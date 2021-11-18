@@ -1,16 +1,16 @@
 import { Actor } from './engine/actor'
 import { Dungeon, startDungeon } from './engine/dungeon'
 import { ItemKind } from './engine/itemTypes'
+import { BigClub } from './items/bigClub'
+import { ChumbyChicken } from './items/chicken'
+import { CleansingFlames } from './items/cleansingFlames'
+import { HealingPendant } from './items/healingPendant'
+import { Machete } from './items/machete'
+import { SeekingMissiles } from './items/seekingMissiles'
 
 const currentParty: Actor[] = [{
     name: "Piefayth",
-    items: [{
-        kind: ItemKind.BIG_CLUB,
-        tier: 5
-    }, {
-        kind: ItemKind.CHUMBY_CHICKEN,
-        tier: 2
-    }],
+    items: [new Machete(2), new SeekingMissiles(2), new HealingPendant(9)],
     auras: [],
     maxHP: 110,
     curHP: 110,
@@ -20,13 +20,7 @@ const currentParty: Actor[] = [{
     attackMax: 11
 }, {
     name: "zoop",
-    items: [{
-        kind: ItemKind.MACHETE,
-        tier: 2
-    }, {
-        kind: ItemKind.CHUMBY_CHICKEN,
-        tier: 2
-    }],
+    items: [new BigClub(2), new CleansingFlames(3), new HealingPendant(9)],
     auras: [],
     maxHP: 110,
     curHP: 110,
@@ -39,6 +33,28 @@ const currentParty: Actor[] = [{
 const currentDungeon: Dungeon = {
     tier: 1,
     floors: [{
+        enemies: [{
+            name: "angery face",
+            items: [],
+            auras: [],
+            maxHP: 190,
+            curHP: 90,
+            energy: 0,
+            speed: 10,
+            attackMin: 10,
+            attackMax: 20
+        }, {
+            name: "d face",
+            items: [],
+            auras: [],
+            maxHP: 80,
+            curHP: 50,
+            energy: 0,
+            speed: 5,
+            attackMin: 10,
+            attackMax: 20
+        }]
+    }, {
         enemies: [{
             name: "angery face",
             items: [],

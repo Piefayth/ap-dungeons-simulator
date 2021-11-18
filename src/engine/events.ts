@@ -1,24 +1,48 @@
 import { Actor } from "./actor"
 
 enum EventKind {
-    BASIC_ATTACK,
-    MACHETE_ATTACK,
-    DAMAGE_TAKEN,
-    HEALING_RECEIVED,
-    BIG_CLUB,
-    SUMMON_CHUMBY_CHICKEN,
-    CHICKEN_DIED,
+    START_TURN = 'Start Turn',
+    SELECT_TARGET = 'Select Target',
+    TARGET_FINALIZED = 'Target Finalized',
+    AFTER_ATTACK = 'After Attack',
+    BASIC_ATTACK = 'Basic Attack',
+    DAMAGE_TAKEN = 'Damage Taken',
+    HEALING_RECEIVED = 'Healing Received',
+    SUMMON_ACTOR = 'Summon Actor',
+    ACTOR_DIED = 'Actor Died',
 }
 
-interface EventData {}
+abstract class Event {
+    kind: EventKind
 
-type Event<T = EventData> = {
-    kind: EventKind,
-    attackerPartyIndex: number,
-    attackerIndex: number,
-    defenderPartyIndex: number,
+    constructor(kind: EventKind) {
+        this.kind = kind
+    }
+}
+
+abstract class CombatEvent extends Event {
+    attackerPartyIndex: number
+    attackerIndex: number
+    defenderPartyIndex: number
     defenderIndex: number
-    eventData: T
+
+    constructor(kind: EventKind, attackerPartyIndexOrTriggeredBy: number | CombatEvent, attackerIndex?: number, defenderPartyIndex?: number, defenderIndex?: number) {
+        super(kind)
+
+        if (typeof attackerPartyIndexOrTriggeredBy == "number") {
+            this.attackerIndex = attackerIndex
+            this.attackerPartyIndex = attackerPartyIndexOrTriggeredBy
+            this.defenderIndex = defenderIndex
+            this.defenderPartyIndex = defenderPartyIndex
+        } else {
+            this.attackerIndex = attackerPartyIndexOrTriggeredBy.attackerIndex
+            this.attackerPartyIndex = attackerPartyIndexOrTriggeredBy.attackerPartyIndex
+            this.defenderIndex = attackerPartyIndexOrTriggeredBy.defenderIndex
+            this.defenderPartyIndex = attackerPartyIndexOrTriggeredBy.defenderPartyIndex
+        }
+
+    }
+
 }
 
 type ProcessedEventResult = {
@@ -28,7 +52,7 @@ type ProcessedEventResult = {
 
 export {
     Event,
+    CombatEvent,
     EventKind,
-    EventData,
     ProcessedEventResult
 }

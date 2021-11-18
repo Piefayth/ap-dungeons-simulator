@@ -1,86 +1,74 @@
 import { getRandomInt } from "../../util/math";
 import { Actor } from "../actor";
 import { AuraKind } from "../aura";
-import { Event, EventData, EventKind, ProcessedEventResult } from "../events";
-import { DamageTakenEventData } from "./damageTaken";
+import { CombatEvent, Event, EventData, EventKind, ProcessedEventResult } from "../events";
 import * as _ from 'lodash'
+import { TargetFinalizedEvent } from "./targetFinalized";
+import { DamageTakenEvent } from "./damageTaken";
+import { AfterAttackEvent } from "./afterAttack";
 
-interface BasicAttackEventData extends EventData {
-    damageDealt: number
-}
+class BasicAttackEvent extends CombatEvent {
+    triggeredBy: TargetFinalizedEvent
 
-function generateBasicAttack(parties: Actor[][], attackerPartyIndex: number, attackerIndex: number): Event[] {
-    const defenderPartyIndex = attackerPartyIndex === 0 ? 1 : 0
-    const basicAttackEvents: Event[] = []
-
-    const attacker = parties[attackerPartyIndex][attackerIndex]
-    const defenderIndex = getRandomInt(0, parties[defenderPartyIndex].length)
-    const attackerSwingBaseDamage = getRandomInt(attacker.attackMin, attacker.attackMax + 1)
-    const basicAttackEvent: Event<BasicAttackEventData> = {
-        kind: EventKind.BASIC_ATTACK,
-        attackerPartyIndex,
-        attackerIndex,
-        defenderPartyIndex,
-        defenderIndex,
-        eventData: {
-            damageDealt: attackerSwingBaseDamage,
-        }
+    constructor(triggeredBy: TargetFinalizedEvent) {
+        super(EventKind.BASIC_ATTACK, triggeredBy)
+        this.triggeredBy = triggeredBy
     }
 
-    basicAttackEvents.push(basicAttackEvent)
-
-    return basicAttackEvents
-}
-
-function processBasicAttack(partyStates: Actor[][], event: Event<BasicAttackEventData>): ProcessedEventResult {
-    // resubmit the basic attack event if we are targeting something that died
-    const attacker = partyStates[event.attackerPartyIndex][event.attackerIndex]
-    const defender = partyStates[event.defenderPartyIndex][event.defenderIndex]
-    if (attacker === undefined || defender === undefined) {
-        return {
-            newPartyStates: partyStates,
-            newEvents: generateBasicAttack(partyStates, event.attackerPartyIndex, event.attackerIndex)
+    processBasicAttack(parties: Actor[][]): ProcessedEventResult {
+        // resubmit the basic attack event if we are targeting something that died
+        const attacker = parties[this.attackerPartyIndex][this.attackerIndex]
+        const defender = parties[this.defenderPartyIndex][this.defenderIndex]
+        if (defender === undefined) {
+            const defenderIndex = getRandomInt(0, parties[this.defenderPartyIndex].length)
+            this.triggeredBy.defenderIndex = defenderIndex
+            return {
+                newPartyStates: parties,
+                newEvents: [new BasicAttackEvent(this.triggeredBy)]
+            }
         }
-    }
-
-    let newPartyStates = _.cloneDeep(partyStates) as Actor[][]
-
-    const baseDamageDealt = event.eventData.damageDealt
-    let totalDamage = baseDamageDealt
     
-    const resultEvents = []
-    if (attacker.auras.some(it => it.kind === AuraKind.BIG_CLUB)) {
-        totalDamage *= 2.5
-        totalDamage = Math.floor(totalDamage)
+        let newPartyStates = _.cloneDeep(parties) as Actor[][]
         
-        attacker.auras = attacker.auras.filter(aura => aura.kind !== AuraKind.BIG_CLUB)
-        newPartyStates[event.attackerPartyIndex][event.attackerIndex] = attacker
-    }
+        const baseDamageDealt = getRandomInt(attacker.attackMin, attacker.attackMax + 1)
+        let totalDamage = baseDamageDealt
+        
+        let resultEvents: Event[] = [new AfterAttackEvent(this)]
 
-    const damageTakenEvent: Event<DamageTakenEventData> = {
-        ...event,
-        kind: EventKind.DAMAGE_TAKEN,
-        eventData: {
-            damageTaken: totalDamage
+        // TODO: Refactor this behavior into the item
+        if (attacker.auras.some(it => it.kind === AuraKind.SEEKING_MISSILES)) {
+            totalDamage += attacker.auras.find(it => it.kind === AuraKind.SEEKING_MISSILES).stacks
+
+            attacker.auras = attacker.auras.filter(aura => aura.kind !== AuraKind.SEEKING_MISSILES)
+            newPartyStates[this.attackerPartyIndex][this.attackerIndex] = attacker
         }
-    }
 
-    resultEvents.push(damageTakenEvent)
+        // TODO: Refactor this behavior into the item
+        if (attacker.auras.some(it => it.kind === AuraKind.BIG_CLUB)) {
+            totalDamage *= 2.5
+            totalDamage = Math.floor(totalDamage)
+            
+            attacker.auras = attacker.auras.filter(aura => aura.kind !== AuraKind.BIG_CLUB)
+            newPartyStates[this.attackerPartyIndex][this.attackerIndex] = attacker
+        }
 
-    console.log(`${
-        partyStates[event.attackerPartyIndex][event.attackerIndex].name
-    } attacks ${
-        partyStates[event.defenderPartyIndex][event.defenderIndex].name
-    } for ${totalDamage} damage.`)
-
-    return {
-        newEvents: resultEvents,
-        newPartyStates: partyStates
+        const damageTakenEvent = new DamageTakenEvent(totalDamage, this.defenderPartyIndex, this.defenderIndex, this)
+    
+        resultEvents.push(damageTakenEvent)
+    
+        console.log(`${
+            newPartyStates[this.attackerPartyIndex][this.attackerIndex].name
+        } attacks ${
+            newPartyStates[this.defenderPartyIndex][this.defenderIndex].name
+        } for ${totalDamage} damage.`)
+    
+        return {
+            newEvents: resultEvents,
+            newPartyStates: newPartyStates
+        }
     }
 }
 
 export {
-    BasicAttackEventData,
-    generateBasicAttack,
-    processBasicAttack
+    BasicAttackEvent
 }

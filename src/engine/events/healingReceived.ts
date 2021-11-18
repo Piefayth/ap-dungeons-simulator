@@ -1,28 +1,37 @@
 import { Actor } from "../actor"
-import { Event, EventData } from "../events"
+import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
 
-interface HealingReceivedEventData extends EventData {
+class HealingReceivedEvent extends Event {
     healingReceived: number
     targetPartyIndex: number
     targetIndex: number
-}
 
-function processHealingReceived(partyStates: Actor[][], event: Event<HealingReceivedEventData>): Actor[][] {
-    let newPartyStates = _.cloneDeep(partyStates)
-    let target = newPartyStates[event.eventData.targetPartyIndex][event.eventData.targetIndex]
-
-    let updatedTarget = {
-        ...target,
-        curHP: Math.min(target.maxHP, target.curHP += event.eventData.healingReceived)
+    constructor(healingReceived: number, targetPartyIndex: number, targetIndex: number, triggeredBy: Event) {
+        super(EventKind.HEALING_RECEIVED)
+        this.healingReceived = healingReceived
+        this.targetPartyIndex = targetPartyIndex
+        this.targetIndex = targetIndex
     }
 
-    newPartyStates[event.defenderPartyIndex][event.defenderIndex] = updatedTarget
-
-    return newPartyStates
+    processHealingReceived(partyStates: Actor[][]): ProcessedEventResult {
+        let newPartyStates = _.cloneDeep(partyStates)
+        let target = newPartyStates[this.targetPartyIndex][this.targetIndex]
+    
+        let updatedTarget = {
+            ...target,
+            curHP: Math.min(target.maxHP, target.curHP += this.healingReceived)
+        }
+    
+        newPartyStates[this.targetPartyIndex][this.targetIndex] = updatedTarget
+    
+        return {
+            newPartyStates,
+            newEvents: []
+        }
+    }
 }
 
 export {
-    HealingReceivedEventData,
-    processHealingReceived
+    HealingReceivedEvent
 }

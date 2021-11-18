@@ -1,17 +1,21 @@
+import * as _ from 'lodash'
 import { getRandomInt } from '../util/math'
 import { Actor } from './actor'
 import { 
+    CombatEvent,
     Event, 
-    EventKind, 
+    EventKind,
+    ProcessedEventResult, 
 } from './events'
-import { BasicAttackEventData, generateBasicAttack, processBasicAttack } from './events/basicAttack'
-import { BigClubEventData, processBigClubEvent } from './events/bigClub'
-import { SummonChickenEventData, processSummonChickenEvent, generateChickenDiedEvent, processChickenDiedEvent, ChickenDiedEventData } from './events/chumbyChicken'
-import { DamageTakenEventData, processDamageTaken } from './events/damageTaken'
-import { HealingReceivedEventData, processHealingReceived } from './events/healingReceived'
-import { MacheteAttackEventData, processMacheteAttack } from './events/machete'
-import { itemEnergyCosts, itemEventGenerators } from './item'
-import * as _ from 'lodash'
+import { BasicAttackEvent } from './events/basicAttack'
+import { DamageTakenEvent } from './events/damageTaken'
+import { HealingReceivedEvent } from './events/healingReceived'
+import { SummonActorEvent } from './events/summonActor'
+import { ActorDiedEvent } from './events/actorDied'
+import { StartTurnEvent } from './events/startTurn'
+import { SelectTargetEvent } from './events/selectTarget'
+import { TargetFinalizedEvent } from './events/targetFinalized'
+import { AfterAttackEvent } from './events/afterAttack'
 
 type Floor = {
     enemies: Actor[]
@@ -23,17 +27,26 @@ type Dungeon = {
 }
 
 function startDungeon(dungeon: Dungeon, party: Actor[]) {
-    const party0 = _.cloneDeep(party)
-    const party1 = _.cloneDeep(dungeon.floors[0].enemies)
-    
-    for (let i = 0; i < dungeon.floors.length; i++) {
-        console.log(`Starting floor ${i}`)
+    let parties = _.cloneDeep([party, []])
+    // stat items need to apply here
 
-        // TODO: Call function to remove chicken exhaustion
-        // probably want to have "floor begin" and "floor end" events?
+    for (let f = 0; f < dungeon.floors.length; f++) {
+        console.log(`Starting floor ${f}`)
+        parties[1] = _.cloneDeep(dungeon.floors[f].enemies)
+        
+        // handle new floor actions for items
+        for (let i = 0; i < parties.length; i++) {
+            for (let j = 0; j < parties[i].length; j++) {
+                for (let k = 0; k < parties[i][j].items.length; k++) {
+                    let result = parties[i][j].items[k].handleNewFloor(parties, i, j, f)
+                    parties = result.newPartyStates
+                }
+            }
+        }
 
-        const losingParty = simulateFloor([party0, party1])
-        if (losingParty == 0) {
+        parties = simulateFloor(parties)
+        
+        if (whichPartyDied(parties) == 0) {
             console.log(`Party 0 has fallen!`)
             return
         }
@@ -42,13 +55,17 @@ function startDungeon(dungeon: Dungeon, party: Actor[]) {
     console.log(`Party 1 has fallen!`)
 }
 
-function simulateFloor(parties: Actor[][]): number {
+function simulateFloor(parties: Actor[][]): Actor[][] {
     let deadParty = whichPartyDied(parties)
     if (deadParty !== null) {
-        return deadParty
+        return parties
     }
 
     console.log('--------')
+    
+    // debug
+    // console.log(JSON.stringify(parties, null, 2))
+
     const turnActorSelection = determineTurn(parties[0], parties[1])
 
     // TODO: Make energy happen before turn
@@ -58,8 +75,8 @@ function simulateFloor(parties: Actor[][]): number {
     // implement energy
     // implement an energy item
 
-    const turnEvents = generateTurnEvents(parties, turnActorSelection.partyID, turnActorSelection.partyIndex)
-    const newPartyState = processTurnEvents(parties, turnEvents)
+    const startTurnEvent = new StartTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
+    const newPartyState = processTurnEvents(parties, [startTurnEvent])
 
     return simulateFloor(newPartyState)
 }
@@ -83,48 +100,72 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
 
     while (localEvents.length != 0) {
         const event = localEvents.pop()
-
+        //console.log(event.kind)
         switch (event.kind) {
+            case EventKind.START_TURN:
+                const startTurnEvent = event as StartTurnEvent
+                const startTurnResult = startTurnEvent.processStartTurn(newPartyStates)
+                localEvents = localEvents.concat(startTurnResult.newEvents)
+                newPartyStates = startTurnResult.newPartyStates
+                break
+            case EventKind.SELECT_TARGET:
+                const selectTargetEvent = event as SelectTargetEvent
+                const selectTargetResult = selectTargetEvent.processSelectTarget(newPartyStates)
+                localEvents = localEvents.concat(selectTargetResult.newEvents)
+                newPartyStates = selectTargetResult.newPartyStates
+                break
+            case EventKind.TARGET_FINALIZED:
+                const targetFinalizedEvent = event as TargetFinalizedEvent
+                const targetFinalizedResult = targetFinalizedEvent.processTargetFinalized(newPartyStates)
+                localEvents = localEvents.concat(targetFinalizedResult.newEvents)
+                newPartyStates = targetFinalizedResult.newPartyStates
+                break
             case EventKind.BASIC_ATTACK:
-                const basicAttackResult = processBasicAttack(newPartyStates, event as Event<BasicAttackEventData>)
+                const basicAttackEvent = event as BasicAttackEvent
+                const basicAttackResult = basicAttackEvent.processBasicAttack(newPartyStates)
                 localEvents = localEvents.concat(basicAttackResult.newEvents)
                 newPartyStates = basicAttackResult.newPartyStates
                 break
-            case EventKind.BIG_CLUB:
-                newPartyStates = processBigClubEvent(newPartyStates, event as Event<BigClubEventData>)
+            case EventKind.AFTER_ATTACK:
+                const afterAttackEvent = event as AfterAttackEvent
+                const afterAttackResult = afterAttackEvent.processAfterAttack(newPartyStates)
+                localEvents = localEvents.concat(afterAttackResult.newEvents)
+                newPartyStates = afterAttackResult.newPartyStates
                 break
-            case EventKind.SUMMON_CHUMBY_CHICKEN:
-                newPartyStates = processSummonChickenEvent(newPartyStates, event as Event<SummonChickenEventData>)
+            case EventKind.SUMMON_ACTOR:
+                const summonActorEvent = event as SummonActorEvent
+                const summonActorResult = summonActorEvent.processSummonActor(newPartyStates)
+                localEvents = localEvents.concat(summonActorResult.newEvents)
+                newPartyStates = summonActorResult.newPartyStates
                 break
-            case EventKind.CHICKEN_DIED:
-                const chickenDiedResult = processChickenDiedEvent(newPartyStates, event as Event<ChickenDiedEventData>)
-                newPartyStates = chickenDiedResult.newPartyStates
-                localEvents = localEvents.concat(chickenDiedResult.newEvents)
-                break
-            case EventKind.MACHETE_ATTACK:
-                localEvents = localEvents.concat(
-                    processMacheteAttack(newPartyStates, event as Event<MacheteAttackEventData>)
-                )
+            case EventKind.ACTOR_DIED:
+                const actorDiedEvent = event as ActorDiedEvent
+                const actorDiedResult = actorDiedEvent.processActorDied(newPartyStates)
+                localEvents = localEvents.concat(actorDiedResult.newEvents)
+                newPartyStates = actorDiedResult.newPartyStates
                 break
             case EventKind.DAMAGE_TAKEN:
-                newPartyStates = processDamageTaken(newPartyStates, event as Event<DamageTakenEventData>)
+                const damageTakenEvent = event as DamageTakenEvent
+                const damageTakenResult = damageTakenEvent.processDamageTaken(newPartyStates)
+                localEvents = localEvents.concat(damageTakenResult.newEvents)
+                newPartyStates = damageTakenResult.newPartyStates
                 break
             case EventKind.HEALING_RECEIVED:
-                newPartyStates = processHealingReceived(newPartyStates, event as Event<HealingReceivedEventData>)
+                const healingReceivedEvent = event as HealingReceivedEvent
+                const healingReceivedResult = healingReceivedEvent.processHealingReceived(newPartyStates)
+                localEvents = localEvents.concat(healingReceivedResult.newEvents)
+                newPartyStates = healingReceivedResult.newPartyStates
                 break
             default:
                 break
         }
 
         // remove dead units
-        // this could be an event
         newPartyStates = newPartyStates.map((party, partyIndex) => 
             party.filter(actor => {
                 if (actor.curHP <= 0) {
                     console.log(`${actor.name} has fallen!`)                    
-                    if (actor.name.includes(`Celine's Chumby Chicken`)) {
-                        localEvents = localEvents.concat(generateChickenDiedEvent(newPartyStates, partyIndex, actor, event))
-                    }
+                    localEvents = localEvents.concat(new ActorDiedEvent(actor, event as CombatEvent))
                     return false
                 }
                 return true
@@ -133,25 +174,6 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
     }
 
     return newPartyStates
-}
-
-function generateTurnEvents(parties, attackerPartyIndex, attackerIndex): Event[] {
-    let events = []
-
-    const basicAttackEvent = generateBasicAttack(parties, attackerPartyIndex, attackerIndex)[0]
-    events = events.concat(basicAttackEvent)
-
-    let attacker = parties[attackerPartyIndex][attackerIndex]
-    for (let i = 0; i < attacker.items.length; i++) {
-        if (itemEnergyCosts[attacker.items[i].kind] <= attacker.energy) {
-            const itemEvent = itemEventGenerators[attacker.items[i].kind](
-                parties, attackerPartyIndex, attackerIndex, basicAttackEvent
-            )
-            events = events.concat(itemEvent)
-        }
-    }
-    
-    return events
 }
 
 type DetermineTurnResult = {

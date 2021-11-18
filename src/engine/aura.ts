@@ -1,5 +1,5 @@
 import { Actor } from "./actor";
-import { Event, EventData } from "./events";
+import { Event } from "./events";
 
 export enum AuraKind {
     BIG_CLUB,

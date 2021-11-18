@@ -1,4 +1,4 @@
-import { Item } from "./itemTypes"
+import { Item } from "./item"
 import { Aura } from './aura'
 
 type Actor = {

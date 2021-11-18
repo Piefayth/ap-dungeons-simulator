@@ -1,27 +1,39 @@
 import { Actor } from "../actor"
-import { Event, EventData } from "../events"
+import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
 
-interface DamageTakenEventData extends EventData {
+
+class DamageTakenEvent extends CombatEvent {
     damageTaken: number
-}
+    targetPartyIndex: number
+    targetIndex: number
 
-function processDamageTaken(partyStates: Actor[][], event: Event<DamageTakenEventData>): Actor[][] {
-    let newPartyStates = _.cloneDeep(partyStates)
-    let defender = newPartyStates[event.defenderPartyIndex][event.defenderIndex]
-    let attacker = newPartyStates[event.attackerPartyIndex][event.attackerIndex]
+    constructor(damageTaken: number, targetPartyIndex: number, targetIndex: number, triggeredBy: CombatEvent) {
+        super(EventKind.DAMAGE_TAKEN, triggeredBy)
+        this.damageTaken = damageTaken
+        this.targetPartyIndex = targetPartyIndex
+        this.targetIndex = targetIndex
 
-    let updatedDefender = {
-        ...defender,
-        curHP: Math.max(0, defender.curHP -= event.eventData.damageTaken)
     }
 
-    newPartyStates[event.defenderPartyIndex][event.defenderIndex] = updatedDefender
-
-    return newPartyStates
+    processDamageTaken(partyStates: Actor[][]): ProcessedEventResult {
+        let newPartyStates = _.cloneDeep(partyStates)
+        let defender = newPartyStates[this.defenderPartyIndex][this.defenderIndex]
+    
+        let updatedDefender = {
+            ...defender,
+            curHP: Math.max(0, defender.curHP -= this.damageTaken)
+        }
+    
+        newPartyStates[this.defenderPartyIndex][this.defenderIndex] = updatedDefender
+    
+        return {
+            newPartyStates,
+            newEvents: []
+        }
+    }
 }
 
 export {
-    DamageTakenEventData,
-    processDamageTaken
+    DamageTakenEvent
 }

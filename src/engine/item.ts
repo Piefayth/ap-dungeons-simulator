@@ -1,37 +1,74 @@
 import { getRandomInt } from "../util/math"
 import { Actor } from "./actor"
-import { Event, EventData, EventKind } from "./events"
-import { generateBigClubEvent } from "./events/bigClub"
-import { generateSummonChickenEvent } from "./events/chumbyChicken"
-import { DamageTakenEventData } from "./events/damageTaken"
-import { generateMacheteEvent } from "./events/machete"
-import { EventGeneratorMap, EnergyCostMap, ItemKind, Item } from './itemTypes'
+import { Event, EventKind, ProcessedEventResult } from "./events"
+import { SelectTargetEvent } from "./events/selectTarget"
+import { StartTurnEvent } from "./events/startTurn"
+import { TargetFinalizedEvent } from "./events/targetFinalized"
+import { ItemKind } from './itemTypes'
 
-export const itemEventGenerators: EventGeneratorMap = {
-    [ItemKind.MACHETE]: generateMacheteEvent,
-    [ItemKind.THORNS]: generateNoEvent,   //TODO: Change function
-    [ItemKind.EXPLOSION_POWDER]: generateNoEvent, //TODO: Change function
-    [ItemKind.KNIGHTS_LANCE]: generateNoEvent, //TODO: Change function
-    [ItemKind.BIG_CLUB]: generateBigClubEvent,
-    [ItemKind.CHUMBY_CHICKEN]: generateSummonChickenEvent,
+abstract class _Item {
+    kind: ItemKind
+    name: string
+    tier: number
+    energyCost: number
+
+    constructor(kind: ItemKind, name: string, tier: number, energyCost: number) {
+        this.kind = kind
+        this.name = name
+        this.tier = tier
+        this.energyCost = energyCost
+    }
+
+    abstract handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult
+    abstract handleOnDeath(parties: Actor[][], triggeredBy: Event): ProcessedEventResult
+    abstract handleNewFloor(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult
+    abstract handleBeforeAttackerTargetFinalized(parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent
+    abstract handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent
+    abstract handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult
+    abstract handleOnAfterAttack(parties: Actor[][], triggeredBy: Event): ProcessedEventResult
 }
 
-export const itemEnergyCosts: EnergyCostMap = {
-    [ItemKind.MACHETE]: 0,
-    [ItemKind.THORNS]: 0,
-    [ItemKind.EXPLOSION_POWDER]: 0,
-    [ItemKind.KNIGHTS_LANCE]: 40,
-    [ItemKind.BIG_CLUB]: 0,
-    [ItemKind.CHUMBY_CHICKEN]: 0
+export class Item extends _Item {
+    handleBeforeAttackerTargetFinalized(parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
+        return null
+    }
+
+    handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent {
+        return null
+    }
+
+    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
+    handleOnAfterAttack(parties: Actor[][], triggeredBy: Event): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
+    handleOnDeath(parties: Actor[][], triggeredBy: Event): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
+    handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
+    handleNewFloor(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number) : ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
 }
-
-
-function generateNoEvent(parties: Actor[][], attackerPartyIndex: number, attackerIndex: number, triggeredBy: Event): Event[] {
-    return []
-}
-
-// this could be an abstract class
-// that provides all the different item functionality as noops
-    // how do we provide default implementations?
-    // abstract class _Item then Item is concrete and has all the implementations?
-// handleOnBasicAttack, handleOnTurn, handleOnNewFloor, etc
