@@ -31,6 +31,8 @@ type Dungeon = {
     floors: Floor[]
 }
 
+let turnCounter = 0
+
 function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
     let parties = _.cloneDeep([party, []])
     
@@ -60,6 +62,7 @@ function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
             }
         }
 
+        turnCounter = 0
         parties = simulateFloor(parties)
         
         if (whichPartyDied(parties) == 0) {
@@ -70,6 +73,8 @@ function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
     return true
 }
 
+
+
 function simulateFloor(parties: Actor[][]): Actor[][] {
     let deadParty = whichPartyDied(parties)
     if (deadParty !== null) {
@@ -78,15 +83,21 @@ function simulateFloor(parties: Actor[][]): Actor[][] {
 
     combatMessage('--------')
     
-    // debug
     if (settings.displayPartyStates) {
         console.log(JSON.stringify(parties, null, 2))
     }
+
     const turnActorSelection = determineTurn(parties[0], parties[1])
     let newPartyState = prepareTurn(parties)
     const startTurnEvent = new StartTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
     newPartyState = processTurnEvents(newPartyState, [startTurnEvent])
 
+    turnCounter++
+    if (turnCounter > 1000) {
+        console.log(JSON.stringify(newPartyState, null, 2))
+        throw new Error("combat looped infinitely - printing party state")
+    }
+    
     return simulateFloor(newPartyState)
 }
 
@@ -122,7 +133,6 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
 
     while (localEvents.length != 0) {
         const event = localEvents.pop()
-        // TODO: make the event processing generic, all these cases are the same
         switch (event.kind) {
             case EventKind.START_TURN:
                 const startTurnEvent = event as StartTurnEvent

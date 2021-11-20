@@ -1,17 +1,18 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
+import { DamageDealtEvent } from "./damageDealt"
 
 
-class DamageTakenEvent extends CombatEvent {
+class DamageTakenEvent extends Event {
     damageTaken: number
     targetPartyIndex: number
     targetIndex: number
 
     // TODO: this probably shouldn't be or provide access to a CombatEvent at all
     // It would be incorrect to use some of CombatEvent's properties here
-    constructor(damageTaken: number, targetPartyIndex: number, targetIndex: number, triggeredBy: CombatEvent) {
-        super(EventKind.DAMAGE_TAKEN, triggeredBy)
+    constructor(damageTaken: number, targetPartyIndex: number, targetIndex: number, triggeredBy: DamageDealtEvent) {
+        super(EventKind.DAMAGE_TAKEN)
         this.damageTaken = damageTaken
         this.targetPartyIndex = targetPartyIndex
         this.targetIndex = targetIndex

@@ -34,7 +34,6 @@ export class ExplosionPowder extends Item {
 
         combatMessage(`Suddenly, the battlefield is covered in a thick powder. ${attacker.name} combusts the powder!`)
 
-        // for all living targets...
         newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (actor, i) => {
             const powderDamageMin = 5 * this.tier
             const powderDamageMax = 10 * this.tier

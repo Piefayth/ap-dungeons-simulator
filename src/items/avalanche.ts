@@ -36,6 +36,7 @@ export class Avalanche extends Item {
         // HACK: This preemptively checks for deaths to avoid invalid double-targeting 
         // This should probably just trigger two AVALANCHE_TARGET events or something
         // But trying to avoid item-specific events for now
+        // Edit: This might be wrong per Zethorix's spreadsheet, double targeting could be valid. >:(
 
         let ignoredDefenders: number[] = []
         for (let i = 0; i < 2; i++) {
@@ -56,7 +57,11 @@ export class Avalanche extends Item {
             let avalancheDamage = getRandomInt(avalancheMinDamage, avalancheMaxDamage + 1)
             let avalancheMinSpeed = 0
             let avalancheMaxSpeed = 1 * this.tier
-            let avalancheSpeed = getRandomInt(avalancheMinSpeed, avalancheMaxSpeed + 1)
+
+            let avalancheSpeed = Math.min(
+                newPartyStates[defenderPartyIndex][possibleAvalancheTarget].speed  - 1, 
+                getRandomInt(avalancheMinSpeed, avalancheMaxSpeed + 1)
+            )
 
             const damageDealtEvent = new DamageDealtEvent(avalancheDamage, defenderPartyIndex, possibleAvalancheTarget, new CombatEvent(
                 EventKind.GENERIC_COMBAT,

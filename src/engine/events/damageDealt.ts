@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 import { DamageTakenEvent } from "./damageTaken"
 
 
-class DamageDealtEvent extends CombatEvent {
+class DamageDealtEvent extends Event {
     damageDealt: number
     targetPartyIndex: number
     targetIndex: number
@@ -13,8 +13,8 @@ class DamageDealtEvent extends CombatEvent {
     // It would be incorrect to use some of CombatEvent's properties here
     // Add to this counter the number of minutes you've lost to referencing this.defenderIndex
     // 75 minutes wasted
-    constructor(damageDealt: number, targetPartyIndex: number, targetIndex: number, triggeredBy: CombatEvent) {
-        super(EventKind.DAMAGE_DEALT, triggeredBy)
+    constructor(damageDealt: number, targetPartyIndex: number, targetIndex: number, triggeredBy: Event) {
+        super(EventKind.DAMAGE_DEALT)
         this.damageDealt = damageDealt
         this.targetPartyIndex = targetPartyIndex
         this.targetIndex = targetIndex

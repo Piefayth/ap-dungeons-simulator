@@ -27,68 +27,9 @@ import { SurvivalKit } from './items/survivalKit'
 import { Thorns } from './items/thorns'
 import { WhirlwindAxe } from './items/whirlwindAxe'
 
-/*
-    D8 Trio Test (winrate 1/6)
-    zoop
-    magic parasol 8
-    martyr armor 8
-    knight's lance 7
-    survival kit 7
-
-    maurixxo
-    challenger arrow 8
-    fire sword 8
-    big club 7
-    freezeman 7
-
-    neonus
-    cleansing flames 7
-    energetic ally 7
-    freezeman 7
-    love letter 7
-*/
-
-/*
-    D8 Duo Test (winrate high?)
-    Frux
-    Boosting Bugle 8
-    Freezeman 7
-    Martyr Armor 7
-    Poison Dagger 7
-
-    Tobu
-    Energetic Ally 8
-    Martyr Armor 8
-    Magic Parasol 7
-    Survival Kit 7
-*/
-
-/*
 const fruxParty: Actor[] = [{
     name: "Frux",
     items: [new BoostingBugle(8), new MartyrArmor(7), new Freezeman(7), new PoisonDagger(7)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "Tobu",
-    items: [new EnergeticAlly(8), new MartyrArmor(8), new MagicParasol(7), new SurvivalKit(7)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}]*/
-
-const fruxParty: Actor[] = [{
-    name: "Frux",
-    items: [new BoostingBugle(8), new MartyrArmor(7), new Freezeman(1), new PoisonDagger(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,

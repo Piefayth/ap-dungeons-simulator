@@ -4,7 +4,7 @@ type Settings = {
 }
 
 const settings: Settings = {
-    displayCombatEvents: false,
+    displayCombatEvents: true,
     displayPartyStates: false,
 }
 
