@@ -19,7 +19,7 @@ export class MagicParasol extends Item {
 
     handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
         let newPartyStates = _.cloneDeep(parties)
-        let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
+        let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
 
         const chance = 5 + (5 * this.tier)

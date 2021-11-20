@@ -38,19 +38,12 @@ export class ExplosionPowder extends Item {
             const powderDamageMin = 5 * this.tier
             const powderDamageMax = 10 * this.tier
             let powderDamage = getRandomInt(powderDamageMin, powderDamageMax + 1)
-            const triggeringEvent = new CombatEvent(
-                EventKind.GENERIC_COMBAT,
-                event.turnActorPartyIndex,
-                event.turnActorIndex,
-                defenderPartyIndex,
-                i
-            )
 
             if (newPartyStates[defenderPartyIndex].length === 1) {
                 powderDamage *= 2
             }
 
-            const damageDealtEvent = new DamageDealtEvent(powderDamage, defenderPartyIndex, i, triggeringEvent)
+            const damageDealtEvent = new DamageDealtEvent(powderDamage, defenderPartyIndex, i, event)
             powderEvents.push(damageDealtEvent)
 
             combatMessage(`${newPartyStates[defenderPartyIndex][i].name} takes ${powderDamage} damage from the sheer force of the massive explosion.`)

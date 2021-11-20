@@ -36,24 +36,17 @@ export class KnightsLance extends Item {
         const lanceDamageMax = 10 * this.tier
         let lanceDamage = getRandomInt(lanceDamageMin, lanceDamageMax + 1)
         const lanceTarget = getRandomLivingActor(newPartyStates, defenderPartyIndex)
-        const triggeringEvent = new CombatEvent(
-            EventKind.GENERIC_COMBAT,
-            event.turnActorPartyIndex,
-            event.turnActorIndex,
-            defenderPartyIndex,
-            lanceTarget
-        )
 
         let defender = newPartyStates[defenderPartyIndex][lanceTarget]
 
         if (attacker.curHP === attacker.maxHP) {
             lanceDamage *= 2
-            const damageDealtEvent = new DamageDealtEvent(lanceDamage, defenderPartyIndex, lanceTarget, triggeringEvent)
+            const damageDealtEvent = new DamageDealtEvent(lanceDamage, defenderPartyIndex, lanceTarget, event)
             lanceEvents.push(damageDealtEvent)
             combatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg.`)
         } else {
-            const damageDealtEvent = new DamageDealtEvent(lanceDamage, defenderPartyIndex, lanceTarget, triggeringEvent)
-            const healingReceivedEvent = new HealingReceivedEvent(lanceDamage, event.turnActorPartyIndex, event.turnActorIndex, triggeringEvent)
+            const damageDealtEvent = new DamageDealtEvent(lanceDamage, defenderPartyIndex, lanceTarget, event)
+            const healingReceivedEvent = new HealingReceivedEvent(lanceDamage, event.turnActorPartyIndex, event.turnActorIndex, event)
             lanceEvents.push(damageDealtEvent)
             lanceEvents.push(healingReceivedEvent)
             combatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg. When did ${attacker.name} become a knight? Who knows, but ${attacker.name} heals ${lanceDamage} hp.` )

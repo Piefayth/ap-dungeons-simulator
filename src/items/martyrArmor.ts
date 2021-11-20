@@ -20,7 +20,7 @@ export class MartyrArmor extends Item {
 
     handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
         let newPartyStates = _.cloneDeep(parties)
-        let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
+        let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
 
         const roll = getRandomInt(0, 100)
@@ -31,8 +31,8 @@ export class MartyrArmor extends Item {
             }
         }
 
-        const possibleTargets = newPartyStates[triggeredBy.defenderPartyIndex]
-            .filter((actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.defenderIndex)
+        const possibleTargets = newPartyStates[triggeredBy.targetPartyIndex]
+            .filter((actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.targetIndex)
 
         if (possibleTargets.length == 0) {
             return {
@@ -42,18 +42,18 @@ export class MartyrArmor extends Item {
         }
 
         let targetIndex = getRandomLivingActor(
-            newPartyStates, triggeredBy.defenderPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.defenderIndex
+            newPartyStates, triggeredBy.targetPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.targetIndex
         )
-        const target = newPartyStates[triggeredBy.defenderPartyIndex][targetIndex]
+        const target = newPartyStates[triggeredBy.targetPartyIndex][targetIndex]
 
         const healingReceived = 2 * this.tier
         const energyReceived = 1 * this.tier
 
-        const armorHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.defenderPartyIndex, targetIndex, triggeredBy)
+        const armorHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.targetPartyIndex, targetIndex, triggeredBy)
         newEvents.push(armorHealingEvent)
         target.energy += energyReceived
 
-        newPartyStates[triggeredBy.defenderPartyIndex][targetIndex] = target
+        newPartyStates[triggeredBy.targetPartyIndex][targetIndex] = target
 
         combatMessage(`${defender.name}'s sacrifice invigorates ${target.name}. They gain ${healingReceived} HP and ${energyReceived} energy.`)
 
