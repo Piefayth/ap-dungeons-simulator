@@ -2,11 +2,12 @@ import * as _ from 'lodash'
 import { Actor } from "../engine/actor"
 import { AuraKind } from "../engine/aura"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/events"
-import { DamageTakenEvent } from "../engine/events/damageTaken"
+import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 import { TargetFinalizedEvent } from "../engine/events/targetFinalized"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
+import { combatMessage } from '../log'
 import { getRandomInt } from "../util/math"
 
 export class SeekingMissiles extends Item {
@@ -27,7 +28,7 @@ export class SeekingMissiles extends Item {
             }
         }
 
-        console.log(`${
+        combatMessage(`${
             parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
         } follows their seeking missiles and hunts down ${
             parties[triggeredBy.defenderPartyIndex][newTargetIndex].name
@@ -46,9 +47,13 @@ export class SeekingMissiles extends Item {
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
 
+        // Seeking missiles actually does 0.5 damage per tier per 10% hp missing
+        // The double rounding here might not be 100% correct?
+        // TODO: Test if this works better without operating on "chunks" of missing HP
+
         let hpPercentageMissing = 100 - (100 * (defender.curHP / defender.maxHP))
-        let missilesMultiplier = Math.floor(hpPercentageMissing / 20)
-        let missileDamage = 1 * this.tier * missilesMultiplier
+        let missilesMultiplier = Math.floor(hpPercentageMissing / 10)
+        let missileDamage = Math.floor(0.5 * this.tier * missilesMultiplier)
 
         attacker.auras.push({
             kind: AuraKind.SEEKING_MISSILES,
@@ -57,7 +62,7 @@ export class SeekingMissiles extends Item {
 
         newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
 
-        console.log(`Seeking Missiles deal an extra ${missileDamage} damage.`)
+        combatMessage(`Seeking Missiles deal an extra ${missileDamage} damage.`)
 
         return {
             newPartyStates,

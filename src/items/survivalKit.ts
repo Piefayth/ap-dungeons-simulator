@@ -1,38 +1,32 @@
 import { Actor } from "../engine/actor"
-import { AuraKind } from "../engine/aura"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/events"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
-import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { StartTurnEvent } from "../engine/events/startTurn"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 import { combatMessage } from "../log"
 
-export class HealingPendant extends Item {
+export class SurvivalKit extends Item {
     constructor(tier: number) {
-        let kind = ItemKind.HEALING_PENDANT
-        let name = ItemKind[ItemKind.HEALING_PENDANT]
+        let kind = ItemKind.SURVIVAL_KIT
+        let name = ItemKind[ItemKind.SURVIVAL_KIT]
         let energyCost = 0
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
-        const newEvents: Event[] = []
+    handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
+        let newPartyStates = _.cloneDeep(parties)
+        let owner = newPartyStates[ownerPartyIndex][ownerIndex]
 
-        let roll = getRandomInt(0, 2)
-        if (roll > 0) {
-            const healingReceived = 5 * this.tier
-            const pendantHealingEvent = new HealingReceivedEvent(healingReceived, event.turnActorPartyIndex, event.turnActorIndex, event)
-            newEvents.push(pendantHealingEvent)
-            combatMessage(`The magic of ${attacker.name}'s healing pendant revitalizes them. ${attacker.name} restores ${healingReceived} HP.`)
-        }
+        owner.curHP += 20 * this.tier
+        owner.maxHP += 20 * this.tier
+
+        newPartyStates[ownerPartyIndex][ownerIndex] = owner
 
         return {
-            newPartyStates: parties,
-            newEvents
+            newPartyStates,
+            newEvents: []
         }
     }
 

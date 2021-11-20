@@ -3,8 +3,8 @@ import { Event } from "./events";
 
 export enum AuraKind {
     BIG_CLUB,
-    POISON,      // auras have stacks
-    SEEKING_MISSILES, // ugh are we going to have to implement the damage amount as stacks
+    POISON,
+    SEEKING_MISSILES,
     CHICKEN_EXHAUSTION,
 }
 

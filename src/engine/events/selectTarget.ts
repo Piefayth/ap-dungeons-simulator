@@ -37,7 +37,12 @@ class SelectTargetEvent extends Event {
             for (let j = 0; j < iteratedDefender.items.length; j++) {
                 const newSelectTargetEvent = iteratedDefender.items[j].handleBeforeDefenderTargetFinalized(newPartyStates, i, this)
                 if (newSelectTargetEvent) {
-                    this.defenderIndex = newSelectTargetEvent.defenderIndex
+                    // if a party member jumps in front of an attack, they can't do it again for the same attack
+                    // note this break may impact future items triggered on this event
+                    if (newSelectTargetEvent.defenderIndex != this.defenderIndex) {
+                        this.defenderIndex = newSelectTargetEvent.defenderIndex
+                        break
+                    }
                 }
             }
         }

@@ -5,33 +5,32 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
-import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { StartTurnEvent } from "../engine/events/startTurn"
+import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 import { combatMessage } from "../log"
 
-export class HealingPendant extends Item {
+export class MagicParasol extends Item {
     constructor(tier: number) {
-        let kind = ItemKind.HEALING_PENDANT
-        let name = ItemKind[ItemKind.HEALING_PENDANT]
+        let kind = ItemKind.MAGIC_PARASOL
+        let name = ItemKind[ItemKind.MAGIC_PARASOL]
         let energyCost = 0
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
+    handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
+        let newPartyStates = _.cloneDeep(parties)
+        let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
         const newEvents: Event[] = []
 
-        let roll = getRandomInt(0, 2)
-        if (roll > 0) {
-            const healingReceived = 5 * this.tier
-            const pendantHealingEvent = new HealingReceivedEvent(healingReceived, event.turnActorPartyIndex, event.turnActorIndex, event)
-            newEvents.push(pendantHealingEvent)
-            combatMessage(`The magic of ${attacker.name}'s healing pendant revitalizes them. ${attacker.name} restores ${healingReceived} HP.`)
+        const chance = 5 + (5 * this.tier)
+        const roll = getRandomInt(0, 100)
+        if (roll < chance) {
+            combatMessage(`${defender.name} uses their Magic Parasol to completely absorb the hit!`)
+            triggeredBy.damageDealt = 0
         }
 
         return {
-            newPartyStates: parties,
+            newPartyStates,
             newEvents
         }
     }

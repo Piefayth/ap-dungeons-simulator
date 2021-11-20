@@ -11,11 +11,15 @@ class TargetFinalizedEvent extends CombatEvent {
 
     processTargetFinalized(parties: Actor[][]): ProcessedEventResult {
         let newPartyStates = _.cloneDeep(parties)
-        // should fire basic attack after all this
         
         let newEvents: Event[] = [new BasicAttackEvent(this)]
 
         let attacker = newPartyStates[this.attackerPartyIndex][this.attackerIndex]
+
+        // does this have the same problem as startAttack? selects dead targets?
+        // you poison the thing you attack, so it has to be alive
+        // but how could it die between now and the item being used when the item is thorns?
+        // i think we have an old reference to the parties array somehow
 
         for (let i = 0; i < attacker.items.length; i++) {
             const itemOnTargetFinalizedResult = attacker.items[i].handleOnTargetFinalized(newPartyStates, this)

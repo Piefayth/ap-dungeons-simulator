@@ -12,7 +12,8 @@ type Actor = {
     attackMin: number,
     attackMax: number,
     tier?: number
-    isSummoned?: boolean
+    isSummoned?: boolean,
+    actorID?: number,
 }
 
 export {

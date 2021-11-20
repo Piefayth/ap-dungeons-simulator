@@ -8,7 +8,7 @@ import {
     ProcessedEventResult, 
 } from './events'
 import { BasicAttackEvent } from './events/basicAttack'
-import { DamageTakenEvent } from './events/damageTaken'
+import { DamageDealtEvent } from './events/damageDealt'
 import { HealingReceivedEvent } from './events/healingReceived'
 import { SummonActorEvent } from './events/summonActor'
 import { ActorDiedEvent } from './events/actorDied'
@@ -16,6 +16,12 @@ import { StartTurnEvent } from './events/startTurn'
 import { SelectTargetEvent } from './events/selectTarget'
 import { TargetFinalizedEvent } from './events/targetFinalized'
 import { AfterAttackEvent } from './events/afterAttack'
+import { EndTurnEvent } from './events/endTurn'
+import { StartTurnItemEvent } from './events/startTurnItem'
+import { combatMessage } from '../log'
+import { DamageTakenEvent } from './events/damageTaken'
+import settings from '../settings'
+import { setInitialActorIDs } from '../util/actor'
 
 type Floor = {
     enemies: Actor[]
@@ -26,12 +32,24 @@ type Dungeon = {
     floors: Floor[]
 }
 
-function startDungeon(dungeon: Dungeon, party: Actor[]) {
+function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
     let parties = _.cloneDeep([party, []])
-    // stat items need to apply here
+    parties = setInitialActorIDs(parties)
+    
+    // TODO: Move dungeon start and floor start to events
+    // Without this, can't use summon actor event for pet summons
+
+    for (let i = 0; i < parties.length; i++) {
+        for (let j = 0; j < parties[i].length; j++) {
+            for (let k = 0; k < parties[i][j].items.length; k++) {
+                let result = parties[i][j].items[k].handleOnDungeonStart(parties, i, j)
+                parties = result.newPartyStates
+            }
+        }
+    }
 
     for (let f = 0; f < dungeon.floors.length; f++) {
-        console.log(`Starting floor ${f}`)
+        combatMessage(`Starting floor ${f}`)
         parties[1] = _.cloneDeep(dungeon.floors[f].enemies)
         
         // handle new floor actions for items
@@ -47,12 +65,11 @@ function startDungeon(dungeon: Dungeon, party: Actor[]) {
         parties = simulateFloor(parties)
         
         if (whichPartyDied(parties) == 0) {
-            console.log(`Party 0 has fallen!`)
-            return
+            return false
         }
     }
 
-    console.log(`Party 1 has fallen!`)
+    return true
 }
 
 function simulateFloor(parties: Actor[][]): Actor[][] {
@@ -61,24 +78,31 @@ function simulateFloor(parties: Actor[][]): Actor[][] {
         return parties
     }
 
-    console.log('--------')
+    combatMessage('--------')
     
     // debug
-    // console.log(JSON.stringify(parties, null, 2))
-
+    if (settings.displayPartyStates) {
+        console.log(JSON.stringify(parties, null, 2))
+    }
     const turnActorSelection = determineTurn(parties[0], parties[1])
-
-    // TODO: Make energy happen before turn
-    // const beforeTurnResult = prepareTurn(attackingParty, defendingParty)
-
-    // implement a stat item (freezeman, halberd)
-    // implement energy
-    // implement an energy item
-
+    let newPartyState = prepareTurn(parties)
     const startTurnEvent = new StartTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
-    const newPartyState = processTurnEvents(parties, [startTurnEvent])
+    newPartyState = processTurnEvents(newPartyState, [startTurnEvent])
 
     return simulateFloor(newPartyState)
+}
+
+function prepareTurn(parties: Actor[][]): Actor[][] {
+    let newPartyState = _.cloneDeep(parties)
+
+    newPartyState = newPartyState.map(party => 
+        party.map(actor => {
+            actor.energy += 2
+            return actor
+        })
+    )
+
+    return newPartyState
 }
 
 function whichPartyDied(parties: Actor[][]): number | null {
@@ -100,13 +124,19 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
 
     while (localEvents.length != 0) {
         const event = localEvents.pop()
-        //console.log(event.kind)
+        // TODO: make the event processing generic, all these cases are the same
         switch (event.kind) {
             case EventKind.START_TURN:
                 const startTurnEvent = event as StartTurnEvent
                 const startTurnResult = startTurnEvent.processStartTurn(newPartyStates)
                 localEvents = localEvents.concat(startTurnResult.newEvents)
                 newPartyStates = startTurnResult.newPartyStates
+                break
+            case EventKind.START_TURN_ITEM:
+                const startTurnItemEvent = event as StartTurnItemEvent
+                const startTurnItemResult = startTurnItemEvent.processStartTurnItem(newPartyStates)
+                localEvents = localEvents.concat(startTurnItemResult.newEvents)
+                newPartyStates = startTurnItemResult.newPartyStates
                 break
             case EventKind.SELECT_TARGET:
                 const selectTargetEvent = event as SelectTargetEvent
@@ -150,27 +180,44 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
                 localEvents = localEvents.concat(damageTakenResult.newEvents)
                 newPartyStates = damageTakenResult.newPartyStates
                 break
+            case EventKind.DAMAGE_DEALT:
+                const damageDealtEvent = event as DamageDealtEvent
+                const damageDealtResult = damageDealtEvent.processDamageDealt(newPartyStates)
+                localEvents = localEvents.concat(damageDealtResult.newEvents)
+                newPartyStates = damageDealtResult.newPartyStates
+                break
             case EventKind.HEALING_RECEIVED:
                 const healingReceivedEvent = event as HealingReceivedEvent
                 const healingReceivedResult = healingReceivedEvent.processHealingReceived(newPartyStates)
                 localEvents = localEvents.concat(healingReceivedResult.newEvents)
                 newPartyStates = healingReceivedResult.newPartyStates
                 break
+            case EventKind.END_TURN:
+                const endTurnEvent = event as EndTurnEvent
+                const endTurnResult = endTurnEvent.processEndTurn(newPartyStates)
+                localEvents = localEvents.concat(endTurnResult.newEvents)
+                newPartyStates = endTurnResult.newPartyStates
+                break
             default:
                 break
         }
 
         // remove dead units
+        // TODO: store dead units in their own array so they can be accessed if needed
         newPartyStates = newPartyStates.map((party, partyIndex) => 
-            party.filter(actor => {
+            party.filter((actor, actorIndex) => {
                 if (actor.curHP <= 0) {
-                    console.log(`${actor.name} has fallen!`)                    
+                    combatMessage(`${actor.name} has fallen!`)                    
                     localEvents = localEvents.concat(new ActorDiedEvent(actor, event as CombatEvent))
                     return false
                 }
                 return true
             })
         )
+
+        if (whichPartyDied(newPartyStates) !== null) {
+            break
+        }
     }
 
     return newPartyStates

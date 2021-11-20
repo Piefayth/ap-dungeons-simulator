@@ -6,6 +6,7 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
+import { combatMessage } from "../log"
 
 export class ChickenHealing extends Item {
     constructor(tier: number) {
@@ -17,7 +18,7 @@ export class ChickenHealing extends Item {
 
     handleOnDeath(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
         let newPartyStates = _.cloneDeep(parties)
-        console.log('The party drools at the sight of accidentally cooked Chumby Chicken.')
+        combatMessage('The party drools at the sight of accidentally cooked Chumby Chicken.')
     
         const newEvents: Event[] = []
         for (let i = 0; i < newPartyStates[triggeredBy.defenderPartyIndex].length; i++) {
@@ -31,7 +32,7 @@ export class ChickenHealing extends Item {
             )
 
             newEvents.push(chickenHealingEvent)
-            console.log(`${actor.name} takes a bite, it was very juicy and delicious. ${actor.name} gains ${healingReceived} HP`)
+            combatMessage(`${actor.name} takes a bite, it was very juicy and delicious. ${actor.name} gains ${healingReceived} HP`)
         }
 
         return {

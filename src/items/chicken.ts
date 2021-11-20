@@ -8,11 +8,12 @@ import { ChickenHealing } from "./chickenHealing"
 import * as _ from 'lodash'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
+import { combatMessage } from "../log"
 
 export class ChumbyChicken extends Item {
     constructor(tier: number) {
         let kind = ItemKind.CHUMBY_CHICKEN
-        let name = `Celine's Chumby Chicken`
+        let name = ItemKind[ItemKind.CHUMBY_CHICKEN]
         let energyCost = 0
         super(kind, name, tier, energyCost)
     }
@@ -27,24 +28,23 @@ export class ChumbyChicken extends Item {
                 .filter(it => it.name === `Celine's Chumby Chicken`)
                 .length
 
-            const chumbyChicken = attacker.items.find(it => it.kind === ItemKind.CHUMBY_CHICKEN)
             const chickenName = chickensInParty === 0 ? `Celine's Chumby Chicken` : `Celine's Chumby Chicken ${chickensInParty + 1}`
             const chumbyChickenEvent = new SummonActorEvent({
                 name: chickenName,
-                items: [new ChickenHealing(chumbyChicken.tier)],
+                items: [new ChickenHealing(this.tier)],
                 auras: [],
-                maxHP: chumbyChicken.tier,
-                curHP: chumbyChicken.tier,
+                maxHP: this.tier,
+                curHP: this.tier,
                 energy: 0,
                 speed: 1,
                 attackMin: 0,
                 attackMax: 1,
-                tier: chumbyChicken.tier,
+                tier: this.tier,
                 isSummoned: true
             }, triggeredBy.turnActorPartyIndex)
 
             chumbyChickenEvents.push(chumbyChickenEvent)
-            console.log(`${attacker.name} summons a Celine's Chumby Chicken.`)
+            combatMessage(`${attacker.name} summons a Celine's Chumby Chicken.`)
         
             newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex].auras.push({
                 kind: AuraKind.CHICKEN_EXHAUSTION,

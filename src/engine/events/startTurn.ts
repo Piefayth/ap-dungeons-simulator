@@ -2,6 +2,7 @@ import { Actor } from "../actor"
 import { Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
 import { SelectTargetEvent } from "./selectTarget"
+import { StartTurnItemEvent } from "./startTurnItem"
 
 class StartTurnEvent extends Event {
     turnActorPartyIndex: number
@@ -18,11 +19,9 @@ class StartTurnEvent extends Event {
         let selectTargetEvent = new SelectTargetEvent(this.turnActorPartyIndex, this.turnActorIndex)
         let startTurnEvents: Event[] = [selectTargetEvent]
 
-        for (let k = 0; k < parties[this.turnActorPartyIndex][this.turnActorIndex].items.length; k++) {
-            let item = parties[this.turnActorPartyIndex][this.turnActorIndex].items[k]
-            let result = item.handleOnTurnStart(parties, this)
-            newPartyStates = result.newPartyStates
-            startTurnEvents = startTurnEvents.concat(result.newEvents)
+        for (let k = 0; k < newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].items.length; k++) {
+            let item = newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].items[k]
+            startTurnEvents.push(new StartTurnItemEvent(item, this))
         }
     
         return {
@@ -31,7 +30,6 @@ class StartTurnEvent extends Event {
         }
     }
 }
-
 
 export {
     StartTurnEvent

@@ -1,6 +1,8 @@
 import { getRandomInt } from "../util/math"
 import { Actor } from "./actor"
-import { Event, EventKind, ProcessedEventResult } from "./events"
+import { CombatEvent, Event, EventKind, ProcessedEventResult } from "./events"
+import { BasicAttackEvent } from "./events/basicAttack"
+import { DamageDealtEvent } from "./events/damageDealt"
 import { SelectTargetEvent } from "./events/selectTarget"
 import { StartTurnEvent } from "./events/startTurn"
 import { TargetFinalizedEvent } from "./events/targetFinalized"
@@ -19,16 +21,40 @@ abstract class _Item {
         this.energyCost = energyCost
     }
 
+    abstract handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult
     abstract handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult
     abstract handleOnDeath(parties: Actor[][], triggeredBy: Event): ProcessedEventResult
     abstract handleNewFloor(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult
     abstract handleBeforeAttackerTargetFinalized(parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent
     abstract handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent
     abstract handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult
+    abstract handleOnBasicAttack(parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult
     abstract handleOnAfterAttack(parties: Actor[][], triggeredBy: Event): ProcessedEventResult
+    abstract handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult
 }
 
 export class Item extends _Item {
+    handleOnBasicAttack(parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
+    handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
+    handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
     handleBeforeAttackerTargetFinalized(parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
         return null
     }

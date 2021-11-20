@@ -12,7 +12,7 @@ class BasicAttackEvent extends CombatEvent {
     triggeredBy: TargetFinalizedEvent
 
     constructor(triggeredBy: TargetFinalizedEvent) {
-        super(EventKind.BASIC_ATTACK, triggeredBy)
+        super(EventKind.BASIC_ATTACK_ITEM, triggeredBy)
         this.triggeredBy = triggeredBy
     }
 
@@ -50,14 +50,6 @@ class BasicAttackEvent extends CombatEvent {
         // damage needs to be calculated in BASIC_ATTACK_ITEM
         // then we just run the rest of the logic in here after
         // oof
-        // oh NO
-        // we already have a finalized target before basic attack item
-        // but things can *still die* 
-        // so we need to target the thing we were targeting all along
-        // because that can't be dead
-        // we just have to figure out wtf its index is
-        // so we either need to leave dead things in the array
-        // or find a better way to reference
 
         for (let i = 0; i < attacker.items.length; i++) {
             const itemResult = attacker.items[i].handleOnBasicAttack(newPartyStates, baseDamageDealt, this)

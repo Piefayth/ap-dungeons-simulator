@@ -1,15 +1,20 @@
 import { Actor } from "./actor"
 
 enum EventKind {
+    GENERIC_COMBAT = 'Generic Combat',
     START_TURN = 'Start Turn',
+    START_TURN_ITEM = 'Start Turn Item',
     SELECT_TARGET = 'Select Target',
     TARGET_FINALIZED = 'Target Finalized',
     AFTER_ATTACK = 'After Attack',
     BASIC_ATTACK = 'Basic Attack',
+    BASIC_ATTACK_ITEM = 'Basic Attack Item',
     DAMAGE_TAKEN = 'Damage Taken',
+    DAMAGE_DEALT = 'Damage Dealt',
     HEALING_RECEIVED = 'Healing Received',
     SUMMON_ACTOR = 'Summon Actor',
     ACTOR_DIED = 'Actor Died',
+    END_TURN = 'End Turn'
 }
 
 abstract class Event {
@@ -20,7 +25,7 @@ abstract class Event {
     }
 }
 
-abstract class CombatEvent extends Event {
+class CombatEvent extends Event {
     attackerPartyIndex: number
     attackerIndex: number
     defenderPartyIndex: number

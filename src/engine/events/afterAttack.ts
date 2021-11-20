@@ -3,6 +3,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
 import { getRandomInt } from "../../util/math"
 import { BasicAttackEvent } from "./basicAttack"
+import { EndTurnEvent } from "./endTurn"
 
 class AfterAttackEvent extends CombatEvent {
     constructor(triggeredBy: CombatEvent) {
@@ -11,7 +12,7 @@ class AfterAttackEvent extends CombatEvent {
 
     processAfterAttack(parties: Actor[][]): ProcessedEventResult {
         let newPartyStates = _.cloneDeep(parties)
-        let newEvents: Event[] = []
+        let newEvents: Event[] = [new EndTurnEvent(this.attackerPartyIndex, this.attackerIndex)]
 
         let attacker = newPartyStates[this.attackerPartyIndex][this.attackerIndex]
 

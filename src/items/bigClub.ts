@@ -5,6 +5,7 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { AuraKind } from "../engine/aura"
+import { combatMessage } from "../log"
 
 export class BigClub extends Item {
     constructor(tier: number) {
@@ -18,9 +19,7 @@ export class BigClub extends Item {
         let newPartyStates = _.cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
     
-        const bigClub = attacker.items.find(it => it.kind === ItemKind.BIG_CLUB)
-
-        const chance = 11 * bigClub.tier
+        const chance = 11 * this.tier
         const roll = getRandomInt(0, 100)
     
         if (roll < chance) {
@@ -31,7 +30,7 @@ export class BigClub extends Item {
         
             newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
         
-            console.log(`${
+            combatMessage(`${
                 newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
             } hits ${
                 newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex].name
