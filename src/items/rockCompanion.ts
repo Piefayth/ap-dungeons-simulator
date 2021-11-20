@@ -9,6 +9,7 @@ import * as _ from 'lodash'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { HealingPendant } from "./healingPendant"
 import { combatMessage } from "../log"
+import { getSummonedActorName } from "../util/actor"
 
 export class RockCompanion extends Item {
     constructor(tier: number) {
@@ -22,11 +23,7 @@ export class RockCompanion extends Item {
         const newPartyStates = _.cloneDeep(parties)
 
         const rockBaseName = 'Rock Companion'
-        const rocksInParty = newPartyStates[ownerPartyIndex]
-            .filter(it => it.name === rockBaseName)
-            .length
-
-        const rockName = rocksInParty === 0 ? rockBaseName : `${rockBaseName} ${rocksInParty + 1}`
+        const rockName = getSummonedActorName(newPartyStates, ownerPartyIndex, rockBaseName)
 
         const rock = {
             name: rockName,

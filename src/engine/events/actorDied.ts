@@ -21,7 +21,7 @@ class ActorDiedEvent extends Event {
             newPartyStates = result.newPartyStates
             actorDiedEvents = actorDiedEvents.concat(result.newEvents)
         }
-    
+
         return {
             newPartyStates,
             newEvents: actorDiedEvents

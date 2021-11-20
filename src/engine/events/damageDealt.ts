@@ -25,11 +25,6 @@ class DamageDealtEvent extends CombatEvent {
         let defender = newPartyStates[this.targetPartyIndex][this.targetIndex]
         let newEvents: Event[] = []
         
-        console.log('defender party index: ' + this.targetPartyIndex)
-        console.log('defender index: ' + this.targetIndex)
-        console.log('pending incoming damage: ' + this.damageDealt)
-        console.log('defender name: ' + defender.name)
-
         for (let i = 0; i < defender.items.length; i++) {
             const itemResult = defender.items[i].handleOnDamageDealt(newPartyStates, this)
             newPartyStates = itemResult.newPartyStates

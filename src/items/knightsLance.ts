@@ -8,6 +8,7 @@ import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
+import { getRandomLivingActor } from "../util/actor"
 
 export class KnightsLance extends Item {
     constructor(tier: number) {
@@ -34,7 +35,7 @@ export class KnightsLance extends Item {
         const lanceDamageMin = 5 * this.tier
         const lanceDamageMax = 10 * this.tier
         let lanceDamage = getRandomInt(lanceDamageMin, lanceDamageMax + 1)
-        const lanceTarget = getRandomInt(0, newPartyStates[defenderPartyIndex].length)
+        const lanceTarget = getRandomLivingActor(newPartyStates, defenderPartyIndex)
         const triggeringEvent = new CombatEvent(
             EventKind.GENERIC_COMBAT,
             event.turnActorPartyIndex,

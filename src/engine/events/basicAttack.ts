@@ -7,6 +7,7 @@ import { TargetFinalizedEvent } from "./targetFinalized";
 import { DamageDealtEvent } from "./damageDealt";
 import { AfterAttackEvent } from "./afterAttack";
 import { combatMessage } from "../../log";
+import { getRandomLivingActor } from "../../util/actor";
 
 class BasicAttackEvent extends CombatEvent {
     triggeredBy: TargetFinalizedEvent
@@ -21,7 +22,7 @@ class BasicAttackEvent extends CombatEvent {
         const attacker = parties[this.attackerPartyIndex][this.attackerIndex]
         const defender = parties[this.defenderPartyIndex][this.defenderIndex]
         if (defender === undefined) {
-            const defenderIndex = getRandomInt(0, parties[this.defenderPartyIndex].length)
+            const defenderIndex = getRandomLivingActor(parties, this.defenderPartyIndex)
             this.triggeredBy.defenderIndex = defenderIndex
             return {
                 newPartyStates: parties,
@@ -35,29 +36,6 @@ class BasicAttackEvent extends CombatEvent {
         let totalDamage = baseDamageDealt
 
         let resultEvents: Event[] = []
-
-        // Note: For now, we can assume this won't kill anything that might otherwise already be targeted
-        // That may eventually not be true
-        // Now it is not true anymore
-        // pog
-        // fucking kill me
-        // whirlwind axe can kill something before basic attack happens
-        // which can't kill the thing being targeted
-        // but can move it around by killing the thing before it
-        // so now we make a BASIC_ATTACK_ITEM event
-        // process all that garbage
-        // then do this
-        // damage needs to be calculated in BASIC_ATTACK_ITEM
-        // then we just run the rest of the logic in here after
-        // oof
-        // oh NO
-        // we already have a finalized target before basic attack item
-        // but things can *still die* 
-        // so we need to target the thing we were targeting all along
-        // because that can't be dead
-        // we just have to figure out wtf its index is
-        // so we either need to leave dead things in the array
-        // or find a better way to reference
 
         for (let i = 0; i < attacker.items.length; i++) {
             const itemResult = attacker.items[i].handleOnBasicAttack(newPartyStates, baseDamageDealt, this)

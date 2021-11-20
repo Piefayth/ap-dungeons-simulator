@@ -7,6 +7,7 @@ import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
+import { getRandomLivingActor } from "../util/actor"
 
 export class LoveLetter extends Item {
     constructor(tier: number) {
@@ -22,7 +23,7 @@ export class LoveLetter extends Item {
         const newEvents: Event[] = []
 
         const possibleTargets = newPartyStates[triggeredBy.attackerPartyIndex]
-            .filter(it => !it.isSummoned && it.name != attacker.name)
+            .filter((actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.attackerIndex)
 
         if (possibleTargets.length == 0) {
             return {
@@ -31,8 +32,10 @@ export class LoveLetter extends Item {
             }
         }
 
-        const target = possibleTargets[getRandomInt(0, possibleTargets.length)]
-        const targetIndex = newPartyStates[triggeredBy.attackerPartyIndex].indexOf(target)
+        const targetIndex = getRandomLivingActor(
+            newPartyStates, triggeredBy.attackerPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.attackerIndex
+        )
+        const target = newPartyStates[triggeredBy.attackerPartyIndex][targetIndex]
 
         const healingReceived = 2 * this.tier
         const energyReceived = 1 * this.tier

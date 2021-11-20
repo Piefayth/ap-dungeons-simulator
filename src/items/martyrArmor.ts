@@ -8,6 +8,7 @@ import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { combatMessage } from "../log"
+import { getRandomLivingActor } from "../util/actor"
 
 export class MartyrArmor extends Item {
     constructor(tier: number) {
@@ -31,7 +32,7 @@ export class MartyrArmor extends Item {
         }
 
         const possibleTargets = newPartyStates[triggeredBy.defenderPartyIndex]
-            .filter(it => !it.isSummoned && it.name != defender.name)
+            .filter((actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.defenderIndex)
 
         if (possibleTargets.length == 0) {
             return {
@@ -40,18 +41,10 @@ export class MartyrArmor extends Item {
             }
         }
 
-        const possibleTargetIndex = getRandomInt(0, possibleTargets.length)
-        const target = possibleTargets[possibleTargetIndex]
-        let targetIndex = newPartyStates[triggeredBy.defenderPartyIndex].indexOf(target)
-
-        // HACK: 
-        // if the taken damage is lethal, the target index will reduce by 1 if the target comes after the item holder
-
-        if (defender.curHP - triggeredBy.damageDealt <= 0) {
-            if (triggeredBy.defenderIndex < targetIndex) {
-                targetIndex -= 1
-            }
-        }
+        let targetIndex = getRandomLivingActor(
+            newPartyStates, triggeredBy.defenderPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.defenderIndex
+        )
+        const target = newPartyStates[triggeredBy.defenderPartyIndex][targetIndex]
 
         const healingReceived = 2 * this.tier
         const energyReceived = 1 * this.tier

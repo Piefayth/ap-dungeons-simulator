@@ -7,6 +7,7 @@ import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
+import { forAllLivingActors } from "../util/actor"
 
 export class CleansingFlames extends Item {
     constructor(tier: number) {
@@ -24,13 +25,13 @@ export class CleansingFlames extends Item {
         let roll = getRandomInt(0, 2)
         if (roll > 0) {
             combatMessage(`${attacker.name} douses their party in cleansing flames.`)
-            for (let i = 0; i < newPartyStates[triggeredBy.attackerPartyIndex].length; i++) {
-                const actor = newPartyStates[triggeredBy.attackerPartyIndex][i]
+            newPartyStates = forAllLivingActors(newPartyStates, triggeredBy.attackerPartyIndex, (actor, i) => {
                 const healingReceived = 1 * this.tier
                 const flamesHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.attackerPartyIndex, i, triggeredBy)
                 newEvents.push(flamesHealingEvent)
                 combatMessage(`${actor.name} gains ${healingReceived} HP.`)
-            }
+                return actor
+            })
         }
 
         return {

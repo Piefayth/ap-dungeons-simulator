@@ -4,6 +4,7 @@ import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { combatMessage } from "../log"
+import { getRandomLivingActor, numLivingPartyMembers } from "../util/actor"
 import { getRandomInt } from "../util/math"
 
 export class Machete extends Item {
@@ -21,22 +22,15 @@ export class Machete extends Item {
         const attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
     
         // don't deal machete damage if there's only one target
-        if (parties[defenderPartyIndex].length <= 1) {
+        // this condition now needs to consider that deaths are not removed from party
+        if (numLivingPartyMembers(parties, defenderPartyIndex) <= 1) {
             return {
                 newPartyStates: parties,
                 newEvents: []
             }
         }
-    
-        // select a defender that is not the target of the triggering basic attack
-        let defenderIndex = -1
-        while (defenderIndex < 0) {
-            let tempDefender = getRandomInt(0, parties[defenderPartyIndex].length)
-            if (tempDefender != triggeredBy.defenderIndex) {
-                defenderIndex = tempDefender
-            }
-        }
-    
+        
+        let defenderIndex = getRandomLivingActor(parties, defenderPartyIndex, (actor, i) => i !== triggeredBy.defenderIndex)
         const macheteMinDamage = this.tier * 3
         const macheteMaxDamage = this.tier * 4
     

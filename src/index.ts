@@ -63,6 +63,7 @@ import { WhirlwindAxe } from './items/whirlwindAxe'
     Survival Kit 7
 */
 
+/*
 const fruxParty: Actor[] = [{
     name: "Frux",
     items: [new BoostingBugle(8), new MartyrArmor(7), new Freezeman(7), new PoisonDagger(7)],
@@ -83,11 +84,34 @@ const fruxParty: Actor[] = [{
     speed: 12,
     attackMin: 3,
     attackMax: 12
+}]*/
+
+const fruxParty: Actor[] = [{
+    name: "Frux",
+    items: [new BoostingBugle(8), new MartyrArmor(7), new Freezeman(1), new PoisonDagger(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "Tobu",
+    items: [new EnergeticAlly(8), new MartyrArmor(8), new MagicParasol(7), new SurvivalKit(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
 }]
+
 
 const zoopParty: Actor[] = [{
     name: "maurixxo",
-    items: [new ChallengerArrow(8), new FireSword(8), new Freezeman(7), new WhirlwindAxe(7)],
+    items: [new ChallengerArrow(8), new FireSword(8), new Freezeman(7), new BigClub(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -117,54 +141,6 @@ const zoopParty: Actor[] = [{
     attackMax: 12
 }]
 
-const currentDungeon: Dungeon = {
-    tier: 1,
-    floors: [{
-        enemies: [{
-            name: "angery face",
-            items: [],
-            auras: [],
-            maxHP: 190,
-            curHP: 90,
-            energy: 0,
-            speed: 15,
-            attackMin: 10,
-            attackMax: 20
-        }, {
-            name: "d face",
-            items: [],
-            auras: [],
-            maxHP: 80,
-            curHP: 80,
-            energy: 0,
-            speed: 15,
-            attackMin: 10,
-            attackMax: 20
-        }]
-    }, {
-        enemies: [{
-            name: "angery face",
-            items: [],
-            auras: [],
-            maxHP: 90,
-            curHP: 90,
-            energy: 0,
-            speed: 10,
-            attackMin: 10,
-            attackMax: 20
-        }, {
-            name: "d face",
-            items: [],
-            auras: [],
-            maxHP: 50,
-            curHP: 50,
-            energy: 0,
-            speed: 5,
-            attackMin: 10,
-            attackMax: 20
-        }]
-    }]
-}
 
 const dungeon8: Dungeon = {
     tier: 8,
@@ -267,12 +243,12 @@ const dungeon8: Dungeon = {
     }]
 }
 
-let trials = 100
+let trials = 10
 let wins = 0
 
 for (let i = 0; i < trials; i++) {
     console.log(`Running trial ${i} / ${trials}`)
-    const trialResult = startDungeon(dungeon8, zoopParty)
+    const trialResult = startDungeon(dungeon8, fruxParty)
     if (trialResult) {
         wins++
     }

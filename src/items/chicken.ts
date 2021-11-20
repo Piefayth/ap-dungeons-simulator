@@ -9,6 +9,7 @@ import * as _ from 'lodash'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
 import { combatMessage } from "../log"
+import { getSummonedActorName } from "../util/actor"
 
 export class ChumbyChicken extends Item {
     constructor(tier: number) {
@@ -24,11 +25,9 @@ export class ChumbyChicken extends Item {
         const attacker = newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
 
         if (!attacker.auras.some(it => it.kind === AuraKind.CHICKEN_EXHAUSTION)) {
-            const chickensInParty = newPartyStates[triggeredBy.turnActorPartyIndex]
-                .filter(it => it.name === `Celine's Chumby Chicken`)
-                .length
-
-            const chickenName = chickensInParty === 0 ? `Celine's Chumby Chicken` : `Celine's Chumby Chicken ${chickensInParty + 1}`
+            const chickenBaseName = `Celine's Chumby Chicken`
+            const chickenName = getSummonedActorName(newPartyStates, triggeredBy.turnActorPartyIndex, chickenBaseName)
+            
             const chumbyChickenEvent = new SummonActorEvent({
                 name: chickenName,
                 items: [new ChickenHealing(this.tier)],

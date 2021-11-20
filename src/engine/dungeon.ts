@@ -21,7 +21,6 @@ import { StartTurnItemEvent } from './events/startTurnItem'
 import { combatMessage } from '../log'
 import { DamageTakenEvent } from './events/damageTaken'
 import settings from '../settings'
-import { setInitialActorIDs } from '../util/actor'
 
 type Floor = {
     enemies: Actor[]
@@ -34,7 +33,6 @@ type Dungeon = {
 
 function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
     let parties = _.cloneDeep([party, []])
-    parties = setInitialActorIDs(parties)
     
     // TODO: Move dungeon start and floor start to events
     // Without this, can't use summon actor event for pet summons
@@ -202,16 +200,15 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
                 break
         }
 
-        // remove dead units
-        // TODO: store dead units in their own array so they can be accessed if needed
         newPartyStates = newPartyStates.map((party, partyIndex) => 
-            party.filter((actor, actorIndex) => {
-                if (actor.curHP <= 0) {
-                    combatMessage(`${actor.name} has fallen!`)                    
+            party.map((actor, actorIndex) => {
+                if (actor.curHP <= 0 && !actor.dead) {
+                    combatMessage(`${actor.name} has fallen!`)
+                    actor.speed = 0                    
+                    actor.dead = true
                     localEvents = localEvents.concat(new ActorDiedEvent(actor, event as CombatEvent))
-                    return false
                 }
-                return true
+                return actor
             })
         )
 
@@ -239,6 +236,8 @@ function determineTurn(party0: Actor[], party1: Actor[]): DetermineTurnResult {
     const roll = getRandomInt(0, totalSpeed)
     let checkedSpeed = 0
     for (let i = 0; i < allActors.length; i++) {
+        if (allActors[i].speed <= 0) continue
+
         checkedSpeed += allActors[i].speed
         if (roll < checkedSpeed) {
             let partyID = 0

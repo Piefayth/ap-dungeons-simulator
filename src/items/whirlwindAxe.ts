@@ -5,6 +5,7 @@ import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { combatMessage } from "../log"
+import { forAllLivingActors } from "../util/actor"
 import { getRandomInt } from "../util/math"
 
 export class WhirlwindAxe extends Item {
@@ -32,16 +33,15 @@ export class WhirlwindAxe extends Item {
         }
 
         combatMessage(`${attacker.name} swings their whirlwind axe wildly.`)
-
-        for (let i = 0; i < parties[triggeredBy.defenderPartyIndex].length; i++) {
-            if (i === triggeredBy.defenderIndex) continue
+        forAllLivingActors(parties, triggeredBy.defenderPartyIndex, (actor, i) => {
+            if (i === triggeredBy.defenderIndex) return actor
 
             const axeDamage = damageDealt
             const damageDealtEvent = new DamageDealtEvent(axeDamage, triggeredBy.defenderPartyIndex, i, triggeredBy)
             axeEvents.push(damageDealtEvent)
 
             combatMessage(`${parties[triggeredBy.defenderPartyIndex][i].name} is hit, taking ${axeDamage} damage`)
-        }
+        })
 
         return {
             newPartyStates: parties,

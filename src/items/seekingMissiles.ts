@@ -23,7 +23,7 @@ export class SeekingMissiles extends Item {
         let newTargetIndex = triggeredBy.defenderIndex
 
         for (let i = 0; i < parties[triggeredBy.defenderPartyIndex].length; i++) {
-            if (parties[triggeredBy.defenderPartyIndex][i].curHP < lowestHP) {
+            if (parties[triggeredBy.defenderPartyIndex][i].curHP > 0 && parties[triggeredBy.defenderPartyIndex][i].curHP < lowestHP) {
                 newTargetIndex = i
             }
         }

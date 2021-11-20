@@ -8,6 +8,7 @@ import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
+import { forAllLivingActors } from "../util/actor"
 
 export class ExplosionPowder extends Item {
     constructor(tier: number) {
@@ -33,7 +34,8 @@ export class ExplosionPowder extends Item {
 
         combatMessage(`Suddenly, the battlefield is covered in a thick powder. ${attacker.name} combusts the powder!`)
 
-        for (let i = 0; i < newPartyStates[defenderPartyIndex].length; i++) {
+        // for all living targets...
+        newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (actor, i) => {
             const powderDamageMin = 5 * this.tier
             const powderDamageMax = 10 * this.tier
             let powderDamage = getRandomInt(powderDamageMin, powderDamageMax + 1)
@@ -53,7 +55,9 @@ export class ExplosionPowder extends Item {
             powderEvents.push(damageDealtEvent)
 
             combatMessage(`${newPartyStates[defenderPartyIndex][i].name} takes ${powderDamage} damage from the sheer force of the massive explosion.`)
-        }
+
+            return actor
+        })
 
         attacker.energy -= this.energyCost
         newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker

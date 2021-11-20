@@ -21,8 +21,7 @@ class DamageTakenEvent extends CombatEvent {
         let newPartyStates = _.cloneDeep(partyStates)
         let defender = newPartyStates[this.targetPartyIndex][this.targetIndex]
         let newEvents = []
-        console.log('taken defender party index: ' + this.targetPartyIndex)
-        console.log('taken defender index: ' + this.targetIndex)
+        
         let updatedDefender = {
             ...defender,
             curHP: Math.max(0, defender.curHP -= this.damageTaken)

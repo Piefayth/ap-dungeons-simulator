@@ -35,7 +35,10 @@ export class EnergeticAlly extends Item {
         let lowestHP = Infinity
 
         for (let i = 0; i < newPartyStates[event.turnActorPartyIndex].length; i++) {
-            if (newPartyStates[event.turnActorPartyIndex][i].curHP < lowestHP) {
+            if (
+                newPartyStates[event.turnActorPartyIndex][i].curHP > 0 && 
+                newPartyStates[event.turnActorPartyIndex][i].curHP < lowestHP
+            ) {
                 lowestHP = newPartyStates[event.turnActorPartyIndex][i].curHP
                 allyTarget = i
             }

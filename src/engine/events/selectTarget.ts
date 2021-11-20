@@ -3,6 +3,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
 import { getRandomInt } from "../../util/math"
 import { TargetFinalizedEvent } from "./targetFinalized"
+import { getRandomLivingActor } from "../../util/actor"
 
 class SelectTargetEvent extends Event {
     attackerPartyIndex: number
@@ -22,7 +23,7 @@ class SelectTargetEvent extends Event {
         let newPartyStates = _.cloneDeep(parties)
         let attacker = newPartyStates[this.attackerPartyIndex][this.attackerIndex]
         if (this.defenderIndex === undefined) {
-            this.defenderIndex = getRandomInt(0, newPartyStates[this.defenderPartyIndex].length)
+            this.defenderIndex = getRandomLivingActor(newPartyStates, this.defenderPartyIndex)
         }
 
         for (let i = 0; i < attacker.items.length; i++) {

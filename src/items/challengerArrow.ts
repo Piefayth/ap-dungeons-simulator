@@ -8,6 +8,7 @@ import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
+import { getRandomLivingActor } from "../util/actor"
 
 export class ChallengerArrow extends Item {
     constructor(tier: number) {
@@ -31,7 +32,7 @@ export class ChallengerArrow extends Item {
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         const arrowDamage = 10 * this.tier
         const arrowAttack = 1 * this.tier
-        const arrowTarget = getRandomInt(0, newPartyStates[defenderPartyIndex].length)
+        const arrowTarget = getRandomLivingActor(newPartyStates, defenderPartyIndex)
         const triggeringEvent = new CombatEvent(
             EventKind.GENERIC_COMBAT,
             event.turnActorPartyIndex,

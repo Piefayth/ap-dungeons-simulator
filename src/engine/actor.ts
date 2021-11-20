@@ -14,6 +14,7 @@ type Actor = {
     tier?: number
     isSummoned?: boolean,
     actorID?: number,
+    dead?: boolean
 }
 
 export {

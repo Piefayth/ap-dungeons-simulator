@@ -9,6 +9,7 @@ import * as _ from 'lodash'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
 import { combatMessage } from "../log"
+import { getSummonedActorName } from "../util/actor"
 
 export class ImpWhistle extends Item {
     constructor(tier: number) {
@@ -32,15 +33,8 @@ export class ImpWhistle extends Item {
 
         const impBaseName = 'Small Imp Companion'
 
-        // TODO: This and ALL other summoning events have the same problem
-        // This check only works for the FIRST summon, won't correctly replace #1 if it dies (will make 2 pet imp 2)
-        // Fix pls :(
-
-        const impsInParty = newPartyStates[triggeredBy.turnActorPartyIndex]
-            .filter(it => it.name === impBaseName)
-            .length
-
-        const impName = impsInParty === 0 ? impBaseName : `${impBaseName} ${impsInParty + 1}`
+        // TODO: This and ALL other summoning names need fixed. Details in chicken
+        const impName = getSummonedActorName(newPartyStates, triggeredBy.turnActorPartyIndex, impBaseName)
         const impWhistleEvent = new SummonActorEvent({
             name: impName,
             items: [],

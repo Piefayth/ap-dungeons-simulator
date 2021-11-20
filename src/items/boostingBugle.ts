@@ -7,6 +7,7 @@ import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
+import { getRandomLivingActor } from "../util/actor"
 
 export class BoostingBugle extends Item {
     constructor(tier: number) {
@@ -32,8 +33,8 @@ export class BoostingBugle extends Item {
 
         combatMessage(`${attacker.name} plays an encouraging fanfare!`)
 
-        const possibleTargets = newPartyStates[event.turnActorPartyIndex]
-            .filter(it => !it.isSummoned && it.name != attacker.name)
+        const possibleTargets = newPartyStates[event.turnActorIndex]
+            .filter((actor, i) => !actor.isSummoned && !actor.dead && i != event.turnActorIndex)
 
         if (possibleTargets.length == 0) {
             return {
@@ -45,8 +46,10 @@ export class BoostingBugle extends Item {
         let bugleEvents: Event[] = []
 
         for (let i = 0; i < 2; i++) {
-            const target = possibleTargets[getRandomInt(0, possibleTargets.length)]
-            const targetIndex = newPartyStates[event.turnActorPartyIndex].indexOf(target)
+            const targetIndex = getRandomLivingActor(
+                newPartyStates, event.turnActorPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != event.turnActorIndex
+            )
+            const target = newPartyStates[event.turnActorPartyIndex][targetIndex]
     
             const healingReceived = 2 * this.tier
             const attackReceived = 1 * this.tier

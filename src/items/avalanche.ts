@@ -7,6 +7,7 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import * as _ from 'lodash'
 import { combatMessage } from "../log"
+import { getRandomLivingActor } from "../util/actor"
 
 export class Avalanche extends Item {
     constructor(tier: number) {
@@ -42,10 +43,14 @@ export class Avalanche extends Item {
                 continue
             }
 
-            let possibleTargets = newPartyStates[defenderPartyIndex].filter((_, index) => !ignoredDefenders.includes(index))
+            let possibleAvalancheTarget = getRandomLivingActor(
+                newPartyStates, defenderPartyIndex, (_, index) => !ignoredDefenders.includes(index)
+            )
 
-            let possibleAvalancheTarget = getRandomInt(0, possibleTargets.length)
-
+            if (possibleAvalancheTarget === -1) {
+                continue
+            }
+            
             let avalancheMinDamage = 3 * this.tier
             let avalancheMaxDamage = 5 * this.tier
             let avalancheDamage = getRandomInt(avalancheMinDamage, avalancheMaxDamage + 1)

@@ -8,6 +8,7 @@ import { ChickenHealing } from "./chickenHealing"
 import * as _ from 'lodash'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { combatMessage } from "../log"
+import { getSummonedActorName } from "../util/actor"
 
 export class PetImp extends Item {
     constructor(tier: number) {
@@ -21,11 +22,7 @@ export class PetImp extends Item {
         const newPartyStates = _.cloneDeep(parties)
 
         const impBaseName = 'Pet Imp'
-        const impsInParty = newPartyStates[ownerPartyIndex]
-            .filter(it => it.name === impBaseName)
-            .length
-
-        const impName = impsInParty === 0 ? impBaseName : `${impBaseName} ${impsInParty + 1}`
+        const impName = getSummonedActorName(newPartyStates, ownerPartyIndex, impBaseName)
 
         const imp = {
             name: impName,
