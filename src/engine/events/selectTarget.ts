@@ -3,7 +3,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
 import { getRandomInt } from "../../util/math"
 import { TargetFinalizedEvent } from "./targetFinalized"
-import { getRandomLivingActor } from "../../util/actor"
+import { forAllLivingActors, getRandomLivingActor } from "../../util/actor"
 
 class SelectTargetEvent extends Event {
     attackerPartyIndex: number
@@ -33,8 +33,7 @@ class SelectTargetEvent extends Event {
             }
         }
 
-        for (let i = 0; i < newPartyStates[this.defenderPartyIndex].length; i++) {
-            let iteratedDefender = newPartyStates[this.defenderPartyIndex][i]
+        newPartyStates = forAllLivingActors(newPartyStates, this.defenderPartyIndex, (iteratedDefender, i) => {
             for (let j = 0; j < iteratedDefender.items.length; j++) {
                 const newSelectTargetEvent = iteratedDefender.items[j].handleBeforeDefenderTargetFinalized(newPartyStates, i, this)
                 if (newSelectTargetEvent) {
@@ -42,10 +41,14 @@ class SelectTargetEvent extends Event {
                     if (newSelectTargetEvent.defenderIndex != this.defenderIndex) {
                         this.defenderIndex = newSelectTargetEvent.defenderIndex
                         break
+                    } else if (newSelectTargetEvent != null) {
+                        break
                     }
                 }
             }
-        }
+
+            return iteratedDefender
+        })
 
         let newEvents = [new TargetFinalizedEvent(this.attackerPartyIndex, this.attackerIndex, this.defenderPartyIndex, this.defenderIndex)]
 

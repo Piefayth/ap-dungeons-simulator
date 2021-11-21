@@ -45,9 +45,13 @@ export class SurvivalKit extends Item {
             if (newDefender.curHP < originalDefender.curHP) {
                 combatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
 
-                return null
+                return new SelectTargetEvent(
+                    event.attackerPartyIndex,
+                    event.attackerIndex,
+                    event.defenderIndex,
+                )
             }
-            
+
             combatMessage(`${attacker.name} targets ${originalDefender.name} but ${
                 newDefender.name} jumps in front of the attack and saves them.`)
 

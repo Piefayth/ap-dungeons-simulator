@@ -33,7 +33,7 @@ export class BoostingBugle extends Item {
 
         combatMessage(`${attacker.name} plays an encouraging fanfare!`)
 
-        const possibleTargets = newPartyStates[event.turnActorIndex]
+        const possibleTargets = newPartyStates[event.turnActorPartyIndex]
             .filter((actor, i) => !actor.isSummoned && !actor.dead && i != event.turnActorIndex)
 
         if (possibleTargets.length == 0) {

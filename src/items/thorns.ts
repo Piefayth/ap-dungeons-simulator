@@ -30,7 +30,7 @@ export class Thorns extends Item {
         let energyGained = 0
         let energyGainTriggered = false
 
-        forAllLivingActors(newPartyStates, defenderPartyIndex, (defender, i) => {
+        newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (defender, i) => {
             const damageDealtEvent = new DamageDealtEvent(thornsDamage, defenderPartyIndex, i, event)
 
             thornsEvents = thornsEvents.concat(damageDealtEvent)

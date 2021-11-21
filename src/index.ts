@@ -1,3 +1,5 @@
+import { dungeon8 } from './dungeons/dungeon8'
+import { dungeon9 } from './dungeons/dungeon9'
 import { Actor } from './engine/actor'
 import { Dungeon, startDungeon } from './engine/dungeon'
 import { ItemKind } from './engine/itemTypes'
@@ -12,6 +14,7 @@ import { EnergeticAlly } from './items/energeticAlly'
 import { ExplosionPowder } from './items/explosionPowder'
 import { FireSword } from './items/fireSword'
 import { Freezeman } from './items/freezeman'
+import { Halberd } from './items/halberd'
 import { HealingPendant } from './items/healingPendant'
 import { ImpWhistle } from './items/impWhistle'
 import { KnightsLance } from './items/knightsLance'
@@ -49,6 +52,57 @@ const fruxParty: Actor[] = [{
     attackMax: 12
 }]
 
+const testParty: Actor[] = [{
+    name: "maurixxo",
+    items: [new FireSword(7), new ChallengerArrow(7), new WhirlwindAxe(7), new BigClub(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "zoop",
+    items: [new KnightsLance(7), new SurvivalKit(7), new HealingPendant(7), new MagicParasol(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "neonus",
+    items: [new Avalanche(7), new MagicParasol(7), new Freezeman(7), new PoisonDagger(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "debuffer",
+    items: [new BoostingBugle(7), new MagicParasol(7), new Freezeman(7), new Thorns(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "anotherguy",
+    items: [new EnergeticAlly(7), new CleansingFlames(7), new Freezeman(7), new LoveLetter(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}]
 
 const zoopParty: Actor[] = [{
     name: "maurixxo",
@@ -83,113 +137,14 @@ const zoopParty: Actor[] = [{
 }]
 
 
-const dungeon8: Dungeon = {
-    tier: 8,
-    floors: [{
-        enemies: [{
-            name: "Boomerang Monkey",
-            items: [new Machete(8)],
-            auras: [],
-            maxHP: 225,
-            curHP: 225,
-            energy: 0,
-            speed: 17,
-            attackMin: 24,
-            attackMax: 32
-        }, {
-            name: "Wizard Monkey",
-            items: [new ExplosionPowder(2)],
-            auras: [],
-            maxHP: 250,
-            curHP: 250,
-            energy: 999,
-            speed: 10,
-            attackMin: 0,
-            attackMax: 0
-        }, {
-            name: "Ice Monkey",
-            items: [new Avalanche(1)],
-            auras: [],
-            maxHP: 200,
-            curHP: 200,
-            energy: 999,
-            speed: 10,
-            attackMin: 10,
-            attackMax: 25
-        }]
-    }, {
-        enemies: [{
-            name: "Dart Monkey 1",
-            items: [],
-            auras: [],
-            maxHP: 150,
-            curHP: 150,
-            energy: 0,
-            speed: 18,
-            attackMin: 10,
-            attackMax: 40
-        }, {
-            name: "Dart Monkey 2",
-            items: [],
-            auras: [],
-            maxHP: 150,
-            curHP: 150,
-            energy: 0,
-            speed: 18,
-            attackMin: 10,
-            attackMax: 40
-        }, {
-            name: "Tack Shooter 1",
-            items: [new Thorns(7)],
-            auras: [],
-            maxHP: 200,
-            curHP: 200,
-            energy: 0,
-            speed: 18,
-            attackMin: 0,
-            attackMax: 0
-        }, {
-            name: "Tack Shooter 2",
-            items: [new Thorns(7)],
-            auras: [],
-            maxHP: 200,
-            curHP: 200,
-            energy: 0,
-            speed: 18,
-            attackMin: 0,
-            attackMax: 0
-        }]
-    }, {
-        enemies: [{
-            name: "Super Monkey",
-            items: [new SeekingMissiles(2)],
-            auras: [],
-            maxHP: 375,
-            curHP: 375,
-            energy: 0,
-            speed: 55,
-            attackMin: 20,
-            attackMax: 35
-        }, {
-            name: "Monkey Village",
-            items: [new BoostingBugle(3)],
-            auras: [],
-            maxHP: 200,
-            curHP: 200,
-            energy: 1001,
-            speed: 20,
-            attackMin: 0,
-            attackMax: 0
-        }]
-    }]
-}
 
-let trials = 1000
+
+let trials = 100
 let wins = 0
 
 for (let i = 0; i < trials; i++) {
     console.log(`Running trial ${i} / ${trials}`)
-    const trialResult = startDungeon(dungeon8, fruxParty)
+    const trialResult = startDungeon(dungeon9, testParty)
     if (trialResult) {
         wins++
     }
