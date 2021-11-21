@@ -8,6 +8,7 @@ import * as _ from 'lodash'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
 import { forAllLivingActors } from "../util/actor"
+import { DamageTakenEvent } from "../engine/events/damageTaken"
 
 export class ChickenHealing extends Item {
     constructor(tier: number) {
@@ -17,16 +18,16 @@ export class ChickenHealing extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDeath(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
+    handleOnDeath(parties: Actor[][], triggeredBy: DamageTakenEvent): ProcessedEventResult {
         let newPartyStates = _.cloneDeep(parties)
         combatMessage('The party drools at the sight of accidentally cooked Chumby Chicken.')
     
         const newEvents: Event[] = []
-        newPartyStates = forAllLivingActors(newPartyStates, triggeredBy.defenderPartyIndex, (actor, i) => {
+        newPartyStates = forAllLivingActors(newPartyStates, triggeredBy.targetPartyIndex, (actor, i) => {
             const healingReceived = 2 * this.tier
             const chickenHealingEvent = new HealingReceivedEvent(
                 healingReceived,
-                triggeredBy.defenderPartyIndex,
+                triggeredBy.targetPartyIndex,
                 i,
                 triggeredBy
             )

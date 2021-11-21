@@ -219,7 +219,7 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
                     actor.speed = 0             
                     actor.pitySpeed = 0       
                     actor.dead = true
-                    localEvents = localEvents.concat(new ActorDiedEvent(actor, event as CombatEvent))
+                    localEvents = localEvents.concat(new ActorDiedEvent(actor, event as DamageTakenEvent))
                 }
                 return actor
             })

@@ -28,7 +28,6 @@ export class Thorns extends Item {
         combatMessage(`${attacker.name} unleashes a bunch of wild thorns!`)
 
         let energyGained = 0
-        let energyGainTriggered = false
 
         newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (defender, i) => {
             const damageDealtEvent = new DamageDealtEvent(thornsDamage, defenderPartyIndex, i, event)
@@ -41,14 +40,14 @@ export class Thorns extends Item {
             if (roll < 25 && energyGained === 0) {
                 energyGained = 1 * this.tier
                 attacker.energy += energyGained
-                energyGainTriggered = true
                 newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
             }
 
             return defender
         })
 
-        if (energyGainTriggered) {
+        if (energyGained > 0) {
+            console.log(`new energy for ${attacker.name} is ${attacker.energy}`)
             combatMessage(`${attacker.name}'s thorns gives them ${energyGained} energy.`)
         }
         

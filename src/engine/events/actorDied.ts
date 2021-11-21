@@ -1,12 +1,13 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import * as _ from 'lodash'
+import { DamageTakenEvent } from "./damageTaken"
 
 class ActorDiedEvent extends Event {
     actor: Actor
-    triggeredBy: CombatEvent
+    triggeredBy: DamageTakenEvent
 
-    constructor(actor: Actor, triggeredBy: CombatEvent) {
+    constructor(actor: Actor, triggeredBy: DamageTakenEvent) {
         super(EventKind.ACTOR_DIED)
         this.actor = actor
         this.triggeredBy = triggeredBy

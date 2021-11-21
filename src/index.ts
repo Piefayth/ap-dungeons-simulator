@@ -54,7 +54,7 @@ const fruxParty: Actor[] = [{
 
 const testParty: Actor[] = [{
     name: "maurixxo",
-    items: [new FireSword(7), new ChallengerArrow(7), new WhirlwindAxe(7), new BigClub(7)],
+    items: [new FireSword(7), new BigClub(7), new WhirlwindAxe(7), new ChallengerArrow(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -64,7 +64,7 @@ const testParty: Actor[] = [{
     attackMax: 12
 }, {
     name: "zoop",
-    items: [new KnightsLance(7), new SurvivalKit(7), new HealingPendant(7), new MagicParasol(7)],
+    items: [new FireSword(7), new BigClub(7), new Freezeman(7), new ChallengerArrow(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -74,7 +74,7 @@ const testParty: Actor[] = [{
     attackMax: 12
 }, {
     name: "neonus",
-    items: [new Avalanche(7), new MagicParasol(7), new Freezeman(7), new PoisonDagger(7)],
+    items: [new SurvivalKit(7), new HealingPendant(7), new KnightsLance(7), new MagicParasol(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -84,7 +84,7 @@ const testParty: Actor[] = [{
     attackMax: 12
 }, {
     name: "debuffer",
-    items: [new BoostingBugle(7), new MagicParasol(7), new Freezeman(7), new Thorns(7)],
+    items: [new SurvivalKit(7), new HealingPendant(7), new KnightsLance(7), new MagicParasol(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -94,7 +94,7 @@ const testParty: Actor[] = [{
     attackMax: 12
 }, {
     name: "anotherguy",
-    items: [new EnergeticAlly(7), new CleansingFlames(7), new Freezeman(7), new LoveLetter(7)],
+    items: [new ChumbyChicken(7), new EnergeticAlly(7), new Freezeman(7), new LoveLetter(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
