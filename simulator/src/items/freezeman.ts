@@ -3,7 +3,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 export class Freezeman extends Item {
     constructor(tier: number) {
@@ -14,7 +14,7 @@ export class Freezeman extends Item {
     }
 
     handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let owner = newPartyStates[ownerPartyIndex][ownerIndex]
 
         owner.speed += this.tier

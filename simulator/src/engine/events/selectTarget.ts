@@ -1,6 +1,6 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from "../../util/math"
 import { TargetFinalizedEvent } from "./targetFinalized"
 import { forAllLivingActors, getRandomLivingActor } from "../../util/actor"
@@ -20,7 +20,7 @@ class SelectTargetEvent extends Event {
     }
 
     processSelectTarget(parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[this.attackerPartyIndex][this.attackerIndex]
         if (this.defenderIndex === undefined) {
             this.defenderIndex = getRandomLivingActor(newPartyStates, this.defenderPartyIndex)

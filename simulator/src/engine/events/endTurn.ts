@@ -1,10 +1,10 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
 import { getRandomInt } from "../../util/math"
 import { BasicAttackEvent } from "./basicAttack"
 import { AuraKind } from "../aura"
 import { combatMessage } from "../../log"
+import cloneDeep from 'lodash/cloneDeep'
 
 class EndTurnEvent extends Event {
     turnActorPartyIndex: number
@@ -17,7 +17,7 @@ class EndTurnEvent extends Event {
     }
 
     processEndTurn(parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let newEvents: Event[] = []
 
         for (let a = 0; a < newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].auras.length; a++) {

@@ -1,6 +1,6 @@
 import { Actor } from "../actor"
 import { Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { SelectTargetEvent } from "./selectTarget"
 import { StartTurnItemEvent } from "./startTurnItem"
 
@@ -15,7 +15,7 @@ class StartTurnEvent extends Event {
     }
 
     processStartTurn(parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let selectTargetEvent = new SelectTargetEvent(this.turnActorPartyIndex, this.turnActorIndex)
         let startTurnEvents: Event[] = [selectTargetEvent]
 

@@ -5,7 +5,7 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import { ChickenHealing } from "./chickenHealing"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { combatMessage } from "../log"
 import { getSummonedActorName } from "../util/actor"
@@ -19,7 +19,7 @@ export class PetImp extends Item {
     }
 
     handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        const newPartyStates = _.cloneDeep(parties)
+        const newPartyStates = cloneDeep(parties)
 
         const impBaseName = 'Pet Imp'
         const impName = getSummonedActorName(newPartyStates, ownerPartyIndex, impBaseName)

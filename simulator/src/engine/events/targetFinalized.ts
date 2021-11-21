@@ -1,6 +1,6 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from "../../util/math"
 import { BasicAttackEvent } from "./basicAttack"
 
@@ -10,7 +10,7 @@ class TargetFinalizedEvent extends CombatEvent {
     }
 
     processTargetFinalized(parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         
         let newEvents: Event[] = [new BasicAttackEvent(this)]
 

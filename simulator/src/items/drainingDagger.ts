@@ -3,7 +3,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { combatMessage } from "../log"
 
 export class DrainingDagger extends Item {
@@ -15,7 +15,7 @@ export class DrainingDagger extends Item {
     }
 
     handleOnTargetFinalized(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
         

@@ -5,7 +5,7 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import { ChickenHealing } from "./chickenHealing"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
 import { combatMessage } from "../log"
@@ -20,7 +20,7 @@ export class ImpWhistle extends Item {
     }
 
     handleOnTurnStart(parties: Actor[][], triggeredBy: StartTurnEvent): ProcessedEventResult {
-        const newPartyStates = _.cloneDeep(parties)
+        const newPartyStates = cloneDeep(parties)
         const impWhistleEvents: Event[] = []
         const attacker = newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
 

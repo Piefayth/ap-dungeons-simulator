@@ -1,7 +1,7 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
 import { DamageTakenEvent } from "./damageTaken"
+import cloneDeep from 'lodash/cloneDeep'
 
 class ActorDiedEvent extends Event {
     actor: Actor
@@ -14,7 +14,7 @@ class ActorDiedEvent extends Event {
     }
 
     processActorDied(partyStates: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(partyStates)
+        let newPartyStates = cloneDeep(partyStates)
         let actorDiedEvents: Event[] = []
     
         for (let i = 0; i < this.actor.items.length; i++) {

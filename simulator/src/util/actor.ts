@@ -1,5 +1,5 @@
 import { Actor } from "../engine/actor";
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from "./math";
 
 export function getRandomLivingActor(parties: Actor[][], partyIndex: number, ignoreCondition: (Actor, number) => boolean = () => true) {
@@ -18,7 +18,7 @@ export function getRandomLivingActor(parties: Actor[][], partyIndex: number, ign
 }
 
 export function forAllLivingActors(parties: Actor[][], partyIndex: number, action: (Actor, number) => Actor): Actor[][] {
-    let newPartyStates = _.cloneDeep(parties)
+    let newPartyStates = cloneDeep(parties)
     
     for (let i = 0; i < newPartyStates[partyIndex].length; i++) {
         let actor = newPartyStates[partyIndex][i]

@@ -2,10 +2,16 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: {
         sim: './simulator/src/index.ts',
-        web: './website/src/index.ts'
+        web: {
+            import: './website/src/index.ts',
+            dependOn: 'sim'
+        }
+    },
+    optimization: {
+        usedExports: true
     },
     module: {
         rules: [

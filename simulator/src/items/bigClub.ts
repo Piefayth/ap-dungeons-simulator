@@ -3,7 +3,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { AuraKind } from "../engine/aura"
 import { combatMessage } from "../log"
 
@@ -16,7 +16,7 @@ export class BigClub extends Item {
     }
 
     handleOnTargetFinalized(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
     
         const chance = 11 * this.tier

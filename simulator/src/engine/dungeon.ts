@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from '../util/math'
 import { Actor } from './actor'
 import { 
@@ -39,7 +39,7 @@ type DungeonResult = {
 let turnCounter = 0
 
 function startDungeon(dungeon: Dungeon, party: Actor[]): DungeonResult {
-    let parties = _.cloneDeep([party, []])
+    let parties = cloneDeep([party, []])
     
     // TODO: Move dungeon start and floor start to events
     // Without this, can't use summon actor event for pet summons
@@ -57,7 +57,7 @@ function startDungeon(dungeon: Dungeon, party: Actor[]): DungeonResult {
 
     for (let f = 0; f < dungeon.floors.length; f++) {
         combatMessage(`Starting floor ${f}`)
-        parties[1] = _.cloneDeep(dungeon.floors[f].enemies)
+        parties[1] = cloneDeep(dungeon.floors[f].enemies)
         
         // handle new floor actions for items
         for (let i = 0; i < parties.length; i++) {
@@ -116,7 +116,7 @@ function simulateFloor(parties: Actor[][]): Actor[][] {
 }
 
 function prepareTurn(parties: Actor[][]): Actor[][] {
-    let newPartyState = _.cloneDeep(parties)
+    let newPartyState = cloneDeep(parties)
 
     newPartyState = newPartyState.map(party => 
         party.map(actor => {
@@ -142,8 +142,8 @@ function whichPartyDied(parties: Actor[][]): number | null {
 }
 
 function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
-    let newPartyStates = _.cloneDeep(parties)
-    let localEvents = _.cloneDeep(events)
+    let newPartyStates = cloneDeep(parties)
+    let localEvents = cloneDeep(events)
 
     while (localEvents.length != 0) {
         const event = localEvents.pop()
@@ -252,7 +252,7 @@ type DetermineTurnResult = {
 }
 
 function applyPitySpeed(parties: Actor[][], turnResult: DetermineTurnResult): Actor[][] {
-    let newPartyStates = _.cloneDeep(parties)
+    let newPartyStates = cloneDeep(parties)
 
     return newPartyStates.map((party, partyIndex) => 
         party.map((actor, partyIndex) => {

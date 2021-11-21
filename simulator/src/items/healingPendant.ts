@@ -4,7 +4,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { StartTurnEvent } from "../engine/events/startTurn"
 import { SelectTargetEvent } from "../engine/events/selectTarget"

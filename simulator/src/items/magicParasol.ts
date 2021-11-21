@@ -4,7 +4,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 import { combatMessage } from "../log"
@@ -18,7 +18,7 @@ export class MagicParasol extends Item {
     }
 
     handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
 

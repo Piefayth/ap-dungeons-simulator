@@ -4,7 +4,7 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { combatMessage } from "../log"
 import { forAllLivingActors } from "../util/actor"
@@ -18,7 +18,7 @@ export class CleansingFlames extends Item {
     }
 
     handleOnAfterAttack(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         const newEvents: Event[] = []
 

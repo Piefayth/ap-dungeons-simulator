@@ -2,7 +2,7 @@ import { getRandomInt } from "../../util/math";
 import { Actor } from "../actor";
 import { AuraKind } from "../aura";
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events";
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { TargetFinalizedEvent } from "./targetFinalized";
 import { DamageDealtEvent } from "./damageDealt";
 import { AfterAttackEvent } from "./afterAttack";
@@ -30,7 +30,7 @@ class BasicAttackEvent extends CombatEvent {
             }
         }
     
-        let newPartyStates = _.cloneDeep(parties) as Actor[][]
+        let newPartyStates = cloneDeep(parties) as Actor[][]
         
         const baseDamageDealt = getRandomInt(attacker.attackMin, attacker.attackMax + 1)
         let totalDamage = baseDamageDealt

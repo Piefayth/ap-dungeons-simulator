@@ -5,7 +5,7 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { combatMessage } from "../log"
 import { getRandomLivingActor } from "../util/actor"
 
@@ -18,7 +18,7 @@ export class Avalanche extends Item {
     }
 
     handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {

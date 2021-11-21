@@ -1,6 +1,6 @@
 import { Actor } from "../actor"
 import { Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 class SummonActorEvent extends Event {
     actor: Actor
@@ -13,7 +13,7 @@ class SummonActorEvent extends Event {
     }
 
     processSummonActor(partyStates: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(partyStates)
+        let newPartyStates = cloneDeep(partyStates)
     
         newPartyStates[this.targetPartyIndex].push({
             ...this.actor,

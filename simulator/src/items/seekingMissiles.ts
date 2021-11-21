@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { Actor } from "../engine/actor"
 import { AuraKind } from "../engine/aura"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/events"
@@ -42,7 +42,7 @@ export class SeekingMissiles extends Item {
     }
 
     handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
 
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]

@@ -1,6 +1,6 @@
 import { Actor } from "../actor"
 import { Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { StartTurnEvent } from "./startTurn"
 import { Item } from "../item"
 
@@ -15,7 +15,7 @@ export class StartTurnItemEvent extends Event {
     }
 
     processStartTurnItem(parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         let startTurnItemEvents: Event[] = []
 
         const result = this.item.handleOnTurnStart(newPartyStates, this.triggeredBy)

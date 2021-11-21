@@ -212,7 +212,7 @@ export class DungeonSimulator {
     }
 }
 
-if (require.main === module) {
+if (require.main === module && typeof window == "undefined") {
     const simulator = new DungeonSimulator()
     simulator.simulate(1, testParty, dungeon8)
 }

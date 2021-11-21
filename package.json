@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
+    "gh-pages": "^3.2.3",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
@@ -20,7 +21,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "simulate": "ts-node ./simulator/src/index.ts",
     "start": "npx webpack serve",
-    "build": "npx webpack"
+    "build": "npx webpack",
+    "publish": "gh-pages -d dist"
   },
   "author": "",
   "license": "ISC"

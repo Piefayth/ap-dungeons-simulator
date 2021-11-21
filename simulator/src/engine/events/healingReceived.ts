@@ -1,6 +1,6 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 class HealingReceivedEvent extends Event {
     healingReceived: number
@@ -15,7 +15,7 @@ class HealingReceivedEvent extends Event {
     }
 
     processHealingReceived(partyStates: Actor[][]): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(partyStates)
+        let newPartyStates = cloneDeep(partyStates)
         let target = newPartyStates[this.targetPartyIndex][this.targetIndex]
     
         let updatedTarget = {

@@ -5,7 +5,7 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import * as _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { combatMessage } from "../log"
 import { forAllLivingActors } from "../util/actor"
 
@@ -18,7 +18,7 @@ export class Thorns extends Item {
     }
 
     handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = _.cloneDeep(parties)
+        let newPartyStates = cloneDeep(parties)
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         let thornsEvents: Event[] = []
         
