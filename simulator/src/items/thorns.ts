@@ -28,7 +28,7 @@ export class Thorns extends Item {
         combatMessage(`${attacker.name} unleashes a bunch of wild thorns!`)
 
         let energyGained = 0
-
+        
         newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (defender, i) => {
             const damageDealtEvent = new DamageDealtEvent(thornsDamage, defenderPartyIndex, i, event)
 
@@ -47,7 +47,6 @@ export class Thorns extends Item {
         })
 
         if (energyGained > 0) {
-            console.log(`new energy for ${attacker.name} is ${attacker.energy}`)
             combatMessage(`${attacker.name}'s thorns gives them ${energyGained} energy.`)
         }
         

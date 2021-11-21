@@ -31,9 +31,14 @@ type Dungeon = {
     floors: Floor[]
 }
 
+type DungeonResult = {
+    won: boolean,
+    turnsTaken: number
+}
+
 let turnCounter = 0
 
-function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
+function startDungeon(dungeon: Dungeon, party: Actor[]): DungeonResult {
     let parties = _.cloneDeep([party, []])
     
     // TODO: Move dungeon start and floor start to events
@@ -47,6 +52,8 @@ function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
             }
         }
     }
+
+    turnCounter = 0
 
     for (let f = 0; f < dungeon.floors.length; f++) {
         combatMessage(`Starting floor ${f}`)
@@ -62,15 +69,20 @@ function startDungeon(dungeon: Dungeon, party: Actor[]): boolean {
             }
         }
 
-        turnCounter = 0
         parties = simulateFloor(parties)
         
         if (whichPartyDied(parties) == 0) {
-            return false
+            return {
+                won: false,
+                turnsTaken: turnCounter
+            }
         }
     }
 
-    return true
+    return {
+        won: true,
+        turnsTaken: turnCounter
+    }
 }
 
 
@@ -94,6 +106,7 @@ function simulateFloor(parties: Actor[][]): Actor[][] {
     newPartyState = processTurnEvents(newPartyState, [startTurnEvent])
 
     turnCounter++
+    
     if (turnCounter > 1000) {
         console.log(JSON.stringify(newPartyState, null, 2))
         throw new Error("combat looped infinitely - printing party state")

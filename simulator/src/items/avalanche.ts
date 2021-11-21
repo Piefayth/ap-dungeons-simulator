@@ -45,7 +45,7 @@ export class Avalanche extends Item {
             }
 
             let possibleAvalancheTarget = getRandomLivingActor(
-                newPartyStates, defenderPartyIndex, (_, index) => !ignoredDefenders.includes(index)
+                newPartyStates, defenderPartyIndex, (_, index) => true // !ignoredDefenders.includes(index) - if the avalanche bug gets fixed, uncomment
             )
 
             if (possibleAvalancheTarget === -1) {

@@ -5,7 +5,7 @@ type Settings = {
 }
 
 const settings: Settings = {
-    displayCombatEvents: true,
+    displayCombatEvents: false,
     displayPartyStates: false,
     pityScaling: (speed) => speed + 1
 }
