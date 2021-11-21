@@ -88,7 +88,8 @@ function simulateFloor(parties: Actor[][]): Actor[][] {
     }
 
     const turnActorSelection = determineTurn(parties[0], parties[1])
-    let newPartyState = prepareTurn(parties)
+    let newPartyState = applyPitySpeed(parties, turnActorSelection)
+    newPartyState = prepareTurn(newPartyState)
     const startTurnEvent = new StartTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
     newPartyState = processTurnEvents(newPartyState, [startTurnEvent])
 
@@ -214,7 +215,9 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
             party.map((actor, actorIndex) => {
                 if (actor.curHP <= 0 && !actor.dead) {
                     combatMessage(`${actor.name} has fallen!`)
-                    actor.speed = 0                    
+                    // TODO: move these changes to the actor died event
+                    actor.speed = 0             
+                    actor.pitySpeed = 0       
                     actor.dead = true
                     localEvents = localEvents.concat(new ActorDiedEvent(actor, event as CombatEvent))
                 }
@@ -235,12 +238,33 @@ type DetermineTurnResult = {
     partyIndex: number
 }
 
+function applyPitySpeed(parties: Actor[][], turnResult: DetermineTurnResult): Actor[][] {
+    let newPartyStates = _.cloneDeep(parties)
+
+    return newPartyStates.map((party, partyIndex) => 
+        party.map((actor, partyIndex) => {
+            if (actor.curHP <= 0) return actor
+
+            if (partyIndex === turnResult.partyID && partyIndex === turnResult.partyIndex) {
+                actor.pitySpeed = 0
+            } else {
+                if (actor.pitySpeed === undefined) {
+                    actor.pitySpeed = 0
+                }
+                actor.pitySpeed = actor.pitySpeed === undefined ? settings.pityScaling(actor.pitySpeed) : settings.pityScaling(0)
+            }
+
+            return actor
+        })
+    )
+}
+
 function determineTurn(party0: Actor[], party1: Actor[]): DetermineTurnResult {
     const allActors = party0.concat(party1)
 
     const totalSpeed = allActors
         .reduce((acc, cur) => 
-            acc += cur.speed
+            acc += Math.floor((cur.speed + (cur.pitySpeed ? cur.pitySpeed : 0)))
         ,0)
     
     const roll = getRandomInt(0, totalSpeed)
@@ -248,7 +272,9 @@ function determineTurn(party0: Actor[], party1: Actor[]): DetermineTurnResult {
     for (let i = 0; i < allActors.length; i++) {
         if (allActors[i].speed <= 0) continue
 
-        checkedSpeed += allActors[i].speed
+        let pitySpeed = allActors[i].pitySpeed ? allActors[i].pitySpeed : 0
+        checkedSpeed += Math.floor(allActors[i].speed + pitySpeed)
+
         if (roll < checkedSpeed) {
             let partyID = 0
             let partyIndex = i

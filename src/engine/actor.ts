@@ -11,6 +11,7 @@ type Actor = {
     speed: number,
     attackMin: number,
     attackMax: number,
+    pitySpeed?: number,
     tier?: number
     isSummoned?: boolean,
     dead?: boolean
