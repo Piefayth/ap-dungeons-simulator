@@ -13,7 +13,6 @@ type Actor = {
     attackMax: number,
     tier?: number
     isSummoned?: boolean,
-    actorID?: number,
     dead?: boolean
 }
 

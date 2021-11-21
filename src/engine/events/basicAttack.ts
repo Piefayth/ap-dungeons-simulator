@@ -64,11 +64,7 @@ class BasicAttackEvent extends CombatEvent {
     
         resultEvents.unshift(damageDealtEvent)
         resultEvents.unshift(new AfterAttackEvent(this))
-
-        // something to consider is that the indices change when something is killed / removed from the array
-        // so if whirlwind axe kills the thing before our target in the party
-        // the target could get switched because the indices are different
-    
+        
         combatMessage(`${
             newPartyStates[this.attackerPartyIndex][this.attackerIndex].name
         } attacks ${

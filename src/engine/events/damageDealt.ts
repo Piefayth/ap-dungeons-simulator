@@ -9,10 +9,6 @@ class DamageDealtEvent extends Event {
     targetPartyIndex: number
     targetIndex: number
 
-    // TODO: this probably shouldn't be or provide access to a CombatEvent at all
-    // It would be incorrect to use some of CombatEvent's properties here
-    // Add to this counter the number of minutes you've lost to referencing this.defenderIndex
-    // 75 minutes wasted
     constructor(damageDealt: number, targetPartyIndex: number, targetIndex: number, triggeredBy: Event) {
         super(EventKind.DAMAGE_DEALT)
         this.damageDealt = damageDealt

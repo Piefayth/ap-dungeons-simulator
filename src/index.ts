@@ -184,12 +184,12 @@ const dungeon8: Dungeon = {
     }]
 }
 
-let trials = 10
+let trials = 1000
 let wins = 0
 
 for (let i = 0; i < trials; i++) {
     console.log(`Running trial ${i} / ${trials}`)
-    const trialResult = startDungeon(dungeon8, fruxParty)
+    const trialResult = startDungeon(dungeon8, zoopParty)
     if (trialResult) {
         wins++
     }

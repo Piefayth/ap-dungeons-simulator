@@ -9,8 +9,6 @@ class DamageTakenEvent extends Event {
     targetPartyIndex: number
     targetIndex: number
 
-    // TODO: this probably shouldn't be or provide access to a CombatEvent at all
-    // It would be incorrect to use some of CombatEvent's properties here
     constructor(damageTaken: number, targetPartyIndex: number, targetIndex: number, triggeredBy: DamageDealtEvent) {
         super(EventKind.DAMAGE_TAKEN)
         this.damageTaken = damageTaken
