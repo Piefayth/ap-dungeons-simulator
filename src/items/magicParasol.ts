@@ -47,6 +47,12 @@ export class MagicParasol extends Item {
             let originalDefender = parties[event.defenderPartyIndex][event.defenderIndex]
             let newDefender = parties[event.defenderPartyIndex][itemHolderIndex]
 
+            if (newDefender.curHP < originalDefender.curHP) {
+                combatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
+
+                return null
+            }
+            
             combatMessage(`${attacker.name} targets ${originalDefender.name} but ${
                 newDefender.name} jumps in front of the attack and saves them.`)
 

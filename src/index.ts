@@ -189,7 +189,7 @@ let wins = 0
 
 for (let i = 0; i < trials; i++) {
     console.log(`Running trial ${i} / ${trials}`)
-    const trialResult = startDungeon(dungeon8, zoopParty)
+    const trialResult = startDungeon(dungeon8, fruxParty)
     if (trialResult) {
         wins++
     }
