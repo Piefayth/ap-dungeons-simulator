@@ -36,8 +36,12 @@ import { SimulationView } from "./components/simulationView"
 
 const element = document.createElement('div')
 document.body.appendChild(element)
+
 ReactDOM.render(
   <Router>
+    <SimulatorConfig path="/ap-dungeons-simulator/" />
+    <SimulationView path="/ap-dungeons-simulator/simulator" />
+
     <SimulatorConfig path="/" />
     <SimulationView path="/simulator" />
   </Router>, 

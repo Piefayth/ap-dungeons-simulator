@@ -31,6 +31,16 @@ const demoParty: Actor[] = [{
     speed: 10,
     attackMin: 1,
     attackMax: 10
+}, {
+    name: "piefayth's cats",
+    items: [new Items.Machete(8), new Items.Freezeman(8), new Items.Thorns(8), new Items.Avalanche(8)],
+    auras: [],
+    maxHP: 100,
+    curHP: 100,
+    energy: 0,
+    speed: 10,
+    attackMin: 1,
+    attackMax: 10
 }]
 
 type SimulatorInputData = {
