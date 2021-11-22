@@ -46,7 +46,7 @@ const testParty: Actor[] = [{
     attackMax: 12
 }, {
     name: "zoop",
-    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new RoughSkin(8)],
+    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(8)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -78,9 +78,9 @@ const testParty: Actor[] = [{
 
 if (require.main === module && typeof window == "undefined") {
     const simulator = new DungeonSimulator({
-        displayCombatEvents: true,
+        displayCombatEvents: false,
         displayPartyStates: false,
         pityScaling: (speed) => speed + 1
     })
-    simulator.simulate(1, testParty, dungeon8)
+    simulator.simulate(100, testParty, dungeon8)
 }

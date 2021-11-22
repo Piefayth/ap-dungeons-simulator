@@ -133,7 +133,6 @@ export default function simulatorConfig() {
             <PartySelection 
                 party={simData.party}
                 onUpdate={(party) => {
-                    console.log(party.length)
                     let newSimData = { ...simData }
                     newSimData.party = party
                     setSimData(newSimData)

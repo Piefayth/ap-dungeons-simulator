@@ -13,6 +13,7 @@ type PlayerCardProps = {
 
 type PrestigePickerProps = {
     label: string
+    level: number
     onUpdate: (tier: number) => void
 }
 
@@ -52,8 +53,9 @@ const NamePicker = (namePickerProps: NamePickerProps) =>
 
     </Row>
 
-const PrestigePicker = (prestigePickerProps: PrestigePickerProps) =>
-    <Row>
+const PrestigePicker = (prestigePickerProps: PrestigePickerProps) => {
+    return (
+        <Row>
         <Col span={19}>
             { prestigePickerProps.label }
         </Col>
@@ -63,8 +65,10 @@ const PrestigePicker = (prestigePickerProps: PrestigePickerProps) =>
         <Col span={4}>
             <Form.Item>
                 <Select 
-                    defaultValue={0}
-                    onChange = { (newValue) => prestigePickerProps.onUpdate(newValue)}
+                    defaultValue={prestigePickerProps.level}
+                    onChange = { (newValue) => {
+                        prestigePickerProps.onUpdate(newValue)
+                    }}
                 >
                 {
                     prestige.map((level, index) => 
@@ -76,7 +80,9 @@ const PrestigePicker = (prestigePickerProps: PrestigePickerProps) =>
                 </Select>
             </Form.Item>
         </Col>
-    </Row>
+        </Row>
+    )
+}
 
 function ItemPicker(itemPickerProps: ItemPickerProps) {
     const [itemKind, setItemKind] = useState(itemPickerProps.defaultItem ? itemPickerProps.defaultItem.kind : ItemKind.NONE)
@@ -154,6 +160,7 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
             />
             <PrestigePicker 
                 label="HP Prestige Level"
+                level={(actor.maxHP - 100) / 5}
                 key={`${actor.name}hppr`}
                 onUpdate={(hppr) => {
                     const updatedHealth = 100 + hppr * 5
@@ -165,6 +172,7 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
             <PrestigePicker 
                 key={`${actor.name}speedpr`}
                 label="Speed Prestige Level"
+                level={actor.speed - 10}
                 onUpdate={(speedpr) => {
                     actor.speed = 10 + speedpr
                     playerCardProps.onUpdate(actor)
@@ -172,6 +180,7 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
             />
             <PrestigePicker 
                 key={`${actor.name}attackpr`}
+                level={actor.attackMax - 10}
                 label="Attack Prestige Level"
                 onUpdate={(attackpr) => {
                     actor.attackMin = 1 + attackpr
