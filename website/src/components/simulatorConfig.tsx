@@ -57,8 +57,8 @@ const defaultSimulatorInputData: SimulatorInputData = {
 
 function runTrials(options: SimulatorInputData): SimulationResult {
     const simulator = new DungeonSimulator({
-        displayCombatEvents: true,
-        displayPartyStates: true,
+        displayCombatEvents: false,
+        displayPartyStates: false,
         pityScaling: speed => speed + 1
     })
 

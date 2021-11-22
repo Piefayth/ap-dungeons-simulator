@@ -21,6 +21,7 @@ import { MartyrArmor } from "./martyrArmor"
 import { PetImp } from "./petImp"
 import { PoisonDagger } from "./poisonDagger"
 import { RockCompanion } from "./rockCompanion"
+import { RoughSkin } from "./roughSkin"
 import { SeekingMissiles } from "./seekingMissiles"
 import { SurvivalKit } from "./survivalKit"
 import { Thorns } from "./thorns"
@@ -48,6 +49,7 @@ const itemKindMap = {
     [ItemKind.MARTYR_ARMOR]: MartyrArmor,
     [ItemKind.PET_IMP]: PetImp,
     [ItemKind.POISON_DAGGER]: PoisonDagger,
+    [ItemKind.ROUGH_SKIN]: RoughSkin,
     [ItemKind.ROCK_COMPANION]: RockCompanion,
     [ItemKind.SEEKING_MISSILES]: SeekingMissiles,
     [ItemKind.SURVIVAL_KIT]: SurvivalKit,

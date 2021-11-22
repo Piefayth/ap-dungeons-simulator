@@ -9,12 +9,14 @@ class DamageDealtEvent extends Event {
     damageDealt: number
     targetPartyIndex: number
     targetIndex: number
+    attackerIndex?: number
 
-    constructor(damageDealt: number, targetPartyIndex: number, targetIndex: number, triggeredBy: Event) {
+    constructor(damageDealt: number, targetPartyIndex: number, targetIndex: number, triggeredBy: Event, attackerIndex?: number, ) {
         super(EventKind.DAMAGE_DEALT)
         this.damageDealt = damageDealt
         this.targetPartyIndex = targetPartyIndex
         this.targetIndex = targetIndex
+        this.attackerIndex = attackerIndex
     }
 
     processDamageDealt(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {

@@ -61,7 +61,7 @@ export class Avalanche extends Item {
 
             let avalancheSpeedReduction = getRandomInt(avalancheMinSpeed, avalancheMaxSpeed + 1)
 
-            const damageDealtEvent = new DamageDealtEvent(avalancheDamage, defenderPartyIndex, possibleAvalancheTarget, event)
+            const damageDealtEvent = new DamageDealtEvent(avalancheDamage, defenderPartyIndex, possibleAvalancheTarget, event, event.turnActorIndex)
 
             avalancheEvents.unshift(damageDealtEvent)
 

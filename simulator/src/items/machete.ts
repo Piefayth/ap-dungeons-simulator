@@ -36,7 +36,7 @@ export class Machete extends Item {
         const macheteMaxDamage = this.tier * 4
     
         const macheteSwingDamage = getRandomInt(macheteMinDamage, macheteMaxDamage + 1)
-        const damageDealtEvent = new DamageDealtEvent(macheteSwingDamage, defenderPartyIndex, defenderIndex, triggeredBy)
+        const damageDealtEvent = new DamageDealtEvent(macheteSwingDamage, defenderPartyIndex, defenderIndex, triggeredBy, triggeredBy.attackerIndex)
     
         macheteEvents.push(damageDealtEvent)
 

@@ -11,6 +11,7 @@ import { LoveLetter } from "../items/loveLetter";
 import { Machete } from "../items/machete";
 import { MagicParasol } from "../items/magicParasol";
 import { PoisonDagger } from "../items/poisonDagger";
+import { RoughSkin } from "../items/roughSkin";
 import { SeekingMissiles } from "../items/seekingMissiles";
 import { SurvivalKit } from "../items/survivalKit";
 import { Thorns } from "../items/thorns";
@@ -62,7 +63,7 @@ export const dungeon9: Dungeon = {
     }, {
         enemies: [{
             name: "Tahm Kench",
-            items: [new HealingPendant(5), new MagicParasol(6)],    // TODO: Add Rough Skin 5
+            items: [new HealingPendant(5), new MagicParasol(6), new RoughSkin(5)],
             auras: [],
             maxHP: 200,
             curHP: 200,
@@ -72,7 +73,7 @@ export const dungeon9: Dungeon = {
             attackMax: 150
         }, {
             name: "Braum",
-            items: [new MagicParasol(4), new SurvivalKit(8)],   // TODO: Add Rough Skin 5
+            items: [new MagicParasol(4), new SurvivalKit(8), new RoughSkin(5)],
             auras: [],
             maxHP: 300,
             curHP: 300,

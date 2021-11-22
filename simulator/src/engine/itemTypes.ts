@@ -25,6 +25,7 @@ export enum ItemKind {
     PET_IMP = 'Pet Imp',
     POISON_DAGGER = 'Poison Dagger',
     ROCK_COMPANION = 'Rock Companion',
+    ROUGH_SKIN = 'Rough Skin',
     SEEKING_MISSILES = 'Seeking Missiles',
     SURVIVAL_KIT = 'Survival Kit',
     THORNS = 'Thorns',

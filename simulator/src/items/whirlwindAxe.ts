@@ -38,7 +38,7 @@ export class WhirlwindAxe extends Item {
             if (i === triggeredBy.defenderIndex) return actor
 
             const axeDamage = damageDealt
-            const damageDealtEvent = new DamageDealtEvent(axeDamage, triggeredBy.defenderPartyIndex, i, triggeredBy)
+            const damageDealtEvent = new DamageDealtEvent(axeDamage, triggeredBy.defenderPartyIndex, i, triggeredBy, triggeredBy.attackerIndex)
             axeEvents.push(damageDealtEvent)
 
             ctx.logCombatMessage(`${parties[triggeredBy.defenderPartyIndex][i].name} is hit, taking ${axeDamage} damage`)

@@ -27,6 +27,7 @@ import { MartyrArmor } from './items/martyrArmor'
 import { PetImp } from './items/petImp'
 import { PoisonDagger } from './items/poisonDagger'
 import { RockCompanion } from './items/rockCompanion'
+import { RoughSkin } from './items/roughSkin'
 import { SeekingMissiles } from './items/seekingMissiles'
 import { SurvivalKit } from './items/survivalKit'
 import { Thorns } from './items/thorns'
@@ -45,7 +46,7 @@ const testParty: Actor[] = [{
     attackMax: 12
 }, {
     name: "zoop",
-    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(8)],
+    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new RoughSkin(8)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -53,17 +54,7 @@ const testParty: Actor[] = [{
     speed: 12,
     attackMin: 3,
     attackMax: 12
-}, {
-    name: "neonus",
-    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(8)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
+}/*, {
     name: "debuffer",
     items: [new Avalanche(8), new Freezeman(8), new Thorns(8), new LoveLetter(8)],
     auras: [],
@@ -83,13 +74,13 @@ const testParty: Actor[] = [{
     speed: 12,
     attackMin: 3,
     attackMax: 12
-}]
+}*/]
 
 if (require.main === module && typeof window == "undefined") {
     const simulator = new DungeonSimulator({
-        displayCombatEvents: false,
+        displayCombatEvents: true,
         displayPartyStates: false,
         pityScaling: (speed) => speed + 1
     })
-    simulator.simulate(100, testParty, dungeon9)
+    simulator.simulate(1, testParty, dungeon8)
 }

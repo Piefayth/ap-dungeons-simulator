@@ -44,7 +44,7 @@ export class ExplosionPowder extends Item {
                 powderDamage *= 2
             }
 
-            const damageDealtEvent = new DamageDealtEvent(powderDamage, defenderPartyIndex, i, event)
+            const damageDealtEvent = new DamageDealtEvent(powderDamage, defenderPartyIndex, i, event, event.turnActorIndex)
             powderEvents.push(damageDealtEvent)
 
             ctx.logCombatMessage(`${newPartyStates[defenderPartyIndex][i].name} takes ${powderDamage} damage from the sheer force of the massive explosion.`)

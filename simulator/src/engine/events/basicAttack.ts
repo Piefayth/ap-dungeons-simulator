@@ -60,7 +60,7 @@ class BasicAttackEvent extends CombatEvent {
             newPartyStates[this.attackerPartyIndex][this.attackerIndex] = attacker
         }
 
-        const damageDealtEvent = new DamageDealtEvent(totalDamage, this.defenderPartyIndex, this.defenderIndex, this)
+        const damageDealtEvent = new DamageDealtEvent(totalDamage, this.defenderPartyIndex, this.defenderIndex, this, this.attackerIndex)
     
         resultEvents.unshift(damageDealtEvent)
         resultEvents.unshift(new AfterAttackEvent(this))

@@ -44,6 +44,9 @@ export class DungeonContext {
     }
 
     logCombatMessage(message: string) {
+        if (this.settings.displayCombatEvents) {
+            console.log(message)
+        }
         this.simulationResult.results[this.currentTrial].turnOutput[this.currentTurn].push(message)
     }
 

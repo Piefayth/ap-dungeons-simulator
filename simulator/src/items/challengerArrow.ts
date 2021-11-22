@@ -36,7 +36,7 @@ export class ChallengerArrow extends Item {
         const arrowTarget = getRandomLivingActor(newPartyStates, defenderPartyIndex)
 
         let arrowEvents: Event[] = []
-        const damageDealtEvent = new DamageDealtEvent(arrowDamage, defenderPartyIndex, arrowTarget, event)
+        const damageDealtEvent = new DamageDealtEvent(arrowDamage, defenderPartyIndex, arrowTarget, event, event.turnActorIndex)
         arrowEvents.push(damageDealtEvent)
 
         attacker.attackMin += arrowAttack
