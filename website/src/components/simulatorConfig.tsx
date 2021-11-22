@@ -10,6 +10,7 @@ import { DungeonSimulator, SimulationResult } from '../../../simulator/src/simul
 import { dungeon8 } from '../../../simulator/src/dungeons/dungeon8'
 import { dungeon9 } from '../../../simulator/src/dungeons/dungeon9'
 import { dungeon10 } from '../../../simulator/src/dungeons/dungeon10'
+import cloneDeep from 'lodash/cloneDeep'
 
 const demoParty: Actor[] = [{
     name: "zoop",
@@ -73,18 +74,13 @@ function runTrials(options: SimulatorInputData): SimulationResult {
 
 export default function simulatorConfig() {
     const navigate = useNavigate()
-    const [simData, setSimData] = useState({
-        ...defaultSimulatorInputData,
-        party: defaultSimulatorInputData.party.map(actor => {
-            return { ...actor }
-        })
-    })
+    const [simData, setSimData] = useState(cloneDeep(defaultSimulatorInputData))
     
     const addTeammateButton =
         <Form.Item>
             <Button onClick={() => {
                 let newSimData = { ...simData }
-                newSimData.party = [...newSimData.party, { ...demoParty[1] }]
+                newSimData.party = cloneDeep([...newSimData.party, demoParty[1] ])
                 setSimData(newSimData)
             }}>
                 Add Teammate
@@ -135,6 +131,7 @@ export default function simulatorConfig() {
                 onUpdate={(party) => {
                     let newSimData = { ...simData }
                     newSimData.party = party
+                    console.log(party)
                     setSimData(newSimData)
                 }}
             />

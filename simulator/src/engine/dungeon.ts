@@ -297,7 +297,6 @@ function determineTurn(party0: Actor[], party1: Actor[]): DetermineTurnResult {
             }
         }
     }
-
 }
 
 export {

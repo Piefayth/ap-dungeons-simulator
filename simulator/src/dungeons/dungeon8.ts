@@ -36,7 +36,7 @@ export const dungeon8: Dungeon = {
             maxHP: 200,
             curHP: 200,
             energy: 999,
-            speed: 10,
+            speed: 20,
             attackMin: 10,
             attackMax: 25
         }]
@@ -85,7 +85,7 @@ export const dungeon8: Dungeon = {
     }, {
         enemies: [{
             name: "Super Monkey",
-            items: [new SeekingMissiles(2)],
+            items: [new SeekingMissiles(5)],
             auras: [],
             maxHP: 375,
             curHP: 375,

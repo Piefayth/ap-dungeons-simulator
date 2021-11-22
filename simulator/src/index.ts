@@ -76,11 +76,53 @@ const testParty: Actor[] = [{
     attackMax: 12
 }*/]
 
+const testParty2: Actor[] = [{
+    name: "maurixxo",
+    items: [new FireSword(8), new BigClub(8), new Freezeman(8), new ChallengerArrow(8)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "zoop",
+    items: [new Avalanche(8), new Thorns(8), new Freezeman(8), new DrainingDagger(8)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "maurixxo 2",
+    items: [new Avalanche(8), new CleansingFlames(8), new Freezeman(8), new LoveLetter(8)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "maurixxo 3",
+    items: [new Avalanche(8), new CleansingFlames(8), new Freezeman(8), new LoveLetter(8)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13
+}]
+
 if (require.main === module && typeof window == "undefined") {
     const simulator = new DungeonSimulator({
         displayCombatEvents: false,
         displayPartyStates: false,
-        pityScaling: (speed) => speed + 1
+        pityScaling: (speed) => speed + 0
     })
     simulator.simulate(100, testParty, dungeon8)
 }

@@ -14,6 +14,7 @@ export function PartySelection(props: PartySelectionProps) {
                 <PlayerCard 
                     key={`playerCard${Math.random() * 1000}`}
                     actor={actor} 
+                    index={index}
                     onUpdate={(updatedActor) => {
                         let updatedParty = [...props.party]
                         updatedParty[index] = updatedActor

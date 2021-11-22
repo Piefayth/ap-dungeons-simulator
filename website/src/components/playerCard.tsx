@@ -8,7 +8,8 @@ import { CloseOutlined } from '@ant-design/icons'
 
 type PlayerCardProps = {
     onUpdate: (actor: Actor) => void,
-    actor: Actor
+    actor: Actor,
+    index: number,
 }
 
 type PrestigePickerProps = {
@@ -95,6 +96,7 @@ function ItemPicker(itemPickerProps: ItemPickerProps) {
                     <Select 
                         defaultValue={itemPickerProps.defaultItem ? itemPickerProps.defaultItem.kind : ItemKind.NONE}
                         onChange={(newKind) => {
+                            console.log(newKind)
                             setItemKind(newKind)
                             itemPickerProps.onUpdate(newKind, tier)
                         }}
@@ -189,7 +191,7 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
                 }}
             />
             <ItemPicker 
-                key={`${actor.name}item1`} 
+                key={`${actor.name}${playerCardProps.index}item1`} 
                 defaultItem={ playerCardProps.actor.items[0] }
                 onUpdate={(kind, tier) => {
                     if (ItemKind[kind] === ItemKind.NONE) {
@@ -204,7 +206,7 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
                 }}
             />
             <ItemPicker 
-                key={`${actor.name}item2`} 
+                key={`${actor.name}${playerCardProps.index}item2`} 
                 defaultItem={ playerCardProps.actor.items[1] }
                 onUpdate={(kind, tier) => {
                     if (ItemKind[kind] === ItemKind.NONE) {
@@ -219,7 +221,7 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
                 }}
             />
             <ItemPicker 
-                key={`${actor.name}item3`} 
+                key={`${actor.name}${playerCardProps.index}item3`} 
                 defaultItem={ playerCardProps.actor.items[2] }
                 onUpdate={(kind, tier) => {
                     if (ItemKind[kind] === ItemKind.NONE) {
@@ -234,7 +236,7 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
                 }}
             />
             <ItemPicker 
-                key={`${actor.name}item4`} 
+                key={`${actor.name}${playerCardProps.index}item4`} 
                 defaultItem={ playerCardProps.actor.items[3] }
                 onUpdate={(kind, tier) => {
                     if (ItemKind[kind] === ItemKind.NONE) {
