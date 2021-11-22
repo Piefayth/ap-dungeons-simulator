@@ -74,12 +74,17 @@ function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): Du
         parties = simulateFloor(ctx, parties)
         
         if (whichPartyDied(parties) === 0) {
+            ctx.logPartyStates(parties)
+            ctx.endTurn()
             return {
                 won: false,
                 turnsTaken: turnCounter
             }
         }
     }
+    
+    ctx.logPartyStates(parties)
+    ctx.endTurn()
     
     return {
         won: true,
@@ -99,7 +104,7 @@ function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
         return parties
     }
 
-    ctx.logPartyStates(parties)
+    ctx.logPartyStates(newPartyState)
     ctx.endTurn()
 
     return simulateFloor(ctx, newPartyState)

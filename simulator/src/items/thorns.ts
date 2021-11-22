@@ -40,14 +40,15 @@ export class Thorns extends Item {
             const roll = getRandomInt(0, 100)
             if (roll < 25 && energyGained === 0) {
                 energyGained = 1 * this.tier
-                attacker.energy += energyGained
-                newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
             }
 
             return defender
         })
 
         if (energyGained > 0) {
+            attacker.energy += energyGained
+            newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+            
             ctx.logCombatMessage(`${attacker.name}'s thorns gives them ${energyGained} energy.`)
         }
         

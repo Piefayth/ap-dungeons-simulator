@@ -3,7 +3,8 @@ import { Item } from '../../../simulator/src/engine/item'
 import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 import * as Items from '../../../simulator/src/items'
 import React, { useState } from 'react'
-import { Card, Form, Input, Select, Row, Col } from 'antd'
+import { Card, Form, Input, Select, Row, Col, Button } from 'antd'
+import { CloseOutlined } from '@ant-design/icons'
 
 type PlayerCardProps = {
     onUpdate: (actor: Actor) => void,
@@ -12,7 +13,6 @@ type PlayerCardProps = {
 
 type PrestigePickerProps = {
     label: string
-    name: string
     onUpdate: (tier: number) => void
 }
 
@@ -45,7 +45,7 @@ const NamePicker = (namePickerProps: NamePickerProps) =>
             <Form.Item>
                 <Input 
                     defaultValue = { namePickerProps.defaultName }
-                    onChange = { newValue => namePickerProps.onUpdate(newValue.target.value) }
+                    onBlur = { newValue => namePickerProps.onUpdate(newValue.target.value) }
                 />
             </Form.Item>
         </Col>
@@ -61,7 +61,7 @@ const PrestigePicker = (prestigePickerProps: PrestigePickerProps) =>
         <Col span={1}></Col>
 
         <Col span={4}>
-            <Form.Item name={prestigePickerProps.name}>
+            <Form.Item>
                 <Select 
                     defaultValue={0}
                     onChange = { (newValue) => prestigePickerProps.onUpdate(newValue)}
@@ -134,6 +134,17 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
 
     return (
         <Card style={{ width: '400px', marginRight: 20, marginTop: 20}}>
+            <Row>
+                <Col span={20} />
+                <Col span={4}>
+                    <Button  danger style={{ float:'right', marginBottom: 20}} onClick={() => {
+                        playerCardProps.onUpdate(undefined)
+                    }}>
+                        <CloseOutlined />
+                    </Button>
+                </Col>
+            </Row>
+
             <NamePicker 
                 defaultName={ playerCardProps.actor.name }
                 onUpdate={(updatedName) => {
@@ -142,7 +153,6 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
                 }}
             />
             <PrestigePicker 
-                name="hppr" 
                 label="HP Prestige Level"
                 key={`${actor.name}hppr`}
                 onUpdate={(hppr) => {
@@ -153,7 +163,6 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
                 }}
             />
             <PrestigePicker 
-                name="speedpr" 
                 key={`${actor.name}speedpr`}
                 label="Speed Prestige Level"
                 onUpdate={(speedpr) => {
@@ -162,7 +171,6 @@ export function PlayerCard(playerCardProps: PlayerCardProps) {
                 }}
             />
             <PrestigePicker 
-                name="attackpr"
                 key={`${actor.name}attackpr`}
                 label="Attack Prestige Level"
                 onUpdate={(attackpr) => {

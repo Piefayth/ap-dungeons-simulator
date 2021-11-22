@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from "@reach/router"
 import { Form, Button, Row, Col } from 'antd'
-import { PartySelection } from './partySelection'
+import { PlusOutlined } from '@ant-design/icons'
 import * as Items from '../../../simulator/src/items'
 import { Actor } from "../../../simulator/src/engine/actor"
 import { DungeonSelection } from './dungeonSelection'
+import { PartySelection } from './partySelection'
 import { DungeonSimulator, SimulationResult } from '../../../simulator/src/simulator'
 import { dungeon8 } from '../../../simulator/src/dungeons/dungeon8'
 import { dungeon9 } from '../../../simulator/src/dungeons/dungeon9'
@@ -62,7 +63,23 @@ function runTrials(options: SimulatorInputData): SimulationResult {
 
 export default function simulatorConfig() {
     const navigate = useNavigate()
-    const [simData, setSimData] = useState(defaultSimulatorInputData)
+    const [simData, setSimData] = useState({
+        ...defaultSimulatorInputData,
+        party: defaultSimulatorInputData.party.map(actor => {
+            return { ...actor }
+        })
+    })
+    
+    const addTeammateButton =
+        <Form.Item>
+            <Button onClick={() => {
+                let newSimData = { ...simData }
+                newSimData.party = [...newSimData.party, { ...demoParty[1] }]
+                setSimData(newSimData)
+            }}>
+                Add Teammate
+            </Button>
+        </Form.Item>
 
     return (
         <Form
@@ -82,14 +99,19 @@ export default function simulatorConfig() {
             />
             
             <Row style={{ width:300, margin: '0 auto'}}>
-                <Col span={19}>
+                <Col span={12}>
+                    { simData.party.length < 5 ? addTeammateButton : null }
+                </Col>
+
+                <Col span={7}>
                 </Col>
 
                 <Col span={4}>
                     <Form.Item>
                         <Button type="primary" onClick={() => {
+                            const sanitizedSimData = sanitizeSimData(simData)
                             navigate('./simulator', {
-                                state: runTrials(simData)
+                                state: runTrials(sanitizedSimData)
                             })
                         }}>
                             Simulate
@@ -99,8 +121,9 @@ export default function simulatorConfig() {
             </Row>
 
             <PartySelection 
-                defaultParty={demoParty}
+                party={simData.party}
                 onUpdate={(party) => {
+                    console.log(party.length)
                     let newSimData = { ...simData }
                     newSimData.party = party
                     setSimData(newSimData)
@@ -108,4 +131,16 @@ export default function simulatorConfig() {
             />
         </Form>
     )
+}
+
+function sanitizeSimData(simData: SimulatorInputData): SimulatorInputData {
+    return {
+        ...simData,
+        party: simData.party
+            .filter(actor => actor ? true: false)
+            .map(actor => {
+                actor.items = actor.items.filter(item => item ? true : false)
+                return actor
+            })
+    }
 }

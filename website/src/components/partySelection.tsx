@@ -3,23 +3,22 @@ import React, { useState } from 'react'
 import { PlayerCard } from './playerCard'
 
 type PartySelectionProps = {
-    defaultParty: Actor[]
+    party: Actor[]
     onUpdate: (party: Actor[]) => void
 }
 
 export function PartySelection(props: PartySelectionProps) {
-    const [party, setParty] = useState(props.defaultParty)
-    
     return (
         <div style={{display: 'flex', flexFlow: 'wrap'}}>
-            { party.map((actor, index) => 
+            { props.party.map((actor, index) => 
                 <PlayerCard 
-                    key={`playerCard${index}`}
+                    key={`playerCard${Math.random() * 1000}`}
                     actor={actor} 
                     onUpdate={(updatedActor) => {
-                        const updatedParty = [...party]
+                        let updatedParty = [...props.party]
                         updatedParty[index] = updatedActor
-                        setParty([...updatedParty])
+                        updatedParty = updatedParty.filter(actor => actor)
+                        props.onUpdate(updatedParty)
                     }} 
                 />
             ) }

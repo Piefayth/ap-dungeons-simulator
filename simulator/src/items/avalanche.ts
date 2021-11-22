@@ -59,17 +59,14 @@ export class Avalanche extends Item {
             let avalancheMinSpeed = 0
             let avalancheMaxSpeed = 1 * this.tier
 
-            let avalancheSpeed = Math.min(
-                newPartyStates[defenderPartyIndex][possibleAvalancheTarget].speed  - 1, 
-                getRandomInt(avalancheMinSpeed, avalancheMaxSpeed + 1)
-            )
+            let avalancheSpeedReduction = getRandomInt(avalancheMinSpeed, avalancheMaxSpeed + 1)
 
             const damageDealtEvent = new DamageDealtEvent(avalancheDamage, defenderPartyIndex, possibleAvalancheTarget, event)
 
             avalancheEvents.unshift(damageDealtEvent)
 
             let defender = newPartyStates[defenderPartyIndex][possibleAvalancheTarget]
-            defender.speed -= avalancheSpeed
+            defender.speed = Math.max(1, defender.speed - avalancheSpeedReduction)
             newPartyStates[defenderPartyIndex][possibleAvalancheTarget] = defender
 
             if ((defender.curHP - avalancheDamage) <= 0) {
@@ -78,7 +75,7 @@ export class Avalanche extends Item {
 
             const displayString = `${
                 newPartyStates[defenderPartyIndex][possibleAvalancheTarget].name
-            } takes ${avalancheDamage} damage${avalancheSpeed ? ", losing " + avalancheSpeed + " speed!" : "!"}`
+            } takes ${avalancheDamage} damage${avalancheSpeedReduction ? ", losing " + avalancheSpeedReduction + " speed!" : "!"}`
             ctx.logCombatMessage(displayString)
         }
 
