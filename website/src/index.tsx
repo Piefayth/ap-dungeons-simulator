@@ -1,4 +1,4 @@
-import { DungeonSimulator } from "../../simulator/src"
+import { DungeonSimulator } from "../../simulator/src/simulator"
 import { dungeon8 } from "../../simulator/src/dungeons/dungeon8"
 import { Actor } from "../../simulator/src/engine/actor"
 import { Avalanche } from '../../simulator/src/items/avalanche'
@@ -27,70 +27,18 @@ import { SeekingMissiles } from '../../simulator/src/items/seekingMissiles'
 import { SurvivalKit } from '../../simulator/src/items/survivalKit'
 import { Thorns } from '../../simulator/src/items/thorns'
 import { WhirlwindAxe } from '../../simulator/src/items/whirlwindAxe'
+import SimulatorConfig from './components/simulatorConfig'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { Router } from '@reach/router'
+import 'antd/dist/antd.less'
+import { SimulationView } from "./components/simulationView"
 
-function component() {
-    const element = document.createElement('div')
-
-    element.innerHTML = 'hello world'
-
-    return element
-}
-
-document.body.appendChild(component())
-
-const testParty: Actor[] = [{
-    name: "maurixxo",
-    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(8)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "zoop",
-    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(8)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "neonus",
-    items: [new Avalanche(8), new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(8)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "debuffer",
-    items: [new Avalanche(8), new Freezeman(8), new Thorns(8), new LoveLetter(8)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "anotherguy",
-    items: [new Avalanche(8), new Freezeman(8), new Thorns(8), new LoveLetter(8)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}]
-
-
-
-const simulator = new DungeonSimulator()
-simulator.simulate(1, testParty, dungeon8)
+const element = document.createElement('div')
+document.body.appendChild(element)
+ReactDOM.render(
+  <Router>
+    <SimulatorConfig path="/" />
+    <SimulationView path="/simulator" />
+  </Router>, 
+element);

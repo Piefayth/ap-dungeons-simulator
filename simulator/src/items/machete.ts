@@ -3,7 +3,8 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 import { getRandomLivingActor, numLivingPartyMembers } from "../util/actor"
 import { getRandomInt } from "../util/math"
 
@@ -15,7 +16,7 @@ export class Machete extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTargetFinalized(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
+    handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
         const defenderPartyIndex = triggeredBy.attackerPartyIndex === 0 ? 1 : 0
         const macheteEvents: Event[] = []
     
@@ -39,7 +40,7 @@ export class Machete extends Item {
     
         macheteEvents.push(damageDealtEvent)
 
-        combatMessage(`${
+        ctx.logCombatMessage(`${
             parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
         } slices and dices with their machete. ${
             parties[defenderPartyIndex][defenderIndex].name

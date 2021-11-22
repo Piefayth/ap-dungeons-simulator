@@ -6,8 +6,9 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
 import { getRandomLivingActor } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class BoostingBugle extends Item {
     constructor(tier: number) {
@@ -17,7 +18,7 @@ export class BoostingBugle extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
 
@@ -31,7 +32,7 @@ export class BoostingBugle extends Item {
         attacker.energy -= this.energyCost
         newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
-        combatMessage(`${attacker.name} plays an encouraging fanfare!`)
+        ctx.logCombatMessage(`${attacker.name} plays an encouraging fanfare!`)
 
         const possibleTargets = newPartyStates[event.turnActorPartyIndex]
             .filter((actor, i) => !actor.isSummoned && !actor.dead && i != event.turnActorIndex)
@@ -62,7 +63,7 @@ export class BoostingBugle extends Item {
 
             newPartyStates[event.turnActorPartyIndex][targetIndex] = target
 
-            combatMessage(`${target.name} gains ${healingReceived} HP and ${attackReceived} attack.`)
+            ctx.logCombatMessage(`${target.name} gains ${healingReceived} HP and ${attackReceived} attack.`)
         }
 
         return {

@@ -5,7 +5,8 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { AuraKind } from "../engine/aura"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class BigClub extends Item {
     constructor(tier: number) {
@@ -15,7 +16,7 @@ export class BigClub extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTargetFinalized(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
+    handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
     
@@ -30,7 +31,7 @@ export class BigClub extends Item {
         
             newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
         
-            combatMessage(`${
+            ctx.logCombatMessage(`${
                 newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
             } hits ${
                 newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex].name

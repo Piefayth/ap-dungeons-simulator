@@ -8,8 +8,9 @@ import { ChickenHealing } from "./chickenHealing"
 import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
-import { combatMessage } from "../log"
+
 import { getSummonedActorName } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class ChumbyChicken extends Item {
     constructor(tier: number) {
@@ -19,7 +20,7 @@ export class ChumbyChicken extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], triggeredBy: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], triggeredBy: StartTurnEvent): ProcessedEventResult {
         const newPartyStates = cloneDeep(parties)
         const chumbyChickenEvents = []
         const attacker = newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
@@ -43,7 +44,7 @@ export class ChumbyChicken extends Item {
             }, triggeredBy.turnActorPartyIndex)
 
             chumbyChickenEvents.push(chumbyChickenEvent)
-            combatMessage(`${attacker.name} summons a Celine's Chumby Chicken.`)
+            ctx.logCombatMessage(`${attacker.name} summons a Celine's Chumby Chicken.`)
         
             newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex].auras.push({
                 kind: AuraKind.CHICKEN_EXHAUSTION,
@@ -57,7 +58,7 @@ export class ChumbyChicken extends Item {
         }
     }
 
-    handleNewFloor(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult {
+    handleNewFloor(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
 
         newPartyStates[ownerPartyIndex][ownerIndex].auras = newPartyStates[ownerPartyIndex][ownerIndex].auras

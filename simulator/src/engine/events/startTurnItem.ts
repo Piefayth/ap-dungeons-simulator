@@ -3,6 +3,7 @@ import { Event, EventKind, ProcessedEventResult } from "../events"
 import cloneDeep from 'lodash/cloneDeep'
 import { StartTurnEvent } from "./startTurn"
 import { Item } from "../item"
+import { DungeonContext } from "../../simulator"
 
 export class StartTurnItemEvent extends Event {
     item: Item
@@ -14,11 +15,11 @@ export class StartTurnItemEvent extends Event {
         this.triggeredBy = triggeredBy
     }
 
-    processStartTurnItem(parties: Actor[][]): ProcessedEventResult {
+    processStartTurnItem(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let startTurnItemEvents: Event[] = []
 
-        const result = this.item.handleOnTurnStart(newPartyStates, this.triggeredBy)
+        const result = this.item.handleOnTurnStart(ctx, newPartyStates, this.triggeredBy)
         newPartyStates = result.newPartyStates
         startTurnItemEvents = startTurnItemEvents.concat(result.newEvents)
 

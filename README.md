@@ -10,7 +10,8 @@ node > 14
 ```
 git clone <this repo>
 npm install
-npm run simulate
+cli - npm run simulate
+web - npm start
 ```
 
 ## Change Stuff

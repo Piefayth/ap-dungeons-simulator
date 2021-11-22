@@ -4,7 +4,8 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class FireSword extends Item {
     constructor(tier: number) {
@@ -14,7 +15,7 @@ export class FireSword extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnAfterAttack(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
+    handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
 
@@ -29,7 +30,7 @@ export class FireSword extends Item {
         if (attackGained > 0) {
             attacker.attackMin += attackGained
             attacker.attackMax += attackGained
-            combatMessage(`${attacker.name}'s fire sword is getting them all fired up! They gain ${attackGained} attack.`)
+            ctx.logCombatMessage(`${attacker.name}'s fire sword is getting them all fired up! They gain ${attackGained} attack.`)
         }
         
 

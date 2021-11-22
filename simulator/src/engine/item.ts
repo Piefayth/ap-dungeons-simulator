@@ -1,3 +1,4 @@
+import { DungeonContext } from "../simulator"
 import { getRandomInt } from "../util/math"
 import { Actor } from "./actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "./events"
@@ -21,77 +22,77 @@ abstract class _Item {
         this.energyCost = energyCost
     }
 
-    abstract handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult
-    abstract handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult
-    abstract handleOnDeath(parties: Actor[][], triggeredBy: Event): ProcessedEventResult
-    abstract handleNewFloor(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult
-    abstract handleBeforeAttackerTargetFinalized(parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent
-    abstract handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent
-    abstract handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult
-    abstract handleOnBasicAttack(parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult
-    abstract handleOnAfterAttack(parties: Actor[][], triggeredBy: Event): ProcessedEventResult
-    abstract handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult
+    abstract handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult
+    abstract handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult
+    abstract handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult
+    abstract handleNewFloor(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult
+    abstract handleBeforeAttackerTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent
+    abstract handleBeforeDefenderTargetFinalized(ctx: DungeonContext, parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent
+    abstract handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult
+    abstract handleOnBasicAttack(ctx: DungeonContext, parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult
+    abstract handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult
+    abstract handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult
 }
 
 export class Item extends _Item {
-    handleOnBasicAttack(parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult {
+    handleOnBasicAttack(ctx: DungeonContext, parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []
         }
     }
 
-    handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
+    handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []
         }
     }
 
-    handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
+    handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []
         }
     }
 
-    handleBeforeAttackerTargetFinalized(parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
+    handleBeforeAttackerTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
         return null
     }
 
-    handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent {
+    handleBeforeDefenderTargetFinalized(ctx: DungeonContext, parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent {
         return null
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []
         }
     }
 
-    handleOnAfterAttack(parties: Actor[][], triggeredBy: Event): ProcessedEventResult {
+    handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []
         }
     }
 
-    handleOnDeath(parties: Actor[][], triggeredBy: Event): ProcessedEventResult {
+    handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []
         }
     }
 
-    handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
+    handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []
         }
     }
 
-    handleNewFloor(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number) : ProcessedEventResult {
+    handleNewFloor(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number) : ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []

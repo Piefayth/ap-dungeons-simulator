@@ -8,7 +8,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { StartTurnEvent } from "../engine/events/startTurn"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class HealingPendant extends Item {
     constructor(tier: number) {
@@ -18,7 +19,7 @@ export class HealingPendant extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
         const newEvents: Event[] = []
 
@@ -27,7 +28,7 @@ export class HealingPendant extends Item {
             const healingReceived = 5 * this.tier
             const pendantHealingEvent = new HealingReceivedEvent(healingReceived, event.turnActorPartyIndex, event.turnActorIndex, event)
             newEvents.push(pendantHealingEvent)
-            combatMessage(`The magic of ${attacker.name}'s healing pendant revitalizes them. ${attacker.name} restores ${healingReceived} HP.`)
+            ctx.logCombatMessage(`The magic of ${attacker.name}'s healing pendant revitalizes them. ${attacker.name} restores ${healingReceived} HP.`)
         }
 
         return {
@@ -36,7 +37,7 @@ export class HealingPendant extends Item {
         }
     }
 
-    handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, event: SelectTargetEvent): SelectTargetEvent {
+    handleBeforeDefenderTargetFinalized(ctx: DungeonContext, parties: Actor[][], itemHolderIndex: number, event: SelectTargetEvent): SelectTargetEvent {
         if (itemHolderIndex === event.defenderIndex) {
             return null
         }
@@ -49,7 +50,7 @@ export class HealingPendant extends Item {
             let newDefender = parties[event.defenderPartyIndex][itemHolderIndex]
 
             if (newDefender.curHP < originalDefender.curHP) {
-                combatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
+                ctx.logCombatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
 
                 return new SelectTargetEvent(
                     event.attackerPartyIndex,
@@ -58,7 +59,7 @@ export class HealingPendant extends Item {
                 )
             }
 
-            combatMessage(`${attacker.name} targets ${originalDefender.name} but ${
+            ctx.logCombatMessage(`${attacker.name} targets ${originalDefender.name} but ${
                 newDefender.name} jumps in front of the attack and saves them.`)
 
             return new SelectTargetEvent(

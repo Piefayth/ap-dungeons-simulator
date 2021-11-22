@@ -3,8 +3,8 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import { getRandomInt } from "../../util/math"
 import { BasicAttackEvent } from "./basicAttack"
 import { AuraKind } from "../aura"
-import { combatMessage } from "../../log"
 import cloneDeep from 'lodash/cloneDeep'
+import { DungeonContext } from "../../simulator"
 
 class EndTurnEvent extends Event {
     turnActorPartyIndex: number
@@ -16,7 +16,7 @@ class EndTurnEvent extends Event {
         this.turnActorIndex = turnActorIndex
     }
 
-    processEndTurn(parties: Actor[][]): ProcessedEventResult {
+    processEndTurn(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let newEvents: Event[] = []
 
@@ -28,7 +28,7 @@ class EndTurnEvent extends Event {
                 newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].curHP = 
                     Math.max(0, newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].curHP - aura.stacks)
 
-                combatMessage(`${
+                ctx.logCombatMessage(`${
                     newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].name
                 } is suffering from poison! ${
                     newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].name

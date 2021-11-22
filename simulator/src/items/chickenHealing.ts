@@ -6,9 +6,10 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
 import { forAllLivingActors } from "../util/actor"
 import { DamageTakenEvent } from "../engine/events/damageTaken"
+import { DungeonContext } from "../simulator"
 
 export class ChickenHealing extends Item {
     constructor(tier: number) {
@@ -18,9 +19,9 @@ export class ChickenHealing extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDeath(parties: Actor[][], triggeredBy: DamageTakenEvent): ProcessedEventResult {
+    handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageTakenEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
-        combatMessage('The party drools at the sight of accidentally cooked Chumby Chicken.')
+        ctx.logCombatMessage('The party drools at the sight of accidentally cooked Chumby Chicken.')
     
         const newEvents: Event[] = []
         newPartyStates = forAllLivingActors(newPartyStates, triggeredBy.targetPartyIndex, (actor, i) => {
@@ -33,7 +34,7 @@ export class ChickenHealing extends Item {
             )
 
             newEvents.push(chickenHealingEvent)
-            combatMessage(`${actor.name} takes a bite, it was very juicy and delicious. ${actor.name} gains ${healingReceived} HP`)
+            ctx.logCombatMessage(`${actor.name} takes a bite, it was very juicy and delicious. ${actor.name} gains ${healingReceived} HP`)
 
             return actor
         })

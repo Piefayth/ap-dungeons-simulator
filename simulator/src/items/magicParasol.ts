@@ -7,7 +7,8 @@ import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class MagicParasol extends Item {
     constructor(tier: number) {
@@ -17,7 +18,7 @@ export class MagicParasol extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
+    handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
@@ -25,7 +26,7 @@ export class MagicParasol extends Item {
         const chance = 5 + (5 * this.tier)
         const roll = getRandomInt(0, 100)
         if (roll < chance) {
-            combatMessage(`${defender.name} uses their Magic Parasol to completely absorb the hit!`)
+            ctx.logCombatMessage(`${defender.name} uses their Magic Parasol to completely absorb the hit!`)
             triggeredBy.damageDealt = 0
         }
 
@@ -35,7 +36,7 @@ export class MagicParasol extends Item {
         }
     }
 
-    handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, event: SelectTargetEvent): SelectTargetEvent {
+    handleBeforeDefenderTargetFinalized(ctx: DungeonContext, parties: Actor[][], itemHolderIndex: number, event: SelectTargetEvent): SelectTargetEvent {
         if (itemHolderIndex === event.defenderIndex) {
             return null
         }
@@ -48,7 +49,7 @@ export class MagicParasol extends Item {
             let newDefender = parties[event.defenderPartyIndex][itemHolderIndex]
 
             if (newDefender.curHP < originalDefender.curHP) {
-                combatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
+                ctx.logCombatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
 
                 return new SelectTargetEvent(
                     event.attackerPartyIndex,
@@ -57,7 +58,7 @@ export class MagicParasol extends Item {
                 )
             }
 
-            combatMessage(`${attacker.name} targets ${originalDefender.name} but ${
+            ctx.logCombatMessage(`${attacker.name} targets ${originalDefender.name} but ${
                 newDefender.name} jumps in front of the attack and saves them.`)
 
             return new SelectTargetEvent(

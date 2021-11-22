@@ -6,8 +6,9 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
 import { forAllLivingActors } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class CleansingFlames extends Item {
     constructor(tier: number) {
@@ -17,19 +18,19 @@ export class CleansingFlames extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnAfterAttack(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
+    handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         const newEvents: Event[] = []
 
         let roll = getRandomInt(0, 2)
         if (roll > 0) {
-            combatMessage(`${attacker.name} douses their party in cleansing flames.`)
+            ctx.logCombatMessage(`${attacker.name} douses their party in cleansing flames.`)
             newPartyStates = forAllLivingActors(newPartyStates, triggeredBy.attackerPartyIndex, (actor, i) => {
                 const healingReceived = 1 * this.tier
                 const flamesHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.attackerPartyIndex, i, triggeredBy)
                 newEvents.push(flamesHealingEvent)
-                combatMessage(`${actor.name} gains ${healingReceived} HP.`)
+                ctx.logCombatMessage(`${actor.name} gains ${healingReceived} HP.`)
                 return actor
             })
         }

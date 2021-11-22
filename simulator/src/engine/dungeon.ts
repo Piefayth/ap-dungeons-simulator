@@ -18,9 +18,8 @@ import { TargetFinalizedEvent } from './events/targetFinalized'
 import { AfterAttackEvent } from './events/afterAttack'
 import { EndTurnEvent } from './events/endTurn'
 import { StartTurnItemEvent } from './events/startTurnItem'
-import { combatMessage } from '../log'
 import { DamageTakenEvent } from './events/damageTaken'
-import settings from '../settings'
+import { DungeonContext } from '../simulator'
 
 type Floor = {
     enemies: Actor[]
@@ -38,7 +37,7 @@ type DungeonResult = {
 
 let turnCounter = 0
 
-function startDungeon(dungeon: Dungeon, party: Actor[]): DungeonResult {
+function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): DungeonResult {
     let parties = cloneDeep([party, []])
     
     // TODO: Move dungeon start and floor start to events
@@ -47,7 +46,7 @@ function startDungeon(dungeon: Dungeon, party: Actor[]): DungeonResult {
     for (let i = 0; i < parties.length; i++) {
         for (let j = 0; j < parties[i].length; j++) {
             for (let k = 0; k < parties[i][j].items.length; k++) {
-                let result = parties[i][j].items[k].handleOnDungeonStart(parties, i, j)
+                let result = parties[i][j].items[k].handleOnDungeonStart(ctx, parties, i, j)
                 parties = result.newPartyStates
             }
         }
@@ -56,63 +55,54 @@ function startDungeon(dungeon: Dungeon, party: Actor[]): DungeonResult {
     turnCounter = 0
 
     for (let f = 0; f < dungeon.floors.length; f++) {
-        combatMessage(`Starting floor ${f}`)
+        ctx.logCombatMessage(`Starting floor ${f}`)
         parties[1] = cloneDeep(dungeon.floors[f].enemies)
         
         // handle new floor actions for items
         for (let i = 0; i < parties.length; i++) {
             for (let j = 0; j < parties[i].length; j++) {
                 for (let k = 0; k < parties[i][j].items.length; k++) {
-                    let result = parties[i][j].items[k].handleNewFloor(parties, i, j, f)
+                    let result = parties[i][j].items[k].handleNewFloor(ctx, parties, i, j, f)
                     parties = result.newPartyStates
                 }
             }
         }
 
-        parties = simulateFloor(parties)
+        ctx.logPartyStates(parties)
+        ctx.endTurn()
+
+        parties = simulateFloor(ctx, parties)
         
-        if (whichPartyDied(parties) == 0) {
+        if (whichPartyDied(parties) === 0) {
             return {
                 won: false,
                 turnsTaken: turnCounter
             }
         }
     }
-
+    
     return {
         won: true,
         turnsTaken: turnCounter
     }
 }
 
+function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
+    const turnActorSelection = determineTurn(parties[0], parties[1])
+    let newPartyState = applyPitySpeed(ctx, parties, turnActorSelection)
+    newPartyState = prepareTurn(newPartyState)
+    const startTurnEvent = new StartTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
+    newPartyState = processTurnEvents(ctx, newPartyState, [startTurnEvent])
 
-
-function simulateFloor(parties: Actor[][]): Actor[][] {
     let deadParty = whichPartyDied(parties)
     if (deadParty !== null) {
         return parties
     }
 
-    combatMessage('--------')
-    
-    if (settings.displayPartyStates) {
-        console.log(JSON.stringify(parties, null, 2))
-    }
+    ctx.logPartyStates(parties)
+    ctx.endTurn()
 
-    const turnActorSelection = determineTurn(parties[0], parties[1])
-    let newPartyState = applyPitySpeed(parties, turnActorSelection)
-    newPartyState = prepareTurn(newPartyState)
-    const startTurnEvent = new StartTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
-    newPartyState = processTurnEvents(newPartyState, [startTurnEvent])
-
-    turnCounter++
-    
-    if (turnCounter > 1000) {
-        console.log(JSON.stringify(newPartyState, null, 2))
-        throw new Error("combat looped infinitely - printing party state")
-    }
-    
-    return simulateFloor(newPartyState)
+    return simulateFloor(ctx, newPartyState)
 }
 
 function prepareTurn(parties: Actor[][]): Actor[][] {
@@ -141,7 +131,7 @@ function whichPartyDied(parties: Actor[][]): number | null {
     return null
 }
 
-function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
+function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Event[]): Actor[][] {
     let newPartyStates = cloneDeep(parties)
     let localEvents = cloneDeep(events)
 
@@ -150,73 +140,73 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
         switch (event.kind) {
             case EventKind.START_TURN:
                 const startTurnEvent = event as StartTurnEvent
-                const startTurnResult = startTurnEvent.processStartTurn(newPartyStates)
+                const startTurnResult = startTurnEvent.processStartTurn(ctx, newPartyStates)
                 localEvents = localEvents.concat(startTurnResult.newEvents)
                 newPartyStates = startTurnResult.newPartyStates
                 break
             case EventKind.START_TURN_ITEM:
                 const startTurnItemEvent = event as StartTurnItemEvent
-                const startTurnItemResult = startTurnItemEvent.processStartTurnItem(newPartyStates)
+                const startTurnItemResult = startTurnItemEvent.processStartTurnItem(ctx, newPartyStates)
                 localEvents = localEvents.concat(startTurnItemResult.newEvents)
                 newPartyStates = startTurnItemResult.newPartyStates
                 break
             case EventKind.SELECT_TARGET:
                 const selectTargetEvent = event as SelectTargetEvent
-                const selectTargetResult = selectTargetEvent.processSelectTarget(newPartyStates)
+                const selectTargetResult = selectTargetEvent.processSelectTarget(ctx, newPartyStates)
                 localEvents = localEvents.concat(selectTargetResult.newEvents)
                 newPartyStates = selectTargetResult.newPartyStates
                 break
             case EventKind.TARGET_FINALIZED:
                 const targetFinalizedEvent = event as TargetFinalizedEvent
-                const targetFinalizedResult = targetFinalizedEvent.processTargetFinalized(newPartyStates)
+                const targetFinalizedResult = targetFinalizedEvent.processTargetFinalized(ctx, newPartyStates)
                 localEvents = localEvents.concat(targetFinalizedResult.newEvents)
                 newPartyStates = targetFinalizedResult.newPartyStates
                 break
             case EventKind.BASIC_ATTACK:
                 const basicAttackEvent = event as BasicAttackEvent
-                const basicAttackResult = basicAttackEvent.processBasicAttack(newPartyStates)
+                const basicAttackResult = basicAttackEvent.processBasicAttack(ctx, newPartyStates)
                 localEvents = localEvents.concat(basicAttackResult.newEvents)
                 newPartyStates = basicAttackResult.newPartyStates
                 break
             case EventKind.AFTER_ATTACK:
                 const afterAttackEvent = event as AfterAttackEvent
-                const afterAttackResult = afterAttackEvent.processAfterAttack(newPartyStates)
+                const afterAttackResult = afterAttackEvent.processAfterAttack(ctx, newPartyStates)
                 localEvents = localEvents.concat(afterAttackResult.newEvents)
                 newPartyStates = afterAttackResult.newPartyStates
                 break
             case EventKind.SUMMON_ACTOR:
                 const summonActorEvent = event as SummonActorEvent
-                const summonActorResult = summonActorEvent.processSummonActor(newPartyStates)
+                const summonActorResult = summonActorEvent.processSummonActor(ctx, newPartyStates)
                 localEvents = localEvents.concat(summonActorResult.newEvents)
                 newPartyStates = summonActorResult.newPartyStates
                 break
             case EventKind.ACTOR_DIED:
                 const actorDiedEvent = event as ActorDiedEvent
-                const actorDiedResult = actorDiedEvent.processActorDied(newPartyStates)
+                const actorDiedResult = actorDiedEvent.processActorDied(ctx, newPartyStates)
                 localEvents = localEvents.concat(actorDiedResult.newEvents)
                 newPartyStates = actorDiedResult.newPartyStates
                 break
             case EventKind.DAMAGE_TAKEN:
                 const damageTakenEvent = event as DamageTakenEvent
-                const damageTakenResult = damageTakenEvent.processDamageTaken(newPartyStates)
+                const damageTakenResult = damageTakenEvent.processDamageTaken(ctx, newPartyStates)
                 localEvents = localEvents.concat(damageTakenResult.newEvents)
                 newPartyStates = damageTakenResult.newPartyStates
                 break
             case EventKind.DAMAGE_DEALT:
                 const damageDealtEvent = event as DamageDealtEvent
-                const damageDealtResult = damageDealtEvent.processDamageDealt(newPartyStates)
+                const damageDealtResult = damageDealtEvent.processDamageDealt(ctx, newPartyStates)
                 localEvents = localEvents.concat(damageDealtResult.newEvents)
                 newPartyStates = damageDealtResult.newPartyStates
                 break
             case EventKind.HEALING_RECEIVED:
                 const healingReceivedEvent = event as HealingReceivedEvent
-                const healingReceivedResult = healingReceivedEvent.processHealingReceived(newPartyStates)
+                const healingReceivedResult = healingReceivedEvent.processHealingReceived(ctx, newPartyStates)
                 localEvents = localEvents.concat(healingReceivedResult.newEvents)
                 newPartyStates = healingReceivedResult.newPartyStates
                 break
             case EventKind.END_TURN:
                 const endTurnEvent = event as EndTurnEvent
-                const endTurnResult = endTurnEvent.processEndTurn(newPartyStates)
+                const endTurnResult = endTurnEvent.processEndTurn(ctx, newPartyStates)
                 localEvents = localEvents.concat(endTurnResult.newEvents)
                 newPartyStates = endTurnResult.newPartyStates
                 break
@@ -227,7 +217,7 @@ function processTurnEvents(parties: Actor[][], events: Event[]): Actor[][] {
         newPartyStates = newPartyStates.map((party, partyIndex) => 
             party.map((actor, actorIndex) => {
                 if (actor.curHP <= 0 && !actor.dead) {
-                    combatMessage(`${actor.name} has fallen!`)
+                    ctx.logCombatMessage(`${actor.name} has fallen!`)
                     // TODO: move these changes to the actor died event
                     actor.speed = 0             
                     actor.pitySpeed = 0       
@@ -251,7 +241,7 @@ type DetermineTurnResult = {
     partyIndex: number
 }
 
-function applyPitySpeed(parties: Actor[][], turnResult: DetermineTurnResult): Actor[][] {
+function applyPitySpeed(ctx: DungeonContext, parties: Actor[][], turnResult: DetermineTurnResult): Actor[][] {
     let newPartyStates = cloneDeep(parties)
 
     return newPartyStates.map((party, partyIndex) => 
@@ -264,7 +254,7 @@ function applyPitySpeed(parties: Actor[][], turnResult: DetermineTurnResult): Ac
                 if (actor.pitySpeed === undefined) {
                     actor.pitySpeed = 0
                 }
-                actor.pitySpeed = actor.pitySpeed === undefined ? settings.pityScaling(actor.pitySpeed) : settings.pityScaling(0)
+                actor.pitySpeed = actor.pitySpeed === undefined ? ctx.settings.pityScaling(actor.pitySpeed) : ctx.settings.pityScaling(0)
             }
 
             return actor

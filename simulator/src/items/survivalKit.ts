@@ -5,7 +5,8 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { SelectTargetEvent } from "../engine/events/selectTarget"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class SurvivalKit extends Item {
     constructor(tier: number) {
@@ -15,7 +16,7 @@ export class SurvivalKit extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
+    handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let owner = newPartyStates[ownerPartyIndex][ownerIndex]
 
@@ -30,7 +31,7 @@ export class SurvivalKit extends Item {
         }
     }
 
-    handleBeforeDefenderTargetFinalized(parties: Actor[][], itemHolderIndex: number, event: SelectTargetEvent): SelectTargetEvent {
+    handleBeforeDefenderTargetFinalized(ctx: DungeonContext, parties: Actor[][], itemHolderIndex: number, event: SelectTargetEvent): SelectTargetEvent {
         if (itemHolderIndex === event.defenderIndex) {
             return null
         }
@@ -43,7 +44,7 @@ export class SurvivalKit extends Item {
             let newDefender = parties[event.defenderPartyIndex][itemHolderIndex]
 
             if (newDefender.curHP < originalDefender.curHP) {
-                combatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
+                ctx.logCombatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)
 
                 return new SelectTargetEvent(
                     event.attackerPartyIndex,
@@ -52,7 +53,7 @@ export class SurvivalKit extends Item {
                 )
             }
 
-            combatMessage(`${attacker.name} targets ${originalDefender.name} but ${
+            ctx.logCombatMessage(`${attacker.name} targets ${originalDefender.name} but ${
                 newDefender.name} jumps in front of the attack and saves them.`)
 
             return new SelectTargetEvent(

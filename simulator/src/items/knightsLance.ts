@@ -7,8 +7,9 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
 import { getRandomLivingActor } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class KnightsLance extends Item {
     constructor(tier: number) {
@@ -18,7 +19,7 @@ export class KnightsLance extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
 
@@ -43,13 +44,13 @@ export class KnightsLance extends Item {
             lanceDamage *= 2
             const damageDealtEvent = new DamageDealtEvent(lanceDamage, defenderPartyIndex, lanceTarget, event)
             lanceEvents.push(damageDealtEvent)
-            combatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg.`)
+            ctx.logCombatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg.`)
         } else {
             const damageDealtEvent = new DamageDealtEvent(lanceDamage, defenderPartyIndex, lanceTarget, event)
             const healingReceivedEvent = new HealingReceivedEvent(lanceDamage, event.turnActorPartyIndex, event.turnActorIndex, event)
             lanceEvents.push(damageDealtEvent)
             lanceEvents.push(healingReceivedEvent)
-            combatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg. When did ${attacker.name} become a knight? Who knows, but ${attacker.name} heals ${lanceDamage} hp.` )
+            ctx.logCombatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg. When did ${attacker.name} become a knight? Who knows, but ${attacker.name} heals ${lanceDamage} hp.` )
         }
 
         attacker.energy -= this.energyCost

@@ -6,8 +6,9 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
 import { getRandomLivingActor } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class LoveLetter extends Item {
     constructor(tier: number) {
@@ -17,7 +18,7 @@ export class LoveLetter extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnAfterAttack(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
+    handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         const newEvents: Event[] = []
@@ -46,7 +47,7 @@ export class LoveLetter extends Item {
 
         newPartyStates[triggeredBy.attackerPartyIndex][targetIndex] = target
 
-        combatMessage(`${attacker.name} gives ${target.name} a letter showing their love! ${target.name} gains ${healingReceived} hp and ${energyReceived} energy.`)
+        ctx.logCombatMessage(`${attacker.name} gives ${target.name} a letter showing their love! ${target.name} gains ${healingReceived} hp and ${energyReceived} energy.`)
 
         return {
             newPartyStates,

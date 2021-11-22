@@ -4,6 +4,7 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
+import { DungeonContext } from "../simulator"
 
 export class Freezeman extends Item {
     constructor(tier: number) {
@@ -13,7 +14,7 @@ export class Freezeman extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
+    handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let owner = newPartyStates[ownerPartyIndex][ownerIndex]
 

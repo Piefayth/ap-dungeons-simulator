@@ -6,8 +6,9 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
-import { combatMessage } from "../log"
+
 import { getRandomLivingActor } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class Avalanche extends Item {
     constructor(tier: number) {
@@ -17,7 +18,7 @@ export class Avalanche extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
 
@@ -31,7 +32,7 @@ export class Avalanche extends Item {
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         let avalancheEvents: Event[] = []
         
-        combatMessage(`${attacker.name} creates a massive avalanche.`)
+        ctx.logCombatMessage(`${attacker.name} creates a massive avalanche.`)
 
         // HACK: This preemptively checks for deaths to avoid invalid double-targeting 
         // This should probably just trigger two AVALANCHE_TARGET events or something
@@ -78,7 +79,7 @@ export class Avalanche extends Item {
             const displayString = `${
                 newPartyStates[defenderPartyIndex][possibleAvalancheTarget].name
             } takes ${avalancheDamage} damage${avalancheSpeed ? ", losing " + avalancheSpeed + " speed!" : "!"}`
-            combatMessage(displayString)
+            ctx.logCombatMessage(displayString)
         }
 
         attacker.energy -= this.energyCost

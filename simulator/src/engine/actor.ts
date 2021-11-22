@@ -2,7 +2,7 @@ import { Item } from "./item"
 import { Aura } from './aura'
 
 type Actor = {
-    name: String,
+    name: string,
     items: Item[],
     auras: Aura[],
     maxHP: number,

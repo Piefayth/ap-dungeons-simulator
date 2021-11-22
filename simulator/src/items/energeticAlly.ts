@@ -7,7 +7,8 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class EnergeticAlly extends Item {
     constructor(tier: number) {
@@ -17,7 +18,7 @@ export class EnergeticAlly extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
 
@@ -52,7 +53,7 @@ export class EnergeticAlly extends Item {
         newPartyStates[event.turnActorPartyIndex][allyTarget].energy += allyEnergy
         newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
-        combatMessage(`${attacker.name}'s cat blinds ${
+        ctx.logCombatMessage(`${attacker.name}'s cat blinds ${
             newPartyStates[event.turnActorPartyIndex][allyTarget].name
         } with an invigorating ray. ${
             newPartyStates[event.turnActorPartyIndex][allyTarget].name

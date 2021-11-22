@@ -28,5 +28,6 @@ export enum ItemKind {
     SEEKING_MISSILES = 'Seeking Missiles',
     SURVIVAL_KIT = 'Survival Kit',
     THORNS = 'Thorns',
-    WHIRLWIND_AXE = 'Whirlwind Axe'
+    WHIRLWIND_AXE = 'Whirlwind Axe',
+    NONE = 'None'
 }

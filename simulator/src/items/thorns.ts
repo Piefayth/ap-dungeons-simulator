@@ -6,8 +6,9 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
-import { combatMessage } from "../log"
+
 import { forAllLivingActors } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class Thorns extends Item {
     constructor(tier: number) {
@@ -17,7 +18,7 @@ export class Thorns extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         let thornsEvents: Event[] = []
@@ -25,7 +26,7 @@ export class Thorns extends Item {
         const attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
         const thornsDamage = 1 * this.tier
 
-        combatMessage(`${attacker.name} unleashes a bunch of wild thorns!`)
+        ctx.logCombatMessage(`${attacker.name} unleashes a bunch of wild thorns!`)
 
         let energyGained = 0
         
@@ -34,7 +35,7 @@ export class Thorns extends Item {
 
             thornsEvents = thornsEvents.concat(damageDealtEvent)
 
-            combatMessage(`Ouch! ${defender.name} takes ${thornsDamage} damage from ${attacker.name}'s thorns.`)
+            ctx.logCombatMessage(`Ouch! ${defender.name} takes ${thornsDamage} damage from ${attacker.name}'s thorns.`)
 
             const roll = getRandomInt(0, 100)
             if (roll < 25 && energyGained === 0) {
@@ -47,7 +48,7 @@ export class Thorns extends Item {
         })
 
         if (energyGained > 0) {
-            combatMessage(`${attacker.name}'s thorns gives them ${energyGained} energy.`)
+            ctx.logCombatMessage(`${attacker.name}'s thorns gives them ${energyGained} energy.`)
         }
         
         return {

@@ -7,7 +7,7 @@ import { SelectTargetEvent } from "../engine/events/selectTarget"
 import { TargetFinalizedEvent } from "../engine/events/targetFinalized"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
-import { combatMessage } from '../log'
+import { DungeonContext } from '../simulator'
 import { getRandomInt } from "../util/math"
 
 export class SeekingMissiles extends Item {
@@ -18,7 +18,7 @@ export class SeekingMissiles extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleBeforeAttackerTargetFinalized(parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
+    handleBeforeAttackerTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
         let lowestHP = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex].curHP
         let newTargetIndex = triggeredBy.defenderIndex
 
@@ -28,7 +28,7 @@ export class SeekingMissiles extends Item {
             }
         }
 
-        combatMessage(`${
+        ctx.logCombatMessage(`${
             parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
         } follows their seeking missiles and hunts down ${
             parties[triggeredBy.defenderPartyIndex][newTargetIndex].name
@@ -41,7 +41,7 @@ export class SeekingMissiles extends Item {
         )
     }
 
-    handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
+    handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
 
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
@@ -62,7 +62,7 @@ export class SeekingMissiles extends Item {
 
         newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
 
-        combatMessage(`Seeking Missiles deal an extra ${missileDamage} damage.`)
+        ctx.logCombatMessage(`Seeking Missiles deal an extra ${missileDamage} damage.`)
 
         return {
             newPartyStates,

@@ -7,8 +7,9 @@ import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { DamageDealtEvent } from "../engine/events/damageDealt"
-import { combatMessage } from "../log"
+
 import { getRandomLivingActor } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class MartyrArmor extends Item {
     constructor(tier: number) {
@@ -18,7 +19,7 @@ export class MartyrArmor extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDamageDealt(parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
+    handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
@@ -55,7 +56,7 @@ export class MartyrArmor extends Item {
 
         newPartyStates[triggeredBy.targetPartyIndex][targetIndex] = target
 
-        combatMessage(`${defender.name}'s sacrifice invigorates ${target.name}. They gain ${healingReceived} HP and ${energyReceived} energy.`)
+        ctx.logCombatMessage(`${defender.name}'s sacrifice invigorates ${target.name}. They gain ${healingReceived} HP and ${energyReceived} energy.`)
 
         return {
             newPartyStates,

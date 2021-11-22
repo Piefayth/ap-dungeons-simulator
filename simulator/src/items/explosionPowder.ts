@@ -7,8 +7,9 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
 import { forAllLivingActors } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class ExplosionPowder extends Item {
     constructor(tier: number) {
@@ -18,7 +19,7 @@ export class ExplosionPowder extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
 
@@ -32,7 +33,7 @@ export class ExplosionPowder extends Item {
         let powderEvents: Event[] = []
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
 
-        combatMessage(`Suddenly, the battlefield is covered in a thick powder. ${attacker.name} combusts the powder!`)
+        ctx.logCombatMessage(`Suddenly, the battlefield is covered in a thick powder. ${attacker.name} combusts the powder!`)
 
         newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (actor, i) => {
             const powderDamageMin = 5 * this.tier
@@ -46,7 +47,7 @@ export class ExplosionPowder extends Item {
             const damageDealtEvent = new DamageDealtEvent(powderDamage, defenderPartyIndex, i, event)
             powderEvents.push(damageDealtEvent)
 
-            combatMessage(`${newPartyStates[defenderPartyIndex][i].name} takes ${powderDamage} damage from the sheer force of the massive explosion.`)
+            ctx.logCombatMessage(`${newPartyStates[defenderPartyIndex][i].name} takes ${powderDamage} damage from the sheer force of the massive explosion.`)
 
             return actor
         })

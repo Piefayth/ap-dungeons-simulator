@@ -6,8 +6,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import { TargetFinalizedEvent } from "./targetFinalized";
 import { DamageDealtEvent } from "./damageDealt";
 import { AfterAttackEvent } from "./afterAttack";
-import { combatMessage } from "../../log";
 import { getRandomLivingActor } from "../../util/actor";
+import { DungeonContext } from "../../simulator";
 
 class BasicAttackEvent extends CombatEvent {
     triggeredBy: TargetFinalizedEvent
@@ -17,7 +17,7 @@ class BasicAttackEvent extends CombatEvent {
         this.triggeredBy = triggeredBy
     }
 
-    processBasicAttack(parties: Actor[][]): ProcessedEventResult {
+    processBasicAttack(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
         // resubmit the basic attack event if we are targeting something that died
         const attacker = parties[this.attackerPartyIndex][this.attackerIndex]
         const defender = parties[this.defenderPartyIndex][this.defenderIndex]
@@ -38,7 +38,7 @@ class BasicAttackEvent extends CombatEvent {
         let resultEvents: Event[] = []
 
         for (let i = 0; i < attacker.items.length; i++) {
-            const itemResult = attacker.items[i].handleOnBasicAttack(newPartyStates, baseDamageDealt, this)
+            const itemResult = attacker.items[i].handleOnBasicAttack(ctx, newPartyStates, baseDamageDealt, this)
             newPartyStates = itemResult.newPartyStates
             resultEvents = resultEvents.concat(itemResult.newEvents)
         }
@@ -65,7 +65,7 @@ class BasicAttackEvent extends CombatEvent {
         resultEvents.unshift(damageDealtEvent)
         resultEvents.unshift(new AfterAttackEvent(this))
         
-        combatMessage(`${
+        ctx.logCombatMessage(`${
             newPartyStates[this.attackerPartyIndex][this.attackerIndex].name
         } attacks ${
             newPartyStates[this.defenderPartyIndex][this.defenderIndex].name

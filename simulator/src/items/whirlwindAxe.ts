@@ -4,7 +4,8 @@ import { BasicAttackEvent } from "../engine/events/basicAttack"
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 import { forAllLivingActors } from "../util/actor"
 import { getRandomInt } from "../util/math"
 
@@ -16,7 +17,7 @@ export class WhirlwindAxe extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnBasicAttack(parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult {
+    handleOnBasicAttack(ctx: DungeonContext, parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult {
         const axeEvents: Event[] = []
     
         const attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
@@ -32,7 +33,7 @@ export class WhirlwindAxe extends Item {
             }
         }
 
-        combatMessage(`${attacker.name} swings their whirlwind axe wildly.`)
+        ctx.logCombatMessage(`${attacker.name} swings their whirlwind axe wildly.`)
         forAllLivingActors(parties, triggeredBy.defenderPartyIndex, (actor, i) => {
             if (i === triggeredBy.defenderIndex) return actor
 
@@ -40,7 +41,7 @@ export class WhirlwindAxe extends Item {
             const damageDealtEvent = new DamageDealtEvent(axeDamage, triggeredBy.defenderPartyIndex, i, triggeredBy)
             axeEvents.push(damageDealtEvent)
 
-            combatMessage(`${parties[triggeredBy.defenderPartyIndex][i].name} is hit, taking ${axeDamage} damage`)
+            ctx.logCombatMessage(`${parties[triggeredBy.defenderPartyIndex][i].name} is hit, taking ${axeDamage} damage`)
         })
 
         return {

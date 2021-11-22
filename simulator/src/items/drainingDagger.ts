@@ -4,7 +4,8 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class DrainingDagger extends Item {
     constructor(tier: number) {
@@ -14,7 +15,7 @@ export class DrainingDagger extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTargetFinalized(parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
+    handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
@@ -24,14 +25,14 @@ export class DrainingDagger extends Item {
         defender.attackMin -= actualAttackDrained
         defender.attackMax -= actualAttackDrained
 
-        combatMessage(`${attacker.name}'s draining dagger drains ${defender.name}. ${defender.name} loses ${actualAttackDrained} attack.`)
+        ctx.logCombatMessage(`${attacker.name}'s draining dagger drains ${defender.name}. ${defender.name} loses ${actualAttackDrained} attack.`)
 
         let chance = 5 * this.tier
         let roll = getRandomInt(0, 100)
         if (roll < chance) {
             defender.energy = Math.max(0, defender.energy - 1)
             attacker.energy += 1
-            combatMessage(`Draining dagger saps ${defender.name}'s energy.`)
+            ctx.logCombatMessage(`Draining dagger saps ${defender.name}'s energy.`)
         }
 
 

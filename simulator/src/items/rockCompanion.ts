@@ -8,8 +8,9 @@ import { ChickenHealing } from "./chickenHealing"
 import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { HealingPendant } from "./healingPendant"
-import { combatMessage } from "../log"
+
 import { getSummonedActorName } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class RockCompanion extends Item {
     constructor(tier: number) {
@@ -19,7 +20,7 @@ export class RockCompanion extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDungeonStart(parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
+    handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
         const newPartyStates = cloneDeep(parties)
 
         const rockBaseName = 'Rock Companion'
@@ -41,7 +42,7 @@ export class RockCompanion extends Item {
 
         newPartyStates[ownerPartyIndex].push(rock)
         
-        combatMessage(`${newPartyStates[ownerPartyIndex][ownerIndex].name}'s rock companion has joined the party! You can always count on this loyal rock to be there!`)
+        ctx.logCombatMessage(`${newPartyStates[ownerPartyIndex][ownerIndex].name}'s rock companion has joined the party! You can always count on this loyal rock to be there!`)
 
         return {
             newPartyStates,

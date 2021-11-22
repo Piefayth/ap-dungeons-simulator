@@ -7,8 +7,9 @@ import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
-import { combatMessage } from "../log"
+
 import { getRandomLivingActor } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class ChallengerArrow extends Item {
     constructor(tier: number) {
@@ -18,7 +19,7 @@ export class ChallengerArrow extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
 
@@ -43,7 +44,7 @@ export class ChallengerArrow extends Item {
         attacker.energy -= this.energyCost
         newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
-        combatMessage(`${attacker.name} draws their bow, hitting ${
+        ctx.logCombatMessage(`${attacker.name} draws their bow, hitting ${
             newPartyStates[defenderPartyIndex][arrowTarget].name
         } for ${arrowDamage} damage! Since ${
             newPartyStates[defenderPartyIndex][arrowTarget].name

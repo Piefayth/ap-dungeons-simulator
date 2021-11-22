@@ -8,8 +8,9 @@ import { ChickenHealing } from "./chickenHealing"
 import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
-import { combatMessage } from "../log"
+
 import { getSummonedActorName } from "../util/actor"
+import { DungeonContext } from "../simulator"
 
 export class ImpWhistle extends Item {
     constructor(tier: number) {
@@ -19,7 +20,7 @@ export class ImpWhistle extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTurnStart(parties: Actor[][], triggeredBy: StartTurnEvent): ProcessedEventResult {
+    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], triggeredBy: StartTurnEvent): ProcessedEventResult {
         const newPartyStates = cloneDeep(parties)
         const impWhistleEvents: Event[] = []
         const attacker = newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
@@ -51,8 +52,8 @@ export class ImpWhistle extends Item {
 
         impWhistleEvents.push(impWhistleEvent)
 
-        combatMessage(`${attacker.name} blows their whistle, calling for help!`)
-        combatMessage('A nearby friend comes to our aid.')
+        ctx.logCombatMessage(`${attacker.name} blows their whistle, calling for help!`)
+        ctx.logCombatMessage('A nearby friend comes to our aid.')
 
         attacker.energy -= this.energyCost
         newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex] = attacker

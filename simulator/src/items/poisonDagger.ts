@@ -6,7 +6,8 @@ import { getRandomInt } from "../util/math"
 import cloneDeep from 'lodash/cloneDeep'
 import { AuraKind } from "../engine/aura"
 import { TargetFinalizedEvent } from "../engine/events/targetFinalized"
-import { combatMessage } from "../log"
+
+import { DungeonContext } from "../simulator"
 
 export class PoisonDagger extends Item {
     constructor(tier: number) {
@@ -16,7 +17,7 @@ export class PoisonDagger extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnTargetFinalized(parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
+    handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
         let newPartyStates = cloneDeep(parties)
         let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
@@ -33,7 +34,7 @@ export class PoisonDagger extends Item {
 
         newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex] = defender
 
-        combatMessage(`${attacker.name}'s poison dagger inflicts a deadly poison on ${defender.name}.`)
+        ctx.logCombatMessage(`${attacker.name}'s poison dagger inflicts a deadly poison on ${defender.name}.`)
 
         return {
             newPartyStates,

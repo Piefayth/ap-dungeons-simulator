@@ -1,12 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
-    mode: 'production',
+module.exports = [{
+    mode: 'development',
     entry: {
         sim: './simulator/src/index.ts',
         web: {
-            import: './website/src/index.ts',
+            import: './website/src/index.tsx',
             dependOn: 'sim'
         }
     },
@@ -20,6 +20,28 @@ module.exports = {
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
+            {
+                test: /\.css$/,
+                use: [{
+                    loader: 'style-loader'
+                }, {
+                    loader: 'css-loader',
+                }]
+            },
+            {
+                test: /\.less$/,
+                use: [
+                  'style-loader',
+                  { loader: 'css-loader', options: { importLoaders: 1 } },
+                  {
+                    loader: 'less-loader', options: { 
+                        lessOptions: {
+                            javascriptEnabled: true
+                        }
+                     },
+                  },
+                ],
+              },
         ],
     },
     resolve: {
@@ -30,4 +52,4 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [new HtmlWebpackPlugin()]
-};
+}];
