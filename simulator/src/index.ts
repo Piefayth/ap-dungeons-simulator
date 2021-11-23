@@ -6,6 +6,7 @@ import { dungeon9 } from './dungeons/dungeon9'
 import { Actor } from './engine/actor'
 import { Dungeon, startDungeon } from './engine/dungeon'
 import { ItemKind } from './engine/itemTypes'
+import { FestiveFeast, TrustySteed } from './items'
 import { Avalanche } from './items/avalanche'
 import { BFCannon } from './items/bfCannon'
 import { BigClub } from './items/bigClub'
@@ -77,7 +78,7 @@ const testParty: Actor[] = [{
     attackMin: 3,
     attackMax: 12
 }*/]
-
+/*
 const testParty2: Actor[] = [{
     name: "Piefayth",
     items: [new WhirlwindAxe(1)],
@@ -118,10 +119,59 @@ const testParty2: Actor[] = [{
     speed: 10,
     attackMin: 2,
     attackMax: 11
+}]*/
+
+const testParty3: Actor[] = [{
+    name: "birb",
+    items: [new MartyrArmor(7), new SurvivalKit(7), new TrustySteed(7), new Avalanche(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "zoop",
+    items: [new MartyrArmor(7), new SurvivalKit(7), new TrustySteed(7), new Avalanche(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "piefayth",
+    items: [new MartyrArmor(7), new SurvivalKit(7), new TrustySteed(7), new Avalanche(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "birb",
+    items: [new MartyrArmor(7), new SurvivalKit(7), new TrustySteed(7), new Avalanche(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "jan",
+    items: [new MartyrArmor(7), new SurvivalKit(7), new TrustySteed(7), new Avalanche(7)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
 }]
-// with whistle: 83.8%
-// with ava: 80.2%
-// with both: 0%
 
 if (require.main === module && typeof window == "undefined") {
     const simulator = new DungeonSimulator({
@@ -129,5 +179,5 @@ if (require.main === module && typeof window == "undefined") {
         displayPartyStates: false,
         pityScaling: (speed) => speed + 0
     })
-    simulator.simulate(10, testParty2, dungeon2)
+    simulator.simulate(1000, testParty3, dungeon9)
 }
