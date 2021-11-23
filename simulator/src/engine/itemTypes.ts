@@ -4,6 +4,7 @@ import { Event } from './events'
 export enum ItemKind {
     AVALANCHE = 'Avalanche',
     BIG_CLUB = 'Big Club',
+    BF_CANNON = 'BF Cannon',
     BOOSTING_BUGLE = 'Boosting Bugle',
     CHALLENGER_ARROW = 'Challenger Arrow',
     CHICKEN_HEALING = 'Dummy Chicken Healing',
@@ -12,6 +13,7 @@ export enum ItemKind {
     DRAINING_DAGGER = 'Draining Dagger',
     ENERGETIC_ALLY = 'Energetic Ally',
     EXPLOSION_POWDER = 'Explosion Powder',
+    FESTIVE_FEAST = 'Festive Feast',
     FIRE_SWORD = 'Fire Sword',
     FREEZEMAN = 'Freezeman',
     HALBERD = 'Halberd',
@@ -29,6 +31,7 @@ export enum ItemKind {
     SEEKING_MISSILES = 'Seeking Missiles',
     SURVIVAL_KIT = 'Survival Kit',
     THORNS = 'Thorns',
+    TRUSTY_STEED = 'Trusty Steed',
     WHIRLWIND_AXE = 'Whirlwind Axe',
     NONE = 'None'
 }

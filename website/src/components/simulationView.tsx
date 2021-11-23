@@ -33,7 +33,11 @@ export function SimulationView(props: RouteComponentProps) {
         <>
             <div style={{marginTop: 20, marginLeft: 20}}>
                 <Button type="primary" onClick={() => {
-                    navigate('./')
+                    navigate('./', {
+                        state: {
+                            party: result.party
+                        }
+                    })
                 }}>
                     <CloseOutlined />
                 </Button>

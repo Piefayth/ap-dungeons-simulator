@@ -20,6 +20,7 @@ import { EndTurnEvent } from './events/endTurn'
 import { StartTurnItemEvent } from './events/startTurnItem'
 import { DamageTakenEvent } from './events/damageTaken'
 import { DungeonContext } from '../simulator'
+import { KnightsLance } from '../items'
 
 type Floor = {
     enemies: Actor[]
@@ -32,10 +33,7 @@ type Dungeon = {
 
 type DungeonResult = {
     won: boolean,
-    turnsTaken: number
 }
-
-let turnCounter = 0
 
 function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): DungeonResult {
     let parties = cloneDeep([party, []])
@@ -51,8 +49,6 @@ function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): Du
             }
         }
     }
-
-    turnCounter = 0
 
     for (let f = 0; f < dungeon.floors.length; f++) {
         ctx.logCombatMessage(`Starting floor ${f}`)
@@ -78,17 +74,15 @@ function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): Du
             ctx.endTurn()
             return {
                 won: false,
-                turnsTaken: turnCounter
             }
         }
     }
     
     ctx.logPartyStates(parties)
     ctx.endTurn()
-    
+
     return {
         won: true,
-        turnsTaken: turnCounter
     }
 }
 

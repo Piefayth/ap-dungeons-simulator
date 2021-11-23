@@ -1,5 +1,6 @@
 import { Settings } from 'http2'
 import { dungeon10 } from './dungeons/dungeon10'
+import { dungeon2 } from './dungeons/dungeon2'
 import { dungeon8 } from './dungeons/dungeon8'
 import { dungeon9 } from './dungeons/dungeon9'
 import { Actor } from './engine/actor'
@@ -77,46 +78,49 @@ const testParty: Actor[] = [{
 }*/]
 
 const testParty2: Actor[] = [{
-    name: "maurixxo",
-    items: [new FireSword(8), new BigClub(8), new Freezeman(8), new ChallengerArrow(8)],
+    name: "Piefayth",
+    items: [new WhirlwindAxe(1)],
     auras: [],
     maxHP: 130,
     curHP: 130,
     energy: 0,
-    speed: 13,
-    attackMin: 4,
-    attackMax: 13
+    speed: 6,
+    attackMin: 15,
+    attackMax: 24
 }, {
-    name: "zoop",
-    items: [new Avalanche(8), new Thorns(8), new Freezeman(8), new DrainingDagger(8)],
+    name: "january",
+    items: [new ImpWhistle(1)],
     auras: [],
-    maxHP: 130,
-    curHP: 130,
+    maxHP: 100,
+    curHP: 100,
     energy: 0,
-    speed: 13,
-    attackMin: 4,
-    attackMax: 13
+    speed: 12,
+    attackMin: 3,
+    attackMax: 12
 }, {
-    name: "maurixxo 2",
-    items: [new Avalanche(8), new CleansingFlames(8), new Freezeman(8), new LoveLetter(8)],
+    name: "saki",
+    items: [],
     auras: [],
-    maxHP: 130,
-    curHP: 130,
+    maxHP: 115,
+    curHP: 115,
     energy: 0,
-    speed: 13,
-    attackMin: 4,
-    attackMax: 13
+    speed: 11,
+    attackMin: 2,
+    attackMax: 11
 }, {
-    name: "maurixxo 3",
-    items: [new Avalanche(8), new CleansingFlames(8), new Freezeman(8), new LoveLetter(8)],
+    name: "birb",
+    items: [new Avalanche(1), new ChumbyChicken(1)],
     auras: [],
-    maxHP: 130,
-    curHP: 130,
+    maxHP: 115,
+    curHP: 115,
     energy: 0,
-    speed: 13,
-    attackMin: 4,
-    attackMax: 13
+    speed: 10,
+    attackMin: 2,
+    attackMax: 11
 }]
+// with whistle: 83.8%
+// with ava: 80.2%
+// with both: 0%
 
 if (require.main === module && typeof window == "undefined") {
     const simulator = new DungeonSimulator({
@@ -124,5 +128,5 @@ if (require.main === module && typeof window == "undefined") {
         displayPartyStates: false,
         pityScaling: (speed) => speed + 0
     })
-    simulator.simulate(100, testParty, dungeon8)
+    simulator.simulate(1000, testParty2, dungeon2)
 }

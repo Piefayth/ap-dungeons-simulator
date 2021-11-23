@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from "@reach/router"
+import { RouteComponentProps, useNavigate } from "@reach/router"
 import { Form, Button, Row, Col } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import * as Items from '../../../simulator/src/items'
@@ -7,10 +7,12 @@ import { Actor } from "../../../simulator/src/engine/actor"
 import { DungeonSelection } from './dungeonSelection'
 import { PartySelection } from './partySelection'
 import { DungeonSimulator, SimulationResult } from '../../../simulator/src/simulator'
+import { dungeon2 } from '../../../simulator/src/dungeons/dungeon2'
 import { dungeon8 } from '../../../simulator/src/dungeons/dungeon8'
 import { dungeon9 } from '../../../simulator/src/dungeons/dungeon9'
 import { dungeon10 } from '../../../simulator/src/dungeons/dungeon10'
 import cloneDeep from 'lodash/cloneDeep'
+import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 
 const demoParty: Actor[] = [{
     name: "zoop",
@@ -57,6 +59,19 @@ const defaultSimulatorInputData: SimulatorInputData = {
 }
 
 function runTrials(options: SimulatorInputData): SimulationResult {
+    const itemRefreshedParty = options.party.map(actor => {
+        actor.items = actor.items.map(item => {
+            if (ItemKind[item.kind] === ItemKind.NONE) {
+                return undefined
+            } 
+            
+            const itemKind = Items.itemKindMap[item.kind] ? Items.itemKindMap[item.kind] : Items.itemKindMap[ItemKind[item.kind]]
+            return new itemKind(item.tier)
+        }).filter(item => item)
+
+        return actor
+    })
+
     const simulator = new DungeonSimulator({
         displayCombatEvents: false,
         displayPartyStates: false,
@@ -64,6 +79,7 @@ function runTrials(options: SimulatorInputData): SimulationResult {
     })
 
     const dungeonMap = {
+        2: dungeon2,
         8: dungeon8,
         9: dungeon9,
         10: dungeon10
@@ -72,10 +88,21 @@ function runTrials(options: SimulatorInputData): SimulationResult {
     return simulator.simulate(options.trials, options.party, dungeonMap[options.dungeon])
 }
 
-export default function simulatorConfig() {
+export default function simulatorConfig(props: RouteComponentProps) {
+    const oldState = (props.location.state as any).party as Actor[]
     const navigate = useNavigate()
-    const [simData, setSimData] = useState(cloneDeep(defaultSimulatorInputData))
     
+    const [simData, setSimData] = useState(cloneDeep(defaultSimulatorInputData))
+
+    if (oldState) {
+        props.location.state = {
+            party: undefined
+        }
+        let newSimData = { ...simData }
+        newSimData.party = cloneDeep(oldState)
+        setSimData(newSimData)
+    }
+
     const addTeammateButton =
         <Form.Item>
             <Button onClick={() => {
@@ -131,7 +158,6 @@ export default function simulatorConfig() {
                 onUpdate={(party) => {
                     let newSimData = { ...simData }
                     newSimData.party = party
-                    console.log(party)
                     setSimData(newSimData)
                 }}
             />

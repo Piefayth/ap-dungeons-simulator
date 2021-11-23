@@ -8,10 +8,11 @@ export type SimulationResult = {
     wins: number
     losses: number
     winrate: number
+    party: Actor[]
     results: DungeonResult[]        // [trial]
 }
 
-type DungeonResult = {
+export type DungeonResult = {
     turnPartyStates: Actor[][][],   // [turn][parties][party]
     turnOutput: string[][]          // [turn][messages]
 }
@@ -30,6 +31,7 @@ export class DungeonContext {
             losses: 0,
             winrate: 0,
             results: [],
+            party: []
         }
         this.currentTrial = 0
         this.currentTurn = 0
@@ -82,6 +84,8 @@ export class DungeonSimulator {
     simulate(trials: number, party: Actor[], dungeon: Dungeon): SimulationResult {
         let wins = 0
         let ctx = new DungeonContext(this.settings)
+        ctx.simulationResult.party = party
+        
         for (let i = 0; i < trials; i++) {
             console.log(`Running trial ${i} / ${trials}`)
             const trialResult = startDungeon(ctx, dungeon, party)
@@ -104,6 +108,9 @@ export class DungeonSimulator {
         console.log(`Wins: ${ctx.simulationResult.wins}`)
         console.log(`Losses: ${trials - ctx.simulationResult.wins}`)
         console.log(`Winrate: ${(ctx.simulationResult.wins / trials) * 100}%`)
+        console.log(`Average Turns Taken: ${ctx.simulationResult.results.reduce((acc, result) => {
+            return acc += result.turnOutput.length
+        }, 0) / trials }`)
 
         return ctx.simulationResult
     }
