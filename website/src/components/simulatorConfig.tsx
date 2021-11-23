@@ -8,6 +8,8 @@ import { DungeonSelection } from './dungeonSelection'
 import { PartySelection } from './partySelection'
 import { DungeonSimulator, SimulationResult } from '../../../simulator/src/simulator'
 import { dungeon2 } from '../../../simulator/src/dungeons/dungeon2'
+import { dungeon3 } from '../../../simulator/src/dungeons/dungeon3'
+import { dungeon4 } from '../../../simulator/src/dungeons/dungeon4'
 import { dungeon8 } from '../../../simulator/src/dungeons/dungeon8'
 import { dungeon9 } from '../../../simulator/src/dungeons/dungeon9'
 import { dungeon10 } from '../../../simulator/src/dungeons/dungeon10'
@@ -80,6 +82,8 @@ function runTrials(options: SimulatorInputData): SimulationResult {
 
     const dungeonMap = {
         2: dungeon2,
+        3: dungeon3,
+        4: dungeon4,
         8: dungeon8,
         9: dungeon9,
         10: dungeon10

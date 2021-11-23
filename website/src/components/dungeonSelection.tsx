@@ -15,7 +15,7 @@ type DungeonPickerProps = {
     onUpdate: (dungeon: number) => void
 }
 
-const dungeons = [2, 8, 9, 10]
+const dungeons = [2, 3, 4, 8, 9, 10]
 
 const TrialsPicker = (trialsPickerProps: TrialsPickerProps) => 
     <Row>
