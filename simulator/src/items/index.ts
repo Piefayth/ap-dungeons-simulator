@@ -8,6 +8,7 @@ import { CleansingFlames } from "./cleansingFlames"
 import { DrainingDagger } from "./drainingDagger"
 import { EnergeticAlly } from "./energeticAlly"
 import { ExplosionPowder } from "./explosionPowder"
+import { FestiveFeast } from "./festiveFeast"
 import { FireSword } from "./fireSword"
 import { Freezeman } from "./freezeman"
 import { Halberd } from "./halberd"
@@ -37,6 +38,7 @@ const itemKindMap = {
     [ItemKind.DRAINING_DAGGER]: DrainingDagger,
     [ItemKind.ENERGETIC_ALLY]: EnergeticAlly,
     [ItemKind.EXPLOSION_POWDER]: ExplosionPowder,
+    [ItemKind.FESTIVE_FEAST]: FestiveFeast,
     [ItemKind.FIRE_SWORD]: FireSword,
     [ItemKind.FREEZEMAN]: Freezeman,
     [ItemKind.HALBERD]: Halberd,

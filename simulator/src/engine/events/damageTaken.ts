@@ -24,7 +24,7 @@ class DamageTakenEvent extends Event {
         
         let updatedDefender = {
             ...defender,
-            curHP: Math.max(0, defender.curHP -= this.damageTaken)
+            curHP: Math.max(0, defender.curHP - this.damageTaken)
         }
 
         newPartyStates[this.targetPartyIndex][this.targetIndex] = updatedDefender

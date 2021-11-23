@@ -18,10 +18,10 @@ class HealingReceivedEvent extends Event {
     processHealingReceived(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {
         let newPartyStates = cloneDeep(partyStates)
         let target = newPartyStates[this.targetPartyIndex][this.targetIndex]
-    
+
         let updatedTarget = {
             ...target,
-            curHP: Math.min(target.maxHP, target.curHP += this.healingReceived)
+            curHP: Math.min(target.maxHP, target.curHP + this.healingReceived)
         }
     
         newPartyStates[this.targetPartyIndex][this.targetIndex] = updatedTarget

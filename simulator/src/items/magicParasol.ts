@@ -29,7 +29,7 @@ export class MagicParasol extends Item {
         const roll = getRandomInt(0, 100)
         if (roll < chance) {
             ctx.logCombatMessage(`${defender.name} uses their Magic Parasol to block ${damageReduction} damage.`)
-            triggeredBy.damageDealt -= damageReduction
+            Math.max(0, triggeredBy.damageDealt -= damageReduction)
         }
 
         return {
