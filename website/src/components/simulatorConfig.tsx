@@ -89,7 +89,7 @@ function runTrials(options: SimulatorInputData): SimulationResult {
 }
 
 export default function simulatorConfig(props: RouteComponentProps) {
-    const oldState = (props.location.state as any).party as Actor[]
+    const oldState = props.location.state ? (props.location.state as any).party as Actor[] : undefined
     const navigate = useNavigate()
     
     const [simData, setSimData] = useState(cloneDeep(defaultSimulatorInputData))

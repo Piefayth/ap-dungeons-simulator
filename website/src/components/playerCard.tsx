@@ -96,7 +96,6 @@ function ItemPicker(itemPickerProps: ItemPickerProps) {
                     <Select 
                         defaultValue={itemPickerProps.defaultItem ? itemPickerProps.defaultItem.kind : ItemKind.NONE}
                         onChange={(newKind) => {
-                            console.log(newKind)
                             setItemKind(newKind)
                             itemPickerProps.onUpdate(newKind, tier)
                         }}
