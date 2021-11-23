@@ -3,6 +3,7 @@ import { getRandomInt } from "../util/math"
 import { Actor } from "./actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "./events"
 import { BasicAttackEvent } from "./events/basicAttack"
+import { BeforeTurnEvent } from "./events/beforeTurn"
 import { DamageDealtEvent } from "./events/damageDealt"
 import { SelectTargetEvent } from "./events/selectTarget"
 import { StartTurnEvent } from "./events/startTurn"
@@ -22,6 +23,7 @@ abstract class _Item {
         this.energyCost = energyCost
     }
 
+    abstract handleOnBeforeTurn(ctx: DungeonContext, parties: Actor[][], event: BeforeTurnEvent): ProcessedEventResult
     abstract handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult
     abstract handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult
     abstract handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult
@@ -35,6 +37,13 @@ abstract class _Item {
 }
 
 export class Item extends _Item {
+    handleOnBeforeTurn(ctx: DungeonContext, parties: Actor[][], event: BeforeTurnEvent): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+    
     handleOnBasicAttack(ctx: DungeonContext, parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult {
         return {
             newPartyStates: parties,

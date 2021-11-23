@@ -21,6 +21,7 @@ import { StartTurnItemEvent } from './events/startTurnItem'
 import { DamageTakenEvent } from './events/damageTaken'
 import { DungeonContext } from '../simulator'
 import { KnightsLance } from '../items'
+import { BeforeTurnEvent } from './events/beforeTurn'
 
 type Floor = {
     enemies: Actor[]
@@ -90,8 +91,8 @@ function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
     const turnActorSelection = determineTurn(parties[0], parties[1])
     let newPartyState = applyPitySpeed(ctx, parties, turnActorSelection)
     newPartyState = prepareTurn(newPartyState)
-    const startTurnEvent = new StartTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
-    newPartyState = processTurnEvents(ctx, newPartyState, [startTurnEvent])
+    const beforeTurnEvent = new BeforeTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
+    newPartyState = processTurnEvents(ctx, newPartyState, [beforeTurnEvent])
 
     let deadParty = whichPartyDied(parties)
     if (deadParty !== null) {
@@ -137,6 +138,15 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
     while (localEvents.length != 0) {
         const event = localEvents.pop()
         switch (event.kind) {
+            case EventKind.BEFORE_TURN:
+                const beforeTurnEvent = event as BeforeTurnEvent
+                const beforeTurnResult = beforeTurnEvent.processBeforeTurn(ctx, newPartyStates)
+                localEvents = localEvents.concat(beforeTurnResult.newEvents)
+                newPartyStates = beforeTurnResult.newPartyStates
+                break
+            case EventKind.CANCEL_TURN:
+                localEvents = []
+                break
             case EventKind.START_TURN:
                 const startTurnEvent = event as StartTurnEvent
                 const startTurnResult = startTurnEvent.processStartTurn(ctx, newPartyStates)

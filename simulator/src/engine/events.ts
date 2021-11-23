@@ -2,6 +2,8 @@ import { Actor } from "./actor"
 
 enum EventKind {
     GENERIC_COMBAT = 'Generic Combat',
+    BEFORE_TURN = 'Before Turn',
+    CANCEL_TURN = 'Cancel Turn',
     START_TURN = 'Start Turn',
     START_TURN_ITEM = 'Start Turn Item',
     SELECT_TARGET = 'Select Target',

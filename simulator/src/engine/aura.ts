@@ -6,6 +6,7 @@ export enum AuraKind {
     POISON,
     SEEKING_MISSILES,
     CHICKEN_EXHAUSTION,
+    CANNON_EXHAUSTION,
 }
 
 export type Aura = {

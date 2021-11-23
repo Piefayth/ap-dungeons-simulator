@@ -7,6 +7,7 @@ import { Actor } from './engine/actor'
 import { Dungeon, startDungeon } from './engine/dungeon'
 import { ItemKind } from './engine/itemTypes'
 import { Avalanche } from './items/avalanche'
+import { BFCannon } from './items/bfCannon'
 import { BigClub } from './items/bigClub'
 import { BoostingBugle } from './items/boostingBugle'
 import { ChallengerArrow } from './items/challengerArrow'
@@ -89,7 +90,7 @@ const testParty2: Actor[] = [{
     attackMax: 24
 }, {
     name: "january",
-    items: [new ImpWhistle(1)],
+    items: [new ImpWhistle(1), new BFCannon(1)],
     auras: [],
     maxHP: 100,
     curHP: 100,
@@ -128,5 +129,5 @@ if (require.main === module && typeof window == "undefined") {
         displayPartyStates: false,
         pityScaling: (speed) => speed + 0
     })
-    simulator.simulate(1000, testParty2, dungeon2)
+    simulator.simulate(10, testParty2, dungeon2)
 }

@@ -1,5 +1,6 @@
 import { ItemKind } from "../engine/itemTypes"
 import { Avalanche } from "./avalanche"
+import { BFCannon } from "./bfCannon"
 import { BigClub } from "./bigClub"
 import { BoostingBugle } from "./boostingBugle"
 import { ChallengerArrow } from "./challengerArrow"
@@ -26,10 +27,12 @@ import { RoughSkin } from "./roughSkin"
 import { SeekingMissiles } from "./seekingMissiles"
 import { SurvivalKit } from "./survivalKit"
 import { Thorns } from "./thorns"
+import { TrustySteed } from "./trustySteed"
 import { WhirlwindAxe } from "./whirlwindAxe"
 
 const itemKindMap = {
     [ItemKind.AVALANCHE]: Avalanche,
+    [ItemKind.BF_CANNON]: BFCannon,
     [ItemKind.BIG_CLUB]: BigClub,
     [ItemKind.BOOSTING_BUGLE]: BoostingBugle,
     [ItemKind.CHALLENGER_ARROW]: ChallengerArrow,
@@ -56,12 +59,14 @@ const itemKindMap = {
     [ItemKind.SEEKING_MISSILES]: SeekingMissiles,
     [ItemKind.SURVIVAL_KIT]: SurvivalKit,
     [ItemKind.THORNS]: Thorns,
+    [ItemKind.TRUSTY_STEED]: TrustySteed,
     [ItemKind.WHIRLWIND_AXE]: WhirlwindAxe,
 }
 
 export {
     itemKindMap,
     Avalanche,
+    BFCannon,
     BigClub,
     BoostingBugle,
     ChallengerArrow,
@@ -70,6 +75,7 @@ export {
     DrainingDagger,
     EnergeticAlly,
     ExplosionPowder,
+    FestiveFeast,
     FireSword,
     Freezeman,
     Halberd,
@@ -86,5 +92,6 @@ export {
     SeekingMissiles,
     SurvivalKit,
     Thorns,
+    TrustySteed,
     WhirlwindAxe,
 }

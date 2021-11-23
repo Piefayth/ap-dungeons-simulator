@@ -29,7 +29,7 @@ export class EnergeticAlly extends Item {
             }
         }
 
-        const allyHealing = 5 + (5 * this.tier)
+        const allyHealing = 5 * this.tier
         const allyEnergy = 20
         
         let allyTarget = -1
