@@ -43,7 +43,7 @@ export class ImpWhistle extends Item {
             maxHP: this.tier,
             curHP: this.tier,
             energy: 0,
-            speed: 11 + (1 * this.tier),
+            speed: 16,
             attackMin: 3 * this.tier,
             attackMax: 4 * this.tier,
             tier: this.tier,

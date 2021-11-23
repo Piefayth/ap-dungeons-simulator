@@ -9,6 +9,7 @@ import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 
 import { DungeonContext } from "../simulator"
+import { CHUMBY_CHICKEN_NAME } from "./chicken"
 
 export class MagicParasol extends Item {
     constructor(tier: number) {
@@ -24,10 +25,11 @@ export class MagicParasol extends Item {
         const newEvents: Event[] = []
 
         const chance = 5 + (5 * this.tier)
+        const damageReduction = 5 + (3 * this.tier)
         const roll = getRandomInt(0, 100)
         if (roll < chance) {
-            ctx.logCombatMessage(`${defender.name} uses their Magic Parasol to completely absorb the hit!`)
-            triggeredBy.damageDealt = 0
+            ctx.logCombatMessage(`${defender.name} uses their Magic Parasol to block ${damageReduction} damage.`)
+            triggeredBy.damageDealt -= damageReduction
         }
 
         return {
@@ -47,6 +49,10 @@ export class MagicParasol extends Item {
             let attacker = parties[event.attackerPartyIndex][event.attackerIndex]
             let originalDefender = parties[event.defenderPartyIndex][event.defenderIndex]
             let newDefender = parties[event.defenderPartyIndex][itemHolderIndex]
+
+            if (originalDefender.name.includes(CHUMBY_CHICKEN_NAME)) {
+                return null
+            }
 
             if (newDefender.curHP < originalDefender.curHP) {
                 ctx.logCombatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)

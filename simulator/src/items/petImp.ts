@@ -32,7 +32,7 @@ export class PetImp extends Item {
             maxHP: 10 * this.tier,
             curHP: 10 * this.tier,
             energy: 0,
-            speed: 12 + (1 * this.tier),
+            speed: 16,
             attackMin: 3 * this.tier,
             attackMax: 4 * this.tier,
             tier: this.tier,

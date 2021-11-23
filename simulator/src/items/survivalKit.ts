@@ -7,6 +7,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 
 import { DungeonContext } from "../simulator"
+import { CHUMBY_CHICKEN_NAME } from "./chicken"
 
 export class SurvivalKit extends Item {
     constructor(tier: number) {
@@ -42,6 +43,10 @@ export class SurvivalKit extends Item {
             let attacker = parties[event.attackerPartyIndex][event.attackerIndex]
             let originalDefender = parties[event.defenderPartyIndex][event.defenderIndex]
             let newDefender = parties[event.defenderPartyIndex][itemHolderIndex]
+
+            if (originalDefender.name.includes(CHUMBY_CHICKEN_NAME)) {
+                return null
+            }
 
             if (newDefender.curHP < originalDefender.curHP) {
                 ctx.logCombatMessage(`${newDefender.name} thinks about jumping in front of the attack, but is a coward.`)

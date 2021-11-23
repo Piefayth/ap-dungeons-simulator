@@ -27,11 +27,11 @@ export class DrainingDagger extends Item {
 
         ctx.logCombatMessage(`${attacker.name}'s draining dagger drains ${defender.name}. ${defender.name} loses ${actualAttackDrained} attack.`)
 
-        let chance = 5 * this.tier
+        let chance = 20
+        let energyDrained = 1 * this.tier
         let roll = getRandomInt(0, 100)
         if (roll < chance) {
             defender.energy = Math.max(0, defender.energy - 1)
-            attacker.energy += 1
             ctx.logCombatMessage(`Draining dagger saps ${defender.name}'s energy.`)
         }
 

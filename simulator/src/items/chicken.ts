@@ -12,6 +12,8 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { getSummonedActorName } from "../util/actor"
 import { DungeonContext } from "../simulator"
 
+export const CHUMBY_CHICKEN_NAME = `Chumby Chicken`
+
 export class ChumbyChicken extends Item {
     constructor(tier: number) {
         let kind = ItemKind.CHUMBY_CHICKEN
@@ -26,7 +28,7 @@ export class ChumbyChicken extends Item {
         const attacker = newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
 
         if (!attacker.auras.some(it => it.kind === AuraKind.CHICKEN_EXHAUSTION)) {
-            const chickenBaseName = `Celine's Chumby Chicken`
+            const chickenBaseName = CHUMBY_CHICKEN_NAME
             const chickenName = getSummonedActorName(newPartyStates, triggeredBy.turnActorPartyIndex, chickenBaseName)
             
             const chumbyChickenEvent = new SummonActorEvent({
@@ -44,7 +46,7 @@ export class ChumbyChicken extends Item {
             }, triggeredBy.turnActorPartyIndex)
 
             chumbyChickenEvents.push(chumbyChickenEvent)
-            ctx.logCombatMessage(`${attacker.name} summons a Celine's Chumby Chicken.`)
+            ctx.logCombatMessage(`${attacker.name} summons a Chumby Chicken.`)
         
             newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex].auras.push({
                 kind: AuraKind.CHICKEN_EXHAUSTION,

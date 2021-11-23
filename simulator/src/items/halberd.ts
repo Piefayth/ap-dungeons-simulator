@@ -20,6 +20,8 @@ export class Halberd extends Item {
 
         owner.attackMin += 2 * this.tier
         owner.attackMax += 2 * this.tier
+        owner.curHP += 4 * this.tier
+        owner.maxHP += 4 * this.tier
 
         newPartyStates[ownerPartyIndex][ownerIndex] = owner
 

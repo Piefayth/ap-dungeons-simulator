@@ -15,7 +15,7 @@ export class KnightsLance extends Item {
     constructor(tier: number) {
         let kind = ItemKind.KNIGHTS_LANCE
         let name = ItemKind[ItemKind.KNIGHTS_LANCE]
-        let energyCost = 40
+        let energyCost = 45
         super(kind, name, tier, energyCost)
     }
 
