@@ -1,5 +1,5 @@
 import { Dungeon } from "../engine/dungeon";
-import { BigClub, CleansingFlames, HealingPendant, KnightsLance, LoveLetter, PoisonDagger, WhirlwindAxe } from "../items";
+import { BigClub, CleansingFlames, HealingPendant, ImpWhistle, KnightsLance, LoveLetter, PoisonDagger, WhirlwindAxe } from "../items";
 import { Avalanche } from "../items/avalanche";
 import { BoostingBugle } from "../items/boostingBugle";
 import { ExplosionPowder } from "../items/explosionPowder";
@@ -13,7 +13,7 @@ export const dungeon4: Dungeon = {
     floors: [{
         enemies: [{
             name: "G Fuel",
-            items: [],
+            items: [new ImpWhistle(2)],
             auras: [],
             maxHP: 80,
             curHP: 80,
