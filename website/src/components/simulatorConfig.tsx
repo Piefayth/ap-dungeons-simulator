@@ -98,6 +98,10 @@ export default function simulatorConfig(props: RouteComponentProps) {
     
     const [simData, setSimData] = useState(cloneDeep(defaultSimulatorInputData))
 
+    // TODO:
+    // Show winrates after simulate
+    // Have button to show simulation combat log
+
     if (oldState) {
         props.location.state = {
             party: undefined
@@ -147,9 +151,11 @@ export default function simulatorConfig(props: RouteComponentProps) {
                     <Form.Item>
                         <Button type="primary" onClick={() => {
                             const sanitizedSimData = sanitizeSimData(simData)
+                            runTrials(sanitizedSimData)
+                            /*
                             navigate('./simulator', {
                                 state: runTrials(sanitizedSimData)
-                            })
+                            })*/
                         }}>
                             Simulate
                         </Button>
