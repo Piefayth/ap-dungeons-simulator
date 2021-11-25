@@ -25,7 +25,7 @@ export class MagicParasol extends Item {
         const newEvents: Event[] = []
 
         const chance = 17 + (3 * this.tier) // TODO: VERIFY PARASOL SCALING IS CORRECT
-        const damageReduction = 5 + (3 * this.tier)
+        const damageReduction = 2 + (3 * this.tier)
         const roll = getRandomInt(0, 100)
         if (roll < chance) {
             ctx.logCombatMessage(`${defender.name} uses their Magic Parasol to block ${damageReduction} damage.`)
