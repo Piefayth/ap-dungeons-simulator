@@ -3,6 +3,7 @@ import { dungeon10 } from './dungeons/dungeon10'
 import { dungeon2 } from './dungeons/dungeon2'
 import { dungeon3 } from './dungeons/dungeon3'
 import { dungeon4 } from './dungeons/dungeon4'
+import { dungeon7 } from './dungeons/dungeon7'
 import { dungeon8 } from './dungeons/dungeon8'
 import { dungeon9 } from './dungeons/dungeon9'
 import { Actor } from './engine/actor'
@@ -80,62 +81,20 @@ const testParty: Actor[] = [{
     attackMin: 3,
     attackMax: 12
 }*/]
-/*
-const testParty2: Actor[] = [{
-    name: "Piefayth",
-    items: [new WhirlwindAxe(1)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 6,
-    attackMin: 1(5),
-    attackMax: 25
-}, {
-    name: "january",
-    items: [new ImpWhistle(1), new BFCannon(1)],
-    auras: [],
-    maxHP: 100,
-    curHP: 100,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "saki",
-    items: [],
-    auras: [],
-    maxHP: 11(5),
-    curHP: 11(5),
-    energy: 0,
-    speed: 11,
-    attackMin: 2,
-    attackMax: 11
-}, {
-    name: "birb",
-    items: [new Avalanche(1), new ChumbyChicken(1)],
-    auras: [],
-    maxHP: 11(5),
-    curHP: 11(5),
-    energy: 0,
-    speed: 10,
-    attackMin: 2,
-    attackMax: 11
-}]*/
 
-const testParty3: Actor[] = [{
+const testParty2: Actor[] = [{
     name: "zoop",
-    items: [new PetImp(8), new RockCompanion(8), new TrustySteed(8), new FestiveFeast(8)],
+    items: [new MartyrArmor(7), new SurvivalKit(7), new MagicParasol(7), new BoostingBugle(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
     energy: 0,
     speed: 13,
-    attackMin: 3,
-    attackMax: 12
+    attackMin: 4,
+    attackMax: 13
 }, {
     name: "piefayth",
-    items: [new PetImp(8), new RockCompanion(8), new TrustySteed(8), new FestiveFeast(8)],
+    items: [new MartyrArmor(7), new SurvivalKit(7), new MagicParasol(7), new BoostingBugle(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -144,8 +103,8 @@ const testParty3: Actor[] = [{
     attackMin: 3,
     attackMax: 12
 }, {
-    name: "saki",
-    items: [new PetImp(8), new RockCompanion(8), new TrustySteed(8), new FestiveFeast(8)],
+    name: "birb",
+    items: [new MartyrArmor(7), new SurvivalKit(7), new MagicParasol(7), new BoostingBugle(7)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -155,11 +114,64 @@ const testParty3: Actor[] = [{
     attackMax: 12
 }]
 
-if (require.main === module && typeof window == "undefined") {
-    const simulator = new DungeonSimulator({
-        displayCombatEvents: false,
-        displayPartyStates: false,
-        pityScaling: (speed) => speed + 0
+const testParty3: Actor[] = [{
+    name: "zoop",
+    items: [new PetImp(4), new RockCompanion(5), new TrustySteed(4), new ImpWhistle(3)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "piefayth",
+    items: [new PetImp(4), new RockCompanion(4), new TrustySteed(3), new FestiveFeast(5)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 13,
+    attackMin: 3,
+    attackMax: 12
+}]
+
+async function worker() {
+    const req = module[`require`].bind(module)
+    const { Worker } = req('worker_threads')
+
+    const worker = new Worker('./simulator/src/worker-import.js', {
+        workerData: {
+            trials: 10,
+            party: testParty3,
+            dungeon: dungeon4,
+            path: './worker.ts'
+        }
     })
-    simulator.simulate(1000, testParty3, dungeon8)
+
+    const promise = new Promise((res, rej) => {
+        worker.on('message', (result) => {
+            res(result)
+        })
+
+        worker.on('error', (error) => {
+            rej(error)
+        })
+    })
+
+    return promise
+}
+
+if (require.main === module && typeof window == "undefined") {
+    const workerOption = process.argv[2]
+    if (workerOption) {
+        worker()
+    } else {
+        const simulator = new DungeonSimulator({
+            displayCombatEvents: false,
+            displayPartyStates: false,
+            pityScaling: (speed) => speed + 0
+        })
+        simulator.simulate(10, testParty2, dungeon7)
+    }
 }

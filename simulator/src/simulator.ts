@@ -114,4 +114,13 @@ export class DungeonSimulator {
 
         return ctx.simulationResult
     }
+
+    simulateSingle(party: Actor[], dungeon: Dungeon): SimulationResult {
+        let ctx = new DungeonContext(this.settings)
+        ctx.simulationResult.party = party
+
+        const result = startDungeon(ctx, dungeon, party)
+
+        return ctx.simulationResult
+    }
 }
