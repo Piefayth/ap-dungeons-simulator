@@ -195,6 +195,7 @@ const testParty3: Actor[] = [{
 }, {
     name: "rando",
     items: [new PetImp(5), new RockCompanion(5), new TrustySteed(6), new ImpWhistle(5)],
+    //[new PetImp(5), new RockCompanion(5), new TrustySteed(6), new ImpWhistle(5)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -207,7 +208,7 @@ const testParty3: Actor[] = [{
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty3
     const selectedDungeon = dungeon7
-    const trials = 100
+    const trials = 1000
     const workers = 4
     const workerOption = process.argv[2]
 

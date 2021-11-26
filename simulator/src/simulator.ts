@@ -89,7 +89,7 @@ export class DungeonSimulator {
         for (let i = 0; i < trials; i++) {
             console.log(`Running trial ${i} / ${trials}`)
             const trialResult = startDungeon(ctx, dungeon, party)
-            
+
             ctx.endTrial()
             ctx.simulationResult.trials++
 

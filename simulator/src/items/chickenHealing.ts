@@ -40,7 +40,7 @@ export class ChickenHealing extends Item {
         })
 
         return {
-            newPartyStates: parties,
+            newPartyStates: newPartyStates,
             newEvents: []
         }
     }
