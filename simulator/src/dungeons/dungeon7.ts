@@ -1,6 +1,5 @@
-import { EnergeticAlly } from "../../../build/simulator/src/items/energeticAlly";
 import { Dungeon } from "../engine/dungeon";
-import { ChallengerArrow, KnightsLance, LoveLetter, MagicParasol, PoisonDagger } from "../items";
+import { ChallengerArrow, EnergeticAlly, KnightsLance, LoveLetter, MagicParasol, PoisonDagger } from "../items";
 import { Avalanche } from "../items/avalanche";
 import { BoostingBugle } from "../items/boostingBugle";
 import { ExplosionPowder } from "../items/explosionPowder";

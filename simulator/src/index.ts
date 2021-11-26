@@ -218,7 +218,7 @@ const testParty3: Actor[] = [{
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty3
     const selectedDungeon = dungeon7
-    const trials = 1000
+    const trials = 1
     const workers = 4
     const workerOption = process.argv[2]
 
@@ -262,7 +262,7 @@ if (require.main === module && typeof window == "undefined") {
             .catch(failed => console.log('failed???'))
     } else {
         const simulator = new DungeonSimulator({
-            displayCombatEvents: false,
+            displayCombatEvents: true,
             displayPartyStates: false,
             pityScaling: (speed) => speed + 0
         })
