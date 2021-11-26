@@ -99,50 +99,8 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 }
 
 const testParty: Actor[] = [{
-    name: "maurixxo",
-    items: [new Avalanche(5), new MartyrArmor(5), new SurvivalKit(5), new MagicParasol(5)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "zoop",
-    items: [new Avalanche(5), new MartyrArmor(5), new SurvivalKit(5), new MagicParasol(5)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}/*, {
-    name: "debuffer",
-    items: [new Avalanche(5), new Freezeman(5), new Thorns(5), new LoveLetter(5)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "anotherguy",
-    items: [new Avalanche(5), new Freezeman(5), new Thorns(5), new LoveLetter(5)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 3,
-    attackMax: 12
-}*/]
-
-const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new PetImp(6), new RockCompanion(5), new TrustySteed(5), new FestiveFeast(5)],
+    items: [new FireSword(6), new BigClub(6), new Freezeman(6), new WhirlwindAxe(6)],
     auras: [],
     maxHP: 130,
     curHP: 130,
@@ -151,30 +109,82 @@ const testParty2: Actor[] = [{
     attackMin: 3,
     attackMax: 12
 }, {
-    name: "saki",
-    items: [new ExplosionPowder(3), new TrustySteed(3), new DrainingDagger(2), new Freezeman(3)],
+    name: "zoop",
+    items: [new FireSword(6), new BigClub(6), new Freezeman(6), new SeekingMissiles(6)],
     auras: [],
-    maxHP: 110,
-    curHP: 110,
+    maxHP: 140,
+    curHP: 140,
     energy: 0,
     speed: 11,
-    attackMin: 1,
-    attackMax: 10
+    attackMin: 3,
+    attackMax: 14
 }, {
-    name: "Tobi",
-    items: [new PetImp(3), new RockCompanion(3), new SeekingMissiles(3), new Avalanche(3)],
+    name: "tank 1",
+    items: [new SurvivalKit(6), new MagicParasol(6), new HealingPendant(6), new KnightsLance(6)],
     auras: [],
     maxHP: 130,
     curHP: 130,
     energy: 0,
     speed: 12,
-    attackMin: 2,
-    attackMax: 11
+    attackMin: 1,
+    attackMax: 10
+}, {
+    name: "tank 2",
+    items: [new SurvivalKit(6), new MagicParasol(6), new HealingPendant(6), new KnightsLance(6)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 1,
+    attackMax: 10
+}, {
+    name: "healer",
+    items: [new LoveLetter(6), new CleansingFlames(6), new Freezeman(6), new EnergeticAlly(6)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 12,
+    attackMin: 1,
+    attackMax: 10
+}]
+
+const testParty2: Actor[] = [{
+    name: "piefayth",
+    items: [new PetImp(5), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(5)],
+    auras: [],
+    maxHP: 130,
+    curHP: 130,
+    energy: 0,
+    speed: 13,
+    attackMin: 3,
+    attackMax: 12
+}, {
+    name: "zoop",
+    items: [new PetImp(5), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(5)],
+    auras: [],
+    maxHP: 140,
+    curHP: 140,
+    energy: 0,
+    speed: 11,
+    attackMin: 3,
+    attackMax: 14
+}, {
+    name: "birb",
+    items: [new Avalanche(5), new DrainingDagger(5), new Freezeman(4), new Thorns(4)],
+    auras: [],
+    maxHP: 115,
+    curHP: 115,
+    energy: 0,
+    speed: 11,
+    attackMin: 1,
+    attackMax: 10
 }]
 
 const testParty3: Actor[] = [{
     name: "zoop",
-    items: [new HealingPendant(6), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(6)],
+    items: [new PetImp(6), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(6)],
     auras: [],
     maxHP: 140,
     curHP: 140,
@@ -194,7 +204,7 @@ const testParty3: Actor[] = [{
     attackMax: 12
 }, {
     name: "rando",
-    items: [new PetImp(5), new RockCompanion(5), new TrustySteed(6), new ImpWhistle(5)],
+    items: [new KnightsLance(6), new SurvivalKit(6), new MagicParasol(6), new HealingPendant(6)],
     //[new PetImp(5), new RockCompanion(5), new TrustySteed(6), new ImpWhistle(5)],
     auras: [],
     maxHP: 130,

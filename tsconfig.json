@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
+        "outDir": "./build/",
         "noImplicitAny": false,
         "removeComments": true,
         "module": "commonjs",
@@ -10,5 +10,11 @@
         "moduleResolution": "node",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true
-      }
+      },
+      "exclude": [
+          "node_modules",
+          "./dist",
+          "./build",
+          "./website"
+      ]
 }

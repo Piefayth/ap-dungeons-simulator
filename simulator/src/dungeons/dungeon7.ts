@@ -1,3 +1,4 @@
+import { EnergeticAlly } from "../../../build/simulator/src/items/energeticAlly";
 import { Dungeon } from "../engine/dungeon";
 import { ChallengerArrow, KnightsLance, LoveLetter, MagicParasol, PoisonDagger } from "../items";
 import { Avalanche } from "../items/avalanche";
@@ -87,7 +88,7 @@ export const dungeon7: Dungeon = {
             attackMax: 2
         }, {
             name: "Aqua",
-            items: [new LoveLetter(6)],
+            items: [new LoveLetter(6), new EnergeticAlly(3)],
             auras: [],
             maxHP: 150,
             curHP: 150,
