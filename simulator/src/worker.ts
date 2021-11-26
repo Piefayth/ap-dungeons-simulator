@@ -9,6 +9,7 @@ function workerSimulate(trials: number, party: Actor[], dungeon: Dungeon, parent
     const simulator = new DungeonSimulator({
         displayCombatEvents: false,
         displayPartyStates: false,
+        skipHistoryStorage: true,
         pityScaling: (speed) => speed + 0
     })
 

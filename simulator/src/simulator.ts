@@ -42,14 +42,19 @@ export class DungeonContext {
     }
 
     logPartyStates(parties: Actor[][]) {
-        this.simulationResult.results[this.currentTrial].turnPartyStates[this.currentTurn] = cloneDeep(parties)
+        if (!this.settings.skipHistoryStorage) {
+            this.simulationResult.results[this.currentTrial].turnPartyStates[this.currentTurn] = cloneDeep(parties)
+        }
     }
 
     logCombatMessage(message: string) {
         if (this.settings.displayCombatEvents) {
             console.log(message)
         }
-        this.simulationResult.results[this.currentTrial].turnOutput[this.currentTurn].push(message)
+
+        if (!this.settings.skipHistoryStorage) {
+            this.simulationResult.results[this.currentTrial].turnOutput[this.currentTurn].push(message)
+        }
     }
 
     endTrial() {

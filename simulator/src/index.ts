@@ -152,34 +152,24 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new PetImp(5), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(5)],
+    items: [new PetImp(6), new RockCompanion(7), new TrustySteed(6), new FestiveFeast(7)],
     auras: [],
-    maxHP: 130,
-    curHP: 130,
+    maxHP: 140,
+    curHP: 140,
     energy: 0,
     speed: 13,
     attackMin: 3,
     attackMax: 12
 }, {
     name: "zoop",
-    items: [new PetImp(5), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(5)],
+    items: [new PetImp(6), new RockCompanion(7), new TrustySteed(6), new FestiveFeast(8)],
     auras: [],
     maxHP: 140,
     curHP: 140,
     energy: 0,
-    speed: 11,
-    attackMin: 3,
-    attackMax: 14
-}, {
-    name: "birb",
-    items: [new Avalanche(5), new DrainingDagger(5), new Freezeman(4), new Thorns(4)],
-    auras: [],
-    maxHP: 115,
-    curHP: 115,
-    energy: 0,
-    speed: 11,
-    attackMin: 1,
-    attackMax: 10
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13
 }]
 
 const testParty3: Actor[] = [{
@@ -216,10 +206,10 @@ const testParty3: Actor[] = [{
 }]
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty3
-    const selectedDungeon = dungeon7
-    const trials = 1
-    const workers = 4
+    const selectedParty = testParty2
+    const selectedDungeon = dungeon6
+    const trials = 10000
+    const workers = 8
     const workerOption = process.argv[2]
 
     if (workerOption) {

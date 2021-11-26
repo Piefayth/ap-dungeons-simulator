@@ -1,5 +1,6 @@
 export type Settings = {
     displayCombatEvents: boolean
-    displayPartyStates: boolean
+    displayPartyStates: boolean,
+    skipHistoryStorage?: boolean,
     pityScaling: (number) => number
 }
