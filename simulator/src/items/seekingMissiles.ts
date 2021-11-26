@@ -24,6 +24,7 @@ export class SeekingMissiles extends Item {
 
         for (let i = 0; i < parties[triggeredBy.defenderPartyIndex].length; i++) {
             if (parties[triggeredBy.defenderPartyIndex][i].curHP > 0 && parties[triggeredBy.defenderPartyIndex][i].curHP < lowestHP) {
+                lowestHP = parties[triggeredBy.defenderPartyIndex][i].curHP
                 newTargetIndex = i
             }
         }
