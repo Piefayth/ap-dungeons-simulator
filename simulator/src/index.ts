@@ -244,6 +244,7 @@ if (require.main === module && typeof window == "undefined") {
                     }
                 })
 
+                console.log(`Ran Dungeon ${selectedDungeon.tier} with this party:`)
                 console.table(partyTable)
                 console.log(`Winrate: ${(aggregateResult.wins / aggregateResult.trials) * 100}%`)
             })
