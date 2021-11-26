@@ -31,14 +31,13 @@ function workerSimulate(trials: number, party: Actor[], dungeon: Dungeon, parent
 
     dungeon.floors = instantiatedFloors
 
-    // do a loop based on number of trials
-    // post a message back for each completion
+    for (let i = 0; i < trials; i++) {
+        const result = simulator.simulateSingle(instantiatedParty, dungeon)
 
-    const result = simulator.simulateSingle(instantiatedParty, dungeon)
-    
-    parentPort.postMessage(
-        result
-    )
+        parentPort.postMessage(
+            result
+        )
+    }
 }
 
 if (typeof window === "undefined") {

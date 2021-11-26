@@ -119,7 +119,14 @@ export class DungeonSimulator {
         let ctx = new DungeonContext(this.settings)
         ctx.simulationResult.party = party
 
-        const result = startDungeon(ctx, dungeon, party)
+        const trialResult = startDungeon(ctx, dungeon, party)
+
+        ctx.simulationResult.trials++
+        if (trialResult.won) {
+            ctx.simulationResult.wins++
+        } else {
+            ctx.simulationResult.losses++
+        }
 
         return ctx.simulationResult
     }

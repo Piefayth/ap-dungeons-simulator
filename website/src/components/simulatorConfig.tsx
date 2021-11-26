@@ -94,11 +94,22 @@ function runTrials(options: SimulatorInputData): SimulationResult {
     return simulator.simulate(options.trials, options.party, dungeonMap[options.dungeon])
 }
 
+const defaultResult: SimulationResult = {
+    trials: 0,
+    winrate: 0,
+    wins: 0,
+    losses: 0,
+    results: [],
+    party: []
+}
+
 export default function simulatorConfig(props: RouteComponentProps) {
     const oldState = props.location.state ? (props.location.state as any).party as Actor[] : undefined
     const navigate = useNavigate()
     
     const [simData, setSimData] = useState(cloneDeep(defaultSimulatorInputData))
+
+    const [resultData, setResultData] = useState(defaultResult)
 
     // TODO:
     // Show winrates after simulate
@@ -112,6 +123,15 @@ export default function simulatorConfig(props: RouteComponentProps) {
         newSimData.party = cloneDeep(oldState)
         setSimData(newSimData)
     }
+
+    const results = 
+        <div style={{width: 300, paddingBottom: 30, margin: '0 auto'}}>
+            Wins: {resultData.wins}
+            <br />
+            Losses: {resultData.trials - resultData.wins}
+            <br />
+            Winrate: {resultData.wins / resultData.trials}
+        </div>
 
     const addTeammateButton =
         <Form.Item>
@@ -130,6 +150,7 @@ export default function simulatorConfig(props: RouteComponentProps) {
             name="basic"
             autoComplete="off"
        >
+            { results }
             <DungeonSelection 
                 defaultDungeon={8}
                 defaultTrials={1}
@@ -153,7 +174,8 @@ export default function simulatorConfig(props: RouteComponentProps) {
                     <Form.Item>
                         <Button type="primary" onClick={() => {
                             const sanitizedSimData = sanitizeSimData(simData)
-                            runTrials(sanitizedSimData)
+                            const result = runTrials(sanitizedSimData)
+                            setResultData(result)
                             /*
                             navigate('./simulator', {
                                 state: runTrials(sanitizedSimData)

@@ -95,6 +95,10 @@ function ItemPicker(itemPickerProps: ItemPickerProps) {
             <Col span={19}>
                 <Form.Item>
                     <Select 
+                        showSearch
+                        filterOption={(input, option) =>
+                            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                        }
                         defaultValue={itemPickerProps.defaultItem ? itemPickerProps.defaultItem.kind : ItemKind.NONE}
                         onChange={(newKind) => {
                             setItemKind(newKind)
