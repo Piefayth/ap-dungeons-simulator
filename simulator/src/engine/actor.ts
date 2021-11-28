@@ -14,7 +14,8 @@ type Actor = {
     pitySpeed?: number,
     tier?: number
     isSummoned?: boolean,
-    dead?: boolean
+    dead?: boolean,
+    angel?: boolean
 }
 
 export {

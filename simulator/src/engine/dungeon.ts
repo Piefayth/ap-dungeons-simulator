@@ -68,7 +68,9 @@ function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): Du
         ctx.logPartyStates(parties)
         ctx.endTurn()
 
-        parties = simulateFloor(ctx, parties)
+        while (whichPartyDied(parties) === null) {
+            parties = simulateFloor(ctx, parties)
+        }
         
         if (whichPartyDied(parties) === 0) {
             ctx.logPartyStates(parties)
@@ -96,13 +98,13 @@ function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
 
     let deadParty = whichPartyDied(parties)
     if (deadParty !== null) {
-        return parties
+        return newPartyState
     }
 
     ctx.logPartyStates(newPartyState)
     ctx.endTurn()
 
-    return simulateFloor(ctx, newPartyState)
+    return newPartyState
 }
 
 function prepareTurn(parties: Actor[][]): Actor[][] {
@@ -226,6 +228,13 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
         newPartyStates = newPartyStates.map((party, partyIndex) => 
             party.map((actor, actorIndex) => {
                 if (actor.curHP <= 0 && !actor.dead) {
+                    if (actor.angel) {
+                        actor.angel = false
+                        actor.curHP = Math.floor(actor.maxHP * 0.33)
+                        ctx.logCombatMessage(`${actor.name} was ressurected!`)
+                        return actor
+                    }
+                    
                     ctx.logCombatMessage(`${actor.name} has fallen!`)
                     // TODO: move these changes to the actor died event
                     actor.speed = 0             

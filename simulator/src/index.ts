@@ -99,116 +99,85 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 }
 
 const testParty: Actor[] = [{
-    name: "piefayth",
-    items: [new FireSword(6), new BigClub(6), new Freezeman(6), new WhirlwindAxe(6)],
+    name: "degen 1",
+    items: [new BoostingBugle(8), new DrainingDagger(7), new MagicParasol(7), new MartyrArmor(7)],
     auras: [],
-    maxHP: 130,
-    curHP: 130,
+    maxHP: 145,
+    curHP: 145,
     energy: 0,
     speed: 13,
     attackMin: 3,
     attackMax: 12
 }, {
-    name: "zoop",
-    items: [new FireSword(6), new BigClub(6), new Freezeman(6), new SeekingMissiles(6)],
+    name: "degen 2",
+    items: [new SurvivalKit(8), new ChallengerArrow(7), new MartyrArmor(7), new SeekingMissiles(6)],
     auras: [],
-    maxHP: 140,
-    curHP: 140,
+    maxHP: 145,
+    curHP: 145,
     energy: 0,
-    speed: 11,
-    attackMin: 3,
-    attackMax: 14
-}, {
-    name: "tank 1",
-    items: [new SurvivalKit(6), new MagicParasol(6), new HealingPendant(6), new KnightsLance(6)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 1,
-    attackMax: 10
-}, {
-    name: "tank 2",
-    items: [new SurvivalKit(6), new MagicParasol(6), new HealingPendant(6), new KnightsLance(6)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 1,
-    attackMax: 10
-}, {
-    name: "healer",
-    items: [new LoveLetter(6), new CleansingFlames(6), new Freezeman(6), new EnergeticAlly(6)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 12,
-    attackMin: 1,
-    attackMax: 10
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13
 }]
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new PetImp(6), new RockCompanion(7), new TrustySteed(6), new FestiveFeast(7)],
+    items: [new MartyrArmor(7), new SurvivalKit(7), new Freezeman(7), new BoostingBugle(7)],
     auras: [],
     maxHP: 140,
     curHP: 140,
     energy: 0,
     speed: 13,
     attackMin: 3,
-    attackMax: 12
+    attackMax: 12,
 }, {
     name: "zoop",
-    items: [new PetImp(6), new RockCompanion(7), new TrustySteed(6), new FestiveFeast(8)],
+    items: [new MartyrArmor(7), new SurvivalKit(7), new Freezeman(7), new BoostingBugle(7)],
     auras: [],
-    maxHP: 140,
-    curHP: 140,
+    maxHP: 145,
+    curHP: 145,
     energy: 0,
     speed: 13,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
 }]
 
 const testParty3: Actor[] = [{
-    name: "zoop",
-    items: [new PetImp(6), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(6)],
+    name: "piefayth",
+    items: [new MartyrArmor(7), new SurvivalKit(7), new Freezeman(7), new BoostingBugle(7)],
+    auras: [],
+    maxHP: 140,
+    curHP: 140,
+    energy: 0,
+    speed: 13,
+    attackMin: 3,
+    attackMax: 12,
+}, {
+    name: "saki",
+    items: [new ExplosionPowder(7), new Halberd(6), new SeekingMissiles(6), new WhirlwindAxe(5)],
+    auras: [],
+    maxHP: 115,
+    curHP: 115,
+    energy: 0,
+    speed: 12,
+    attackMin: 4,
+    attackMax: 13,
+}, {
+    name: "p",
+    items: [new SurvivalKit(6), new MartyrArmor(6), new MagicParasol(6), new BoostingBugle(5)],
     auras: [],
     maxHP: 140,
     curHP: 140,
     energy: 0,
     speed: 13,
     attackMin: 4,
-    attackMax: 13
-}, {
-    name: "piefayth",
-    items: [new SurvivalKit(6), new RockCompanion(6), new TrustySteed(6), new FestiveFeast(6)],
-    auras: [],
-    maxHP: 140,
-    curHP: 140,
-    energy: 0,
-    speed: 13,
-    attackMin: 3,
-    attackMax: 12
-}, {
-    name: "rando",
-    items: [new KnightsLance(6), new SurvivalKit(6), new MagicParasol(6), new HealingPendant(6)],
-    //[new PetImp(5), new RockCompanion(5), new TrustySteed(6), new ImpWhistle(5)],
-    auras: [],
-    maxHP: 130,
-    curHP: 130,
-    energy: 0,
-    speed: 13,
-    attackMin: 3,
-    attackMax: 12
+    attackMax: 13,
 }]
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty2
+    const selectedParty = testParty3
     const selectedDungeon = dungeon6
-    const trials = 10000
+    const trials = 1000
     const workers = 8
     const workerOption = process.argv[2]
 
@@ -241,7 +210,8 @@ if (require.main === module && typeof window == "undefined") {
                         item1: `${actor.items[0].kind} ${actor.items[0].tier}`,
                         item2: `${actor.items[1].kind} ${actor.items[1].tier}`,
                         item3: `${actor.items[2].kind} ${actor.items[2].tier}`,
-                        item4: `${actor.items[3].kind} ${actor.items[3].tier}`
+                        item4: `${actor.items[3].kind} ${actor.items[3].tier}`,
+                        angel: actor.angel ? 'Y' : 'N'
                     }
                 })
 
@@ -252,7 +222,7 @@ if (require.main === module && typeof window == "undefined") {
             .catch(failed => console.log('failed???'))
     } else {
         const simulator = new DungeonSimulator({
-            displayCombatEvents: true,
+            displayCombatEvents: false,
             displayPartyStates: false,
             pityScaling: (speed) => speed + 0
         })
