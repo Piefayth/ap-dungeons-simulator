@@ -203,7 +203,7 @@ const testParty3: Actor[] = [{
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty2
     const selectedDungeon = dungeon8
-    const trials = 10000
+    const trials = 1000
     const workers = 6
     const workerOption = process.argv[2]
 

@@ -130,98 +130,95 @@ function whichPartyDied(parties: Actor[][]): number | null {
 }
 
 function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Event[]): Actor[][] {
-    let newPartyStates = cloneDeep(parties) // might not need this clone
-    let localEvents = cloneDeep(events) // or this one?
-    
-    while (localEvents.length != 0) {
-        const event = localEvents.pop()
+    while (events.length != 0) {
+        const event = events.pop()
         switch (event.kind) {
             case EventKind.BEFORE_TURN:
                 const beforeTurnEvent = event as BeforeTurnEvent
-                const beforeTurnResult = beforeTurnEvent.processBeforeTurn(ctx, newPartyStates)
-                localEvents = localEvents.concat(beforeTurnResult.newEvents)
-                newPartyStates = beforeTurnResult.newPartyStates
+                const beforeTurnResult = beforeTurnEvent.processBeforeTurn(ctx, parties)
+                events = events.concat(beforeTurnResult.newEvents)
+                parties = beforeTurnResult.newPartyStates
                 break
             case EventKind.CANCEL_TURN:
-                localEvents = []
+                events = []
                 break
             case EventKind.START_TURN:
                 const startTurnEvent = event as StartTurnEvent
-                const startTurnResult = startTurnEvent.processStartTurn(ctx, newPartyStates)
-                localEvents = localEvents.concat(startTurnResult.newEvents)
-                newPartyStates = startTurnResult.newPartyStates
+                const startTurnResult = startTurnEvent.processStartTurn(ctx, parties)
+                events = events.concat(startTurnResult.newEvents)
+                parties = startTurnResult.newPartyStates
                 break
             case EventKind.START_TURN_ITEM:
                 const startTurnItemEvent = event as StartTurnItemEvent
-                const startTurnItemResult = startTurnItemEvent.processStartTurnItem(ctx, newPartyStates)
-                localEvents = localEvents.concat(startTurnItemResult.newEvents)
-                newPartyStates = startTurnItemResult.newPartyStates
+                const startTurnItemResult = startTurnItemEvent.processStartTurnItem(ctx, parties)
+                events = events.concat(startTurnItemResult.newEvents)
+                parties = startTurnItemResult.newPartyStates
                 break
             case EventKind.SELECT_TARGET:
                 const selectTargetEvent = event as SelectTargetEvent
-                const selectTargetResult = selectTargetEvent.processSelectTarget(ctx, newPartyStates)
-                localEvents = localEvents.concat(selectTargetResult.newEvents)
-                newPartyStates = selectTargetResult.newPartyStates
+                const selectTargetResult = selectTargetEvent.processSelectTarget(ctx, parties)
+                events = events.concat(selectTargetResult.newEvents)
+                parties = selectTargetResult.newPartyStates
                 break
             case EventKind.TARGET_FINALIZED:
                 const targetFinalizedEvent = event as TargetFinalizedEvent
-                const targetFinalizedResult = targetFinalizedEvent.processTargetFinalized(ctx, newPartyStates)
-                localEvents = localEvents.concat(targetFinalizedResult.newEvents)
-                newPartyStates = targetFinalizedResult.newPartyStates
+                const targetFinalizedResult = targetFinalizedEvent.processTargetFinalized(ctx, parties)
+                events = events.concat(targetFinalizedResult.newEvents)
+                parties = targetFinalizedResult.newPartyStates
                 break
             case EventKind.BASIC_ATTACK:
                 const basicAttackEvent = event as BasicAttackEvent
-                const basicAttackResult = basicAttackEvent.processBasicAttack(ctx, newPartyStates)
-                localEvents = localEvents.concat(basicAttackResult.newEvents)
-                newPartyStates = basicAttackResult.newPartyStates
+                const basicAttackResult = basicAttackEvent.processBasicAttack(ctx, parties)
+                events = events.concat(basicAttackResult.newEvents)
+                parties = basicAttackResult.newPartyStates
                 break
             case EventKind.AFTER_ATTACK:
                 const afterAttackEvent = event as AfterAttackEvent
-                const afterAttackResult = afterAttackEvent.processAfterAttack(ctx, newPartyStates)
-                localEvents = localEvents.concat(afterAttackResult.newEvents)
-                newPartyStates = afterAttackResult.newPartyStates
+                const afterAttackResult = afterAttackEvent.processAfterAttack(ctx, parties)
+                events = events.concat(afterAttackResult.newEvents)
+                parties = afterAttackResult.newPartyStates
                 break
             case EventKind.SUMMON_ACTOR:
                 const summonActorEvent = event as SummonActorEvent
-                const summonActorResult = summonActorEvent.processSummonActor(ctx, newPartyStates)
-                localEvents = localEvents.concat(summonActorResult.newEvents)
-                newPartyStates = summonActorResult.newPartyStates
+                const summonActorResult = summonActorEvent.processSummonActor(ctx, parties)
+                events = events.concat(summonActorResult.newEvents)
+                parties = summonActorResult.newPartyStates
                 break
             case EventKind.ACTOR_DIED:
                 const actorDiedEvent = event as ActorDiedEvent
-                const actorDiedResult = actorDiedEvent.processActorDied(ctx, newPartyStates)
-                localEvents = localEvents.concat(actorDiedResult.newEvents)
-                newPartyStates = actorDiedResult.newPartyStates
+                const actorDiedResult = actorDiedEvent.processActorDied(ctx, parties)
+                events = events.concat(actorDiedResult.newEvents)
+                parties = actorDiedResult.newPartyStates
                 break
             case EventKind.DAMAGE_TAKEN:
                 const damageTakenEvent = event as DamageTakenEvent
-                const damageTakenResult = damageTakenEvent.processDamageTaken(ctx, newPartyStates)
-                localEvents = localEvents.concat(damageTakenResult.newEvents)
-                newPartyStates = damageTakenResult.newPartyStates
+                const damageTakenResult = damageTakenEvent.processDamageTaken(ctx, parties)
+                events = events.concat(damageTakenResult.newEvents)
+                parties = damageTakenResult.newPartyStates
                 break
             case EventKind.DAMAGE_DEALT:
                 const damageDealtEvent = event as DamageDealtEvent
-                const damageDealtResult = damageDealtEvent.processDamageDealt(ctx, newPartyStates)
-                localEvents = localEvents.concat(damageDealtResult.newEvents)
-                newPartyStates = damageDealtResult.newPartyStates
+                const damageDealtResult = damageDealtEvent.processDamageDealt(ctx, parties)
+                events = events.concat(damageDealtResult.newEvents)
+                parties = damageDealtResult.newPartyStates
                 break
             case EventKind.HEALING_RECEIVED:
                 const healingReceivedEvent = event as HealingReceivedEvent
-                const healingReceivedResult = healingReceivedEvent.processHealingReceived(ctx, newPartyStates)
-                localEvents = localEvents.concat(healingReceivedResult.newEvents)
-                newPartyStates = healingReceivedResult.newPartyStates
+                const healingReceivedResult = healingReceivedEvent.processHealingReceived(ctx, parties)
+                events = events.concat(healingReceivedResult.newEvents)
+                parties = healingReceivedResult.newPartyStates
                 break
             case EventKind.END_TURN:
                 const endTurnEvent = event as EndTurnEvent
-                const endTurnResult = endTurnEvent.processEndTurn(ctx, newPartyStates)
-                localEvents = localEvents.concat(endTurnResult.newEvents)
-                newPartyStates = endTurnResult.newPartyStates
+                const endTurnResult = endTurnEvent.processEndTurn(ctx, parties)
+                events = events.concat(endTurnResult.newEvents)
+                parties = endTurnResult.newPartyStates
                 break
             default:
                 break
         }
 
-        newPartyStates = newPartyStates.map((party, partyIndex) => 
+        parties = parties.map((party, partyIndex) => 
             party
                 .map((actor, actorIndex) => {
                 if (actor && actor.curHP <= 0 && !actor.dead) {
@@ -237,18 +234,18 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
                     actor.speed = 0             
                     actor.pitySpeed = 0       
                     actor.dead = true
-                    localEvents = localEvents.concat(new ActorDiedEvent(actor, event as DamageTakenEvent))
+                    events = events.concat(new ActorDiedEvent(actor, event as DamageTakenEvent))
                 }
                 return actor
             })
         )
 
-        if (whichPartyDied(newPartyStates) !== null) {
+        if (whichPartyDied(parties) !== null) {
             break
         }
     }
 
-    return newPartyStates
+    return parties
 }
 
 type DetermineTurnResult = {
