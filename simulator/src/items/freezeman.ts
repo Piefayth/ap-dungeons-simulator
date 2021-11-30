@@ -3,7 +3,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { DungeonContext } from "../simulator"
 
 export class Freezeman extends Item {
@@ -15,15 +14,14 @@ export class Freezeman extends Item {
     }
 
     handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let owner = newPartyStates[ownerPartyIndex][ownerIndex]
+        let owner = parties[ownerPartyIndex][ownerIndex]
 
         owner.speed += this.tier
 
-        newPartyStates[ownerPartyIndex][ownerIndex] = owner
+        parties[ownerPartyIndex][ownerIndex] = owner
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

@@ -1,6 +1,5 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from "../../util/math"
 import { BasicAttackEvent } from "./basicAttack"
 import { DungeonContext } from "../../simulator"
@@ -11,20 +10,18 @@ class TargetFinalizedEvent extends CombatEvent {
     }
 
     processTargetFinalized(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        
         let newEvents: Event[] = [new BasicAttackEvent(this)]
 
-        let attacker = newPartyStates[this.attackerPartyIndex][this.attackerIndex]
+        let attacker = parties[this.attackerPartyIndex][this.attackerIndex]
 
         for (let i = 0; i < attacker.items.length; i++) {
-            const itemOnTargetFinalizedResult = attacker.items[i].handleOnTargetFinalized(ctx, newPartyStates, this)
+            const itemOnTargetFinalizedResult = attacker.items[i].handleOnTargetFinalized(ctx, parties, this)
             newEvents = newEvents.concat(itemOnTargetFinalizedResult.newEvents)
-            newPartyStates = itemOnTargetFinalizedResult.newPartyStates
+            parties = itemOnTargetFinalizedResult.newPartyStates
         }
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents
         }
     }

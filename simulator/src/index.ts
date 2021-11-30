@@ -122,7 +122,7 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(7), new BoostingBugle(8)],
+    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(8), new BoostingBugle(8)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -201,9 +201,9 @@ const testParty3: Actor[] = [{
 }]
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty3
-    const selectedDungeon = dungeon10
-    const trials = 1000
+    const selectedParty = testParty2
+    const selectedDungeon = dungeon8
+    const trials = 10000
     const workers = 6
     const workerOption = process.argv[2]
 

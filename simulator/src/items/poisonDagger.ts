@@ -3,7 +3,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { AuraKind } from "../engine/aura"
 import { TargetFinalizedEvent } from "../engine/events/targetFinalized"
 
@@ -18,9 +17,8 @@ export class PoisonDagger extends Item {
     }
 
     handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
-        let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
+        let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let defender = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
         
         let existingPoisonIndex = defender.auras.findIndex(it => it.kind === AuraKind.POISON)
         if (existingPoisonIndex >= 0) {
@@ -32,12 +30,12 @@ export class PoisonDagger extends Item {
             })
         }
 
-        newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex] = defender
+        parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex] = defender
 
         ctx.logCombatMessage(`${attacker.name}'s poison dagger inflicts a deadly poison on ${defender.name}.`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

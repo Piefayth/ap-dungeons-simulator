@@ -5,7 +5,6 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import { ChickenHealing } from "./chickenHealing"
-import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 
 import { getSummonedActorName } from "../util/actor"
@@ -20,10 +19,8 @@ export class PetImp extends Item {
     }
 
     handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        const newPartyStates = cloneDeep(parties)
-
         const impBaseName = 'Pet Imp'
-        const impName = getSummonedActorName(newPartyStates, ownerPartyIndex, impBaseName)
+        const impName = getSummonedActorName(parties, ownerPartyIndex, impBaseName)
 
         const imp = {
             name: impName,
@@ -39,12 +36,12 @@ export class PetImp extends Item {
             isSummoned: true
         }
 
-        newPartyStates[ownerPartyIndex].push(imp)
+        parties[ownerPartyIndex].push(imp)
         
-        ctx.logCombatMessage(`${newPartyStates[ownerPartyIndex][ownerIndex].name}'s pet imp has joined the party! It will follow you as long as it lives.`)
+        ctx.logCombatMessage(`${parties[ownerPartyIndex][ownerIndex].name}'s pet imp has joined the party! It will follow you as long as it lives.`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

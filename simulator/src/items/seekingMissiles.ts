@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep'
 import { Actor } from "../engine/actor"
 import { AuraKind } from "../engine/aura"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/events"
@@ -43,10 +42,8 @@ export class SeekingMissiles extends Item {
     }
 
     handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-
-        let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
-        let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
+        let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let defender = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
 
         // Seeking missiles actually does 0.5 damage per tier per 10% hp missing
         // The double rounding here might not be 100% correct?
@@ -61,12 +58,12 @@ export class SeekingMissiles extends Item {
             stacks: missileDamage
         })
 
-        newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
+        parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
 
         ctx.logCombatMessage(`Seeking Missiles deal an extra ${missileDamage} damage.`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

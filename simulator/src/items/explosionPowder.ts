@@ -5,7 +5,6 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { forAllLivingActors } from "../util/actor"
@@ -20,8 +19,7 @@ export class ExplosionPowder extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -35,28 +33,28 @@ export class ExplosionPowder extends Item {
 
         ctx.logCombatMessage(`Suddenly, the battlefield is covered in a thick powder. ${attacker.name} combusts the powder!`)
 
-        newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (actor, i) => {
+        parties = forAllLivingActors(parties, defenderPartyIndex, (actor, i) => {
             const powderDamageMin = 5 * this.tier
             const powderDamageMax = 10 * this.tier
             let powderDamage = getRandomInt(powderDamageMin, powderDamageMax + 1)
 
-            if (newPartyStates[defenderPartyIndex].length === 1) {
+            if (parties[defenderPartyIndex].length === 1) {
                 powderDamage *= 2
             }
 
             const damageDealtEvent = new DamageDealtEvent(powderDamage, defenderPartyIndex, i, event, event.turnActorIndex)
             powderEvents.push(damageDealtEvent)
 
-            ctx.logCombatMessage(`${newPartyStates[defenderPartyIndex][i].name} takes ${powderDamage} damage from the sheer force of the massive explosion.`)
+            ctx.logCombatMessage(`${parties[defenderPartyIndex][i].name} takes ${powderDamage} damage from the sheer force of the massive explosion.`)
 
             return actor
         })
 
         attacker.energy -= this.energyCost
-        newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: powderEvents
         }
     }

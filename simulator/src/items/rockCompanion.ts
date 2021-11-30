@@ -5,7 +5,6 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import { ChickenHealing } from "./chickenHealing"
-import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { HealingPendant } from "./healingPendant"
 
@@ -21,10 +20,8 @@ export class RockCompanion extends Item {
     }
 
     handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        const newPartyStates = cloneDeep(parties)
-
         const rockBaseName = 'Rock Companion'
-        const rockName = getSummonedActorName(newPartyStates, ownerPartyIndex, rockBaseName)
+        const rockName = getSummonedActorName(parties, ownerPartyIndex, rockBaseName)
 
         const rock = {
             name: rockName,
@@ -40,12 +37,12 @@ export class RockCompanion extends Item {
             isSummoned: true
         }
 
-        newPartyStates[ownerPartyIndex].push(rock)
+        parties[ownerPartyIndex].push(rock)
         
-        ctx.logCombatMessage(`${newPartyStates[ownerPartyIndex][ownerIndex].name}'s rock companion has joined the party! You can always count on this loyal rock to be there!`)
+        ctx.logCombatMessage(`${parties[ownerPartyIndex][ownerIndex].name}'s rock companion has joined the party! You can always count on this loyal rock to be there!`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

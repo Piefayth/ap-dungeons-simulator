@@ -4,7 +4,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 
@@ -20,32 +19,31 @@ export class MartyrArmor extends Item {
     }
 
     handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
+        let defender = parties[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
 
         const roll = getRandomInt(0, 100)
         if (roll > 66) {
             return {
-                newPartyStates,
+                newPartyStates: parties,
                 newEvents
             }
         }
 
-        const possibleTargets = newPartyStates[triggeredBy.targetPartyIndex]
+        const possibleTargets = parties[triggeredBy.targetPartyIndex]
             .filter((actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.targetIndex)
 
         if (possibleTargets.length == 0) {
             return {
-                newPartyStates,
+                newPartyStates: parties,
                 newEvents
             }
         }
 
         let targetIndex = getRandomLivingActor(
-            newPartyStates, triggeredBy.targetPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.targetIndex
+            parties, triggeredBy.targetPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.targetIndex
         )
-        const target = newPartyStates[triggeredBy.targetPartyIndex][targetIndex]
+        const target = parties[triggeredBy.targetPartyIndex][targetIndex]
 
         const healingReceived = 2 * this.tier
         const energyReceived = 1 * this.tier
@@ -54,12 +52,12 @@ export class MartyrArmor extends Item {
         newEvents.push(armorHealingEvent)
         target.energy += energyReceived
 
-        newPartyStates[triggeredBy.targetPartyIndex][targetIndex] = target
+        parties[triggeredBy.targetPartyIndex][targetIndex] = target
 
         ctx.logCombatMessage(`${defender.name}'s sacrifice invigorates ${target.name}. They gain ${healingReceived} HP and ${energyReceived} energy.`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents
         }
     }

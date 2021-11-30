@@ -5,7 +5,6 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { getRandomLivingActor } from "../util/actor"
@@ -20,8 +19,7 @@ export class ChallengerArrow extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -33,7 +31,7 @@ export class ChallengerArrow extends Item {
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         const arrowDamage = 10 * this.tier
         const arrowAttack = 1 * this.tier
-        const arrowTarget = getRandomLivingActor(newPartyStates, defenderPartyIndex)
+        const arrowTarget = getRandomLivingActor(parties, defenderPartyIndex)
 
         let arrowEvents: Event[] = []
         const damageDealtEvent = new DamageDealtEvent(arrowDamage, defenderPartyIndex, arrowTarget, event, event.turnActorIndex)
@@ -42,16 +40,16 @@ export class ChallengerArrow extends Item {
         attacker.attackMin += arrowAttack
         attacker.attackMax += arrowAttack
         attacker.energy -= this.energyCost
-        newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
         ctx.logCombatMessage(`${attacker.name} draws their bow, hitting ${
-            newPartyStates[defenderPartyIndex][arrowTarget].name
+            parties[defenderPartyIndex][arrowTarget].name
         } for ${arrowDamage} damage! Since ${
-            newPartyStates[defenderPartyIndex][arrowTarget].name
+            parties[defenderPartyIndex][arrowTarget].name
         } was no match for ${attacker.name}, ${attacker.name} gains ${arrowAttack} attack.`)
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: arrowEvents
         }
     }

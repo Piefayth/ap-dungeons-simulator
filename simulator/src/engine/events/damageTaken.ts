@@ -1,7 +1,6 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import { DamageDealtEvent } from "./damageDealt"
-import cloneDeep from 'lodash/cloneDeep'
 import { DungeonContext } from "../../simulator"
 
 
@@ -18,8 +17,7 @@ class DamageTakenEvent extends Event {
     }
 
     processDamageTaken(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {
-        let newPartyStates = cloneDeep(partyStates)
-        let defender = newPartyStates[this.targetPartyIndex][this.targetIndex]
+        let defender = partyStates[this.targetPartyIndex][this.targetIndex]
         let newEvents = []
         
         let updatedDefender = {
@@ -27,10 +25,10 @@ class DamageTakenEvent extends Event {
             curHP: Math.max(0, defender.curHP - this.damageTaken)
         }
 
-        newPartyStates[this.targetPartyIndex][this.targetIndex] = updatedDefender
+        partyStates[this.targetPartyIndex][this.targetIndex] = updatedDefender
     
         return {
-            newPartyStates,
+            newPartyStates: partyStates,
             newEvents
         }
     }

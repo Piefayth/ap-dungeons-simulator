@@ -1,7 +1,6 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import { DamageTakenEvent } from "./damageTaken"
-import cloneDeep from 'lodash/cloneDeep'
 import { DungeonContext } from "../../simulator"
 
 
@@ -20,13 +19,12 @@ class DamageDealtEvent extends Event {
     }
 
     processDamageDealt(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {
-        let newPartyStates = cloneDeep(partyStates)
-        let defender = newPartyStates[this.targetPartyIndex][this.targetIndex]
+        let defender = partyStates[this.targetPartyIndex][this.targetIndex]
         let newEvents: Event[] = []
         
         for (let i = 0; i < defender.items.length; i++) {
-            const itemResult = defender.items[i].handleOnDamageDealt(ctx, newPartyStates, this)
-            newPartyStates = itemResult.newPartyStates
+            const itemResult = defender.items[i].handleOnDamageDealt(ctx, partyStates, this)
+            partyStates = itemResult.newPartyStates
             newEvents = newEvents.concat(itemResult.newEvents)
         }
         
@@ -35,7 +33,7 @@ class DamageDealtEvent extends Event {
         )
 
         return {
-            newPartyStates,
+            newPartyStates: partyStates,
             newEvents
         }
     }

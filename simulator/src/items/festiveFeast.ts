@@ -5,7 +5,6 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { forAllLivingActors } from "../util/actor"
@@ -20,8 +19,7 @@ export class FestiveFeast extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -35,33 +33,33 @@ export class FestiveFeast extends Item {
 
         ctx.logCombatMessage(`${attacker.name} conjures a feast and the team enjoys some food. The scraps get thrown at the enemies.`)  // TODO: Use the real combat text
 
-        newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (actor, i) => {
+        parties = forAllLivingActors(parties, defenderPartyIndex, (actor, i) => {
             const feastDamage = 3 * this.tier
 
             const damageDealtEvent = new DamageDealtEvent(feastDamage, defenderPartyIndex, i, event, event.turnActorIndex)
             feastEvents.push(damageDealtEvent)
 
-            ctx.logCombatMessage(`The food hits ${newPartyStates[defenderPartyIndex][i].name} in they face. They take ${feastDamage} damage.`)
+            ctx.logCombatMessage(`The food hits ${parties[defenderPartyIndex][i].name} in they face. They take ${feastDamage} damage.`)
 
             return actor
         })
 
-        newPartyStates = forAllLivingActors(newPartyStates, event.turnActorPartyIndex, (actor, i) => {
+        parties = forAllLivingActors(parties, event.turnActorPartyIndex, (actor, i) => {
             const feastDamage = 3 * this.tier
 
             const healingReceivedEvent = new HealingReceivedEvent(feastDamage, event.turnActorPartyIndex, i, event)
             feastEvents.push(healingReceivedEvent)
 
-            ctx.logCombatMessage(`${newPartyStates[event.turnActorPartyIndex][i].name} heals for ${feastDamage} HP.`)
+            ctx.logCombatMessage(`${parties[event.turnActorPartyIndex][i].name} heals for ${feastDamage} HP.`)
 
             return actor
         })
 
         attacker.energy -= this.energyCost
-        newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: feastEvents
         }
     }

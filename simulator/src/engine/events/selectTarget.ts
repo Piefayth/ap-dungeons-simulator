@@ -1,6 +1,5 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from "../../util/math"
 import { TargetFinalizedEvent } from "./targetFinalized"
 import { forAllLivingActors, getRandomLivingActor } from "../../util/actor"
@@ -21,22 +20,21 @@ class SelectTargetEvent extends Event {
     }
 
     processSelectTarget(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[this.attackerPartyIndex][this.attackerIndex]
+        let attacker = parties[this.attackerPartyIndex][this.attackerIndex]
         if (this.defenderIndex === undefined) {
-            this.defenderIndex = getRandomLivingActor(newPartyStates, this.defenderPartyIndex)
+            this.defenderIndex = getRandomLivingActor(parties, this.defenderPartyIndex)
         }
 
         for (let i = 0; i < attacker.items.length; i++) {
-            const newSelectTargetEvent = attacker.items[i].handleBeforeAttackerTargetFinalized(ctx, newPartyStates, this)
+            const newSelectTargetEvent = attacker.items[i].handleBeforeAttackerTargetFinalized(ctx, parties, this)
             if (newSelectTargetEvent) {
                 this.defenderIndex = newSelectTargetEvent.defenderIndex
             }
         }
 
-        newPartyStates = forAllLivingActors(newPartyStates, this.defenderPartyIndex, (iteratedDefender, i) => {
+        parties = forAllLivingActors(parties, this.defenderPartyIndex, (iteratedDefender, i) => {
             for (let j = 0; j < iteratedDefender.items.length; j++) {
-                const newSelectTargetEvent = iteratedDefender.items[j].handleBeforeDefenderTargetFinalized(ctx, newPartyStates, i, this)
+                const newSelectTargetEvent = iteratedDefender.items[j].handleBeforeDefenderTargetFinalized(ctx, parties, i, this)
                 if (newSelectTargetEvent) {
                     // if a party member jumps in front of an attack, they can't do it again for the same attack
                     if (newSelectTargetEvent.defenderIndex != this.defenderIndex) {
@@ -54,7 +52,7 @@ class SelectTargetEvent extends Event {
         let newEvents = [new TargetFinalizedEvent(this.attackerPartyIndex, this.attackerIndex, this.defenderPartyIndex, this.defenderIndex)]
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents
         }
     }

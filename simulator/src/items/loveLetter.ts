@@ -4,7 +4,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { getRandomLivingActor } from "../util/actor"
@@ -19,24 +18,23 @@ export class LoveLetter extends Item {
     }
 
     handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         const newEvents: Event[] = []
 
-        const possibleTargets = newPartyStates[triggeredBy.attackerPartyIndex]
+        const possibleTargets = parties[triggeredBy.attackerPartyIndex]
             .filter((actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.attackerIndex)
 
         if (possibleTargets.length == 0) {
             return {
-                newPartyStates,
+                newPartyStates: parties,
                 newEvents
             }
         }
 
         const targetIndex = getRandomLivingActor(
-            newPartyStates, triggeredBy.attackerPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.attackerIndex
+            parties, triggeredBy.attackerPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != triggeredBy.attackerIndex
         )
-        const target = newPartyStates[triggeredBy.attackerPartyIndex][targetIndex]
+        const target = parties[triggeredBy.attackerPartyIndex][targetIndex]
 
         const healingReceived = 2 * this.tier
         const energyReceived = 1 * this.tier
@@ -45,12 +43,12 @@ export class LoveLetter extends Item {
         newEvents.push(letterHealingEvent)
         target.energy += energyReceived
 
-        newPartyStates[triggeredBy.attackerPartyIndex][targetIndex] = target
+        parties[triggeredBy.attackerPartyIndex][targetIndex] = target
 
         ctx.logCombatMessage(`${attacker.name} gives ${target.name} a letter showing their love! ${target.name} gains ${healingReceived} hp and ${energyReceived} energy.`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents
         }
     }

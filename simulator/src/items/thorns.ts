@@ -5,7 +5,6 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 
 import { forAllLivingActors } from "../util/actor"
 import { DungeonContext } from "../simulator"
@@ -19,18 +18,17 @@ export class Thorns extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         let thornsEvents: Event[] = []
         
-        const attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        const attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
         const thornsDamage = 1 * this.tier
 
         ctx.logCombatMessage(`${attacker.name} unleashes a bunch of wild thorns!`)
 
         let energyGained = 0
         
-        newPartyStates = forAllLivingActors(newPartyStates, defenderPartyIndex, (defender, i) => {
+        parties = forAllLivingActors(parties, defenderPartyIndex, (defender, i) => {
             const damageDealtEvent = new DamageDealtEvent(thornsDamage, defenderPartyIndex, i, event, event.turnActorIndex)
 
             thornsEvents = thornsEvents.concat(damageDealtEvent)
@@ -47,13 +45,13 @@ export class Thorns extends Item {
 
         if (energyGained > 0) {
             attacker.energy += energyGained
-            newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+            parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
             
             ctx.logCombatMessage(`${attacker.name}'s thorns gives them ${energyGained} energy.`)
         }
         
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: thornsEvents
         }
     }

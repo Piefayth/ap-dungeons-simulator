@@ -37,7 +37,7 @@ type DungeonResult = {
 }
 
 function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): DungeonResult {
-    let parties = cloneDeep([party, []])
+    let parties = cloneDeep([party, []])    // clones in this function stay
     
     // TODO: Move dungeon start and floor start to events
     // Without this, can't use summon actor event for pet summons
@@ -108,22 +108,18 @@ function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
 }
 
 function prepareTurn(parties: Actor[][]): Actor[][] {
-    let newPartyState = cloneDeep(parties)
-
-    newPartyState = newPartyState.map(party => 
+    return parties.map(party => 
         party.map(actor => {
             actor.energy += 2
             return actor
         })
     )
-
-    return newPartyState
 }
 
 function whichPartyDied(parties: Actor[][]): number | null {
     for (let i = 0; i < parties.length; i++) {
         let partyRemainingHP = parties[i]
-            .reduce((acc, cur) => acc + Math.max(0, cur.curHP), 0)
+            .reduce((acc, cur) => cur ? acc + Math.max(0, cur.curHP) : acc, 0)
 
         if (partyRemainingHP <= 0) {
             return i
@@ -134,9 +130,9 @@ function whichPartyDied(parties: Actor[][]): number | null {
 }
 
 function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Event[]): Actor[][] {
-    let newPartyStates = cloneDeep(parties)
-    let localEvents = cloneDeep(events)
-
+    let newPartyStates = cloneDeep(parties) // might not need this clone
+    let localEvents = cloneDeep(events) // or this one?
+    
     while (localEvents.length != 0) {
         const event = localEvents.pop()
         switch (event.kind) {
@@ -226,8 +222,9 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
         }
 
         newPartyStates = newPartyStates.map((party, partyIndex) => 
-            party.map((actor, actorIndex) => {
-                if (actor.curHP <= 0 && !actor.dead) {
+            party
+                .map((actor, actorIndex) => {
+                if (actor && actor.curHP <= 0 && !actor.dead) {
                     if (actor.angel) {
                         actor.angel = false
                         actor.curHP = Math.floor(actor.maxHP * 0.33)
@@ -260,9 +257,7 @@ type DetermineTurnResult = {
 }
 
 function applyPitySpeed(ctx: DungeonContext, parties: Actor[][], turnResult: DetermineTurnResult): Actor[][] {
-    let newPartyStates = cloneDeep(parties)
-
-    return newPartyStates.map((party, partyIndex) => 
+    return parties.map((party, partyIndex) => 
         party.map((actor, partyIndex) => {
             if (actor.curHP <= 0) return actor
 

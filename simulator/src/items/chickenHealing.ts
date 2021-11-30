@@ -4,7 +4,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { forAllLivingActors } from "../util/actor"
@@ -20,11 +19,10 @@ export class ChickenHealing extends Item {
     }
 
     handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageTakenEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
         ctx.logCombatMessage('The party drools at the sight of accidentally cooked Chumby Chicken.')
     
         const newEvents: Event[] = []
-        newPartyStates = forAllLivingActors(newPartyStates, triggeredBy.targetPartyIndex, (actor, i) => {
+        parties = forAllLivingActors(parties, triggeredBy.targetPartyIndex, (actor, i) => {
             const healingReceived = 2 * this.tier
             const chickenHealingEvent = new HealingReceivedEvent(
                 healingReceived,
@@ -40,7 +38,7 @@ export class ChickenHealing extends Item {
         })
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

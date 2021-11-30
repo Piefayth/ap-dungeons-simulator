@@ -3,7 +3,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 
 import { DungeonContext } from "../simulator"
@@ -18,16 +17,15 @@ export class SurvivalKit extends Item {
     }
 
     handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let owner = newPartyStates[ownerPartyIndex][ownerIndex]
+        let owner = parties[ownerPartyIndex][ownerIndex]
 
         owner.curHP += 20 * this.tier
         owner.maxHP += 20 * this.tier
 
-        newPartyStates[ownerPartyIndex][ownerIndex] = owner
+        parties[ownerPartyIndex][ownerIndex] = owner
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

@@ -5,7 +5,6 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import { ChickenHealing } from "./chickenHealing"
-import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
 
@@ -23,13 +22,12 @@ export class ChumbyChicken extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], triggeredBy: StartTurnEvent): ProcessedEventResult {
-        const newPartyStates = cloneDeep(parties)
         const chumbyChickenEvents = []
-        const attacker = newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
+        const attacker = parties[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
 
         if (!attacker.auras.some(it => it.kind === AuraKind.CHICKEN_EXHAUSTION)) {
             const chickenBaseName = CHUMBY_CHICKEN_NAME
-            const chickenName = getSummonedActorName(newPartyStates, triggeredBy.turnActorPartyIndex, chickenBaseName)
+            const chickenName = getSummonedActorName(parties, triggeredBy.turnActorPartyIndex, chickenBaseName)
             
             const chumbyChickenEvent = new SummonActorEvent({
                 name: chickenName,
@@ -48,26 +46,24 @@ export class ChumbyChicken extends Item {
             chumbyChickenEvents.push(chumbyChickenEvent)
             ctx.logCombatMessage(`${attacker.name} summons a Chumby Chicken.`)
         
-            newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex].auras.push({
+            parties[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex].auras.push({
                 kind: AuraKind.CHICKEN_EXHAUSTION,
                 stacks: 1
             })
         }
         
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: chumbyChickenEvents
         }
     }
 
     handleNewFloor(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-
-        newPartyStates[ownerPartyIndex][ownerIndex].auras = newPartyStates[ownerPartyIndex][ownerIndex].auras
+        parties[ownerPartyIndex][ownerIndex].auras = parties[ownerPartyIndex][ownerIndex].auras
             .filter(aura => aura.kind !== AuraKind.CHICKEN_EXHAUSTION)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

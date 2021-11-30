@@ -1,6 +1,5 @@
 import { Actor } from "../actor"
 import { Event, EventKind, ProcessedEventResult } from "../events"
-import cloneDeep from 'lodash/cloneDeep'
 import { SelectTargetEvent } from "./selectTarget"
 import { StartTurnItemEvent } from "./startTurnItem"
 import { DungeonContext } from "../../simulator"
@@ -16,17 +15,16 @@ class StartTurnEvent extends Event {
     }
 
     processStartTurn(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
         let selectTargetEvent = new SelectTargetEvent(this.turnActorPartyIndex, this.turnActorIndex)
         let startTurnEvents: Event[] = [selectTargetEvent]
 
-        for (let k = 0; k < newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].items.length; k++) {
-            let item = newPartyStates[this.turnActorPartyIndex][this.turnActorIndex].items[k]
+        for (let k = 0; k < parties[this.turnActorPartyIndex][this.turnActorIndex].items.length; k++) {
+            let item = parties[this.turnActorPartyIndex][this.turnActorIndex].items[k]
             startTurnEvents.push(new StartTurnItemEvent(item, this))
         }
     
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: startTurnEvents
         }
     }

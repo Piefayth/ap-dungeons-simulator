@@ -3,7 +3,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 
 import { DungeonContext } from "../simulator"
 
@@ -16,9 +15,8 @@ export class DrainingDagger extends Item {
     }
 
     handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
-        let defender = newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
+        let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let defender = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
         
         let potentialAttackDrained = 1 * this.tier
         let actualAttackDrained = Math.min(defender.attackMin, potentialAttackDrained)
@@ -36,11 +34,11 @@ export class DrainingDagger extends Item {
         }
 
 
-        newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
-        newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex] = defender
+        parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
+        parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex] = defender
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

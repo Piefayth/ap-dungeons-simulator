@@ -4,7 +4,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { DamageTakenEvent } from "../engine/events/damageTaken"
@@ -20,17 +19,16 @@ export class RoughSkin extends Item {
     }
 
     handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
         let attackerPartyIndex = triggeredBy.targetPartyIndex === 0 ? 1 : 0
-        let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
-        let attacker = newPartyStates[attackerPartyIndex][triggeredBy.attackerIndex]
+        let defender = parties[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
+        let attacker = parties[attackerPartyIndex][triggeredBy.attackerIndex]
 
         const newEvents: Event[] = []
 
         const roll = getRandomInt(0, 2)
         if (roll > 0) {
             return {
-                newPartyStates,
+                newPartyStates: parties,
                 newEvents
             }
         }
@@ -44,7 +42,7 @@ export class RoughSkin extends Item {
         }. It's so rough that ${attacker.name} takes ${roughDamage} damage.`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents
         }
     }

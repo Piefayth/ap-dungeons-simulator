@@ -34,7 +34,7 @@ export class WhirlwindAxe extends Item {
         }
 
         ctx.logCombatMessage(`${attacker.name} swings their whirlwind axe wildly.`)
-        forAllLivingActors(parties, triggeredBy.defenderPartyIndex, (actor, i) => {
+        parties = forAllLivingActors(parties, triggeredBy.defenderPartyIndex, (actor, i) => {
             if (i === triggeredBy.defenderIndex) return actor
 
             const axeDamage = damageDealt
@@ -42,6 +42,7 @@ export class WhirlwindAxe extends Item {
             axeEvents.push(damageDealtEvent)
 
             ctx.logCombatMessage(`${parties[triggeredBy.defenderPartyIndex][i].name} is hit, taking ${axeDamage} damage`)
+            return actor
         })
 
         return {

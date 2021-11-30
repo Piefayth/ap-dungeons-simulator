@@ -1,6 +1,5 @@
 import { Actor } from "../actor"
 import { Event, EventKind, ProcessedEventResult } from "../events"
-import cloneDeep from 'lodash/cloneDeep'
 import { DungeonContext } from "../../simulator"
 
 class SummonActorEvent extends Event {
@@ -13,16 +12,14 @@ class SummonActorEvent extends Event {
         this.targetPartyIndex = targetPartyIndex
     }
 
-    processSummonActor(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {
-        let newPartyStates = cloneDeep(partyStates)
-    
-        newPartyStates[this.targetPartyIndex].push({
+    processSummonActor(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {   
+        partyStates[this.targetPartyIndex].push({
             ...this.actor,
             isSummoned: true
         })
         
         return {
-            newPartyStates,
+            newPartyStates: partyStates,
             newEvents: []
         }
     }

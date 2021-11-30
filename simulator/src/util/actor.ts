@@ -1,5 +1,4 @@
 import { Actor } from "../engine/actor";
-import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from "./math";
 
 export function getRandomLivingActor(parties: Actor[][], partyIndex: number, ignoreCondition: (Actor, number) => boolean = () => true) {
@@ -18,16 +17,14 @@ export function getRandomLivingActor(parties: Actor[][], partyIndex: number, ign
 }
 
 export function forAllLivingActors(parties: Actor[][], partyIndex: number, action: (Actor, number) => Actor): Actor[][] {
-    let newPartyStates = cloneDeep(parties)
-    
-    for (let i = 0; i < newPartyStates[partyIndex].length; i++) {
-        let actor = newPartyStates[partyIndex][i]
+    for (let i = 0; i < parties[partyIndex].length; i++) {
+        let actor = parties[partyIndex][i]
         if (actor.curHP <= 0) continue
 
-        newPartyStates[partyIndex][i] = action(actor, i)
+        parties[partyIndex][i] = action(actor, i)
     }
 
-    return newPartyStates
+    return parties
 }
 
 export function numLivingPartyMembers(parties: Actor[][], partyIndex: number) {

@@ -1,6 +1,5 @@
 import { Actor } from "../actor"
 import { Event, EventKind, ProcessedEventResult } from "../events"
-import cloneDeep from 'lodash/cloneDeep'
 import { DungeonContext } from "../../simulator"
 import { StartTurnEvent } from "./startTurn"
 

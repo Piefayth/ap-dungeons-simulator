@@ -3,7 +3,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { AuraKind } from "../engine/aura"
 
 import { DungeonContext } from "../simulator"
@@ -17,8 +16,7 @@ export class BigClub extends Item {
     }
 
     handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
     
         const chance = 11 * this.tier
         const roll = getRandomInt(0, 100)
@@ -29,18 +27,18 @@ export class BigClub extends Item {
                 stacks: 1
             })
         
-            newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
+            parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
         
             ctx.logCombatMessage(`${
-                newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
+                parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
             } hits ${
-                newPartyStates[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex].name
+                parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex].name
             } really hard with their big club, dealing an extra 150% bonus damage.`)
         
         }
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

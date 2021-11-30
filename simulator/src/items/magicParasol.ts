@@ -4,7 +4,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 
@@ -20,8 +19,7 @@ export class MagicParasol extends Item {
     }
 
     handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let defender = newPartyStates[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
+        let defender = parties[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
 
         const chance = 17 + (3 * this.tier) // TODO: VERIFY PARASOL SCALING IS CORRECT
@@ -33,7 +31,7 @@ export class MagicParasol extends Item {
         }
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents
         }
     }

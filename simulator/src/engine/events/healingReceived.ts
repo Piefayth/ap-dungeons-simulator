@@ -1,6 +1,5 @@
 import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
-import cloneDeep from 'lodash/cloneDeep'
 import { DungeonContext } from "../../simulator"
 
 class HealingReceivedEvent extends Event {
@@ -16,18 +15,17 @@ class HealingReceivedEvent extends Event {
     }
 
     processHealingReceived(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {
-        let newPartyStates = cloneDeep(partyStates)
-        let target = newPartyStates[this.targetPartyIndex][this.targetIndex]
+        let target = partyStates[this.targetPartyIndex][this.targetIndex]
 
         let updatedTarget = {
             ...target,
             curHP: Math.min(target.maxHP, target.curHP + this.healingReceived)
         }
     
-        newPartyStates[this.targetPartyIndex][this.targetIndex] = updatedTarget
+        partyStates[this.targetPartyIndex][this.targetIndex] = updatedTarget
     
         return {
-            newPartyStates,
+            newPartyStates: partyStates,
             newEvents: []
         }
     }

@@ -5,7 +5,6 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import { ChickenHealing } from "./chickenHealing"
-import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { StartTurnEvent } from "../engine/events/startTurn"
 
@@ -21,9 +20,8 @@ export class ImpWhistle extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], triggeredBy: StartTurnEvent): ProcessedEventResult {
-        const newPartyStates = cloneDeep(parties)
         const impWhistleEvents: Event[] = []
-        const attacker = newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
+        const attacker = parties[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -35,7 +33,7 @@ export class ImpWhistle extends Item {
         const impBaseName = 'Small Imp Companion'
 
         // TODO: This and ALL other summoning names need fixed. Details in chicken
-        const impName = getSummonedActorName(newPartyStates, triggeredBy.turnActorPartyIndex, impBaseName)
+        const impName = getSummonedActorName(parties, triggeredBy.turnActorPartyIndex, impBaseName)
         const impWhistleEvent = new SummonActorEvent({
             name: impName,
             items: [],
@@ -56,10 +54,10 @@ export class ImpWhistle extends Item {
         ctx.logCombatMessage('A nearby friend comes to our aid.')
 
         attacker.energy -= this.energyCost
-        newPartyStates[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex] = attacker
+        parties[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex] = attacker
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: impWhistleEvents
         }
     }

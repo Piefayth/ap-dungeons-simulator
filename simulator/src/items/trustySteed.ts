@@ -5,7 +5,6 @@ import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
 import { ChickenHealing } from "./chickenHealing"
-import cloneDeep from 'lodash/cloneDeep'
 import { SummonActorEvent } from "../engine/events/summonActor"
 import { HealingPendant } from "./healingPendant"
 
@@ -22,10 +21,8 @@ export class TrustySteed extends Item {
     }
 
     handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        const newPartyStates = cloneDeep(parties)
-
         const steedBaseName = 'Trusty Steed'
-        const steedName = getSummonedActorName(newPartyStates, ownerPartyIndex, steedBaseName)
+        const steedName = getSummonedActorName(parties, ownerPartyIndex, steedBaseName)
 
         const steed = {
             name: steedName,
@@ -41,12 +38,12 @@ export class TrustySteed extends Item {
             isSummoned: true
         }
 
-        newPartyStates[ownerPartyIndex].push(steed)
+        parties[ownerPartyIndex].push(steed)
         
-        ctx.logCombatMessage(`${newPartyStates[ownerPartyIndex][ownerIndex].name}'s trusty steed charges in and joins you in battle!`)
+        ctx.logCombatMessage(`${parties[ownerPartyIndex][ownerIndex].name}'s trusty steed charges in and joins you in battle!`)
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

@@ -5,7 +5,6 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 
 import { getRandomLivingActor } from "../util/actor"
 import { DungeonContext } from "../simulator"
@@ -19,8 +18,7 @@ export class Avalanche extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -41,12 +39,12 @@ export class Avalanche extends Item {
 
         let ignoredDefenders: number[] = []
         for (let i = 0; i < 2; i++) {
-            if (newPartyStates[defenderPartyIndex].length - ignoredDefenders.length <= 0) {
+            if (parties[defenderPartyIndex].length - ignoredDefenders.length <= 0) {
                 continue
             }
 
             let possibleAvalancheTarget = getRandomLivingActor(
-                newPartyStates, defenderPartyIndex, (_, index) => true // !ignoredDefenders.includes(index) - if the avalanche bug gets fixed, uncomment
+                parties, defenderPartyIndex, (_, index) => true // !ignoredDefenders.includes(index) - if the avalanche bug gets fixed, uncomment
             )
 
             if (possibleAvalancheTarget === -1) {
@@ -65,25 +63,25 @@ export class Avalanche extends Item {
 
             avalancheEvents.unshift(damageDealtEvent)
 
-            let defender = newPartyStates[defenderPartyIndex][possibleAvalancheTarget]
+            let defender = parties[defenderPartyIndex][possibleAvalancheTarget]
             defender.speed = Math.max(1, defender.speed - avalancheSpeedReduction)
-            newPartyStates[defenderPartyIndex][possibleAvalancheTarget] = defender
+            parties[defenderPartyIndex][possibleAvalancheTarget] = defender
 
             if ((defender.curHP - avalancheDamage) <= 0) {
                 ignoredDefenders.push(possibleAvalancheTarget)
             } 
 
             const displayString = `${
-                newPartyStates[defenderPartyIndex][possibleAvalancheTarget].name
+                parties[defenderPartyIndex][possibleAvalancheTarget].name
             } takes ${avalancheDamage} damage${avalancheSpeedReduction ? ", losing " + avalancheSpeedReduction + " speed!" : "!"}`
             ctx.logCombatMessage(displayString)
         }
 
         attacker.energy -= this.energyCost
-        newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: avalancheEvents
         }
     }

@@ -5,7 +5,6 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { DungeonContext } from "../simulator"
@@ -19,8 +18,7 @@ export class EnergeticAlly extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -35,12 +33,12 @@ export class EnergeticAlly extends Item {
         let allyTarget = -1
         let lowestHP = Infinity
 
-        for (let i = 0; i < newPartyStates[event.turnActorPartyIndex].length; i++) {
+        for (let i = 0; i < parties[event.turnActorPartyIndex].length; i++) {
             if (
-                newPartyStates[event.turnActorPartyIndex][i].curHP > 0 && 
-                newPartyStates[event.turnActorPartyIndex][i].curHP < lowestHP
+                parties[event.turnActorPartyIndex][i].curHP > 0 && 
+                parties[event.turnActorPartyIndex][i].curHP < lowestHP
             ) {
-                lowestHP = newPartyStates[event.turnActorPartyIndex][i].curHP
+                lowestHP = parties[event.turnActorPartyIndex][i].curHP
                 allyTarget = i
             }
         }
@@ -50,17 +48,17 @@ export class EnergeticAlly extends Item {
         allyEvents.push(allyHealingEvent)
 
         attacker.energy -= this.energyCost
-        newPartyStates[event.turnActorPartyIndex][allyTarget].energy += allyEnergy
-        newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.turnActorPartyIndex][allyTarget].energy += allyEnergy
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
         ctx.logCombatMessage(`${attacker.name}'s cat blinds ${
-            newPartyStates[event.turnActorPartyIndex][allyTarget].name
+            parties[event.turnActorPartyIndex][allyTarget].name
         } with an invigorating ray. ${
-            newPartyStates[event.turnActorPartyIndex][allyTarget].name
+            parties[event.turnActorPartyIndex][allyTarget].name
         } recovers ${allyHealing} hp and gains ${allyEnergy} energy.`)
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: allyEvents
         }
     }

@@ -3,7 +3,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { DungeonContext } from "../simulator"
 import { BeforeTurnEvent } from "../engine/events/beforeTurn"
 import { AuraKind } from "../engine/aura"
@@ -18,26 +17,24 @@ export class BFCannon extends Item {
     }
 
     handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let owner = newPartyStates[ownerPartyIndex][ownerIndex]
+        let owner = parties[ownerPartyIndex][ownerIndex]
 
         owner.attackMin += 6 + (6 * this.tier)
         owner.attackMax += 6 + (6 * this.tier)
         owner.curHP += 10 * this.tier
         owner.maxHP += 10 * this.tier
 
-        newPartyStates[ownerPartyIndex][ownerIndex] = owner
+        parties[ownerPartyIndex][ownerIndex] = owner
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }
 
     handleOnBeforeTurn(ctx: DungeonContext, parties: Actor[][], event: BeforeTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
         let beforeTurnEvents = []
-        let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
         let cannonAuras = attacker.auras.find(aura => aura.kind === AuraKind.CANNON_EXHAUSTION)
 
         if (cannonAuras) {
@@ -52,10 +49,10 @@ export class BFCannon extends Item {
             ctx.logCombatMessage('You load up the giant cannon and fire.')
         }
 
-        newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: beforeTurnEvents
         }
     }

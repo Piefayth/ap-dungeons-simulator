@@ -2,7 +2,6 @@ import { getRandomInt } from "../../util/math";
 import { Actor } from "../actor";
 import { AuraKind } from "../aura";
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events";
-import cloneDeep from 'lodash/cloneDeep'
 import { TargetFinalizedEvent } from "./targetFinalized";
 import { DamageDealtEvent } from "./damageDealt";
 import { AfterAttackEvent } from "./afterAttack";
@@ -29,8 +28,7 @@ class BasicAttackEvent extends CombatEvent {
                 newEvents: [new BasicAttackEvent(this.triggeredBy)]
             }
         }
-    
-        let newPartyStates = cloneDeep(parties) as Actor[][]
+
         
         const baseDamageDealt = getRandomInt(attacker.attackMin, attacker.attackMax + 1)
         let totalDamage = baseDamageDealt
@@ -38,8 +36,8 @@ class BasicAttackEvent extends CombatEvent {
         let resultEvents: Event[] = []
 
         for (let i = 0; i < attacker.items.length; i++) {
-            const itemResult = attacker.items[i].handleOnBasicAttack(ctx, newPartyStates, baseDamageDealt, this)
-            newPartyStates = itemResult.newPartyStates
+            const itemResult = attacker.items[i].handleOnBasicAttack(ctx, parties, baseDamageDealt, this)
+            parties = itemResult.newPartyStates
             resultEvents = resultEvents.concat(itemResult.newEvents)
         }
 
@@ -48,7 +46,7 @@ class BasicAttackEvent extends CombatEvent {
             totalDamage += attacker.auras.find(it => it.kind === AuraKind.SEEKING_MISSILES).stacks
 
             attacker.auras = attacker.auras.filter(aura => aura.kind !== AuraKind.SEEKING_MISSILES)
-            newPartyStates[this.attackerPartyIndex][this.attackerIndex] = attacker
+            parties[this.attackerPartyIndex][this.attackerIndex] = attacker
         }
 
         // TODO: Refactor this behavior into the item
@@ -57,7 +55,7 @@ class BasicAttackEvent extends CombatEvent {
             totalDamage = Math.floor(totalDamage)
             
             attacker.auras = attacker.auras.filter(aura => aura.kind !== AuraKind.BIG_CLUB)
-            newPartyStates[this.attackerPartyIndex][this.attackerIndex] = attacker
+            parties[this.attackerPartyIndex][this.attackerIndex] = attacker
         }
 
         const damageDealtEvent = new DamageDealtEvent(totalDamage, this.defenderPartyIndex, this.defenderIndex, this, this.attackerIndex)
@@ -66,14 +64,14 @@ class BasicAttackEvent extends CombatEvent {
         resultEvents.unshift(new AfterAttackEvent(this))
         
         ctx.logCombatMessage(`${
-            newPartyStates[this.attackerPartyIndex][this.attackerIndex].name
+            parties[this.attackerPartyIndex][this.attackerIndex].name
         } attacks ${
-            newPartyStates[this.defenderPartyIndex][this.defenderIndex].name
+            parties[this.defenderPartyIndex][this.defenderIndex].name
         } for ${totalDamage} damage.`)
     
         return {
             newEvents: resultEvents,
-            newPartyStates: newPartyStates
+            newPartyStates: parties
         }
     }
 }

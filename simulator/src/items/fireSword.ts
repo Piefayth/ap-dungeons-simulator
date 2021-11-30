@@ -3,7 +3,6 @@ import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/e
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 
 import { DungeonContext } from "../simulator"
 
@@ -16,8 +15,7 @@ export class FireSword extends Item {
     }
 
     handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: CombatEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
 
         let attackGained = 0
         for (let i = 0; i < this.tier; i++) {
@@ -34,10 +32,10 @@ export class FireSword extends Item {
         }
         
 
-        newPartyStates[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
+        parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
 
         return {
-            newPartyStates,
+            newPartyStates: parties,
             newEvents: []
         }
     }

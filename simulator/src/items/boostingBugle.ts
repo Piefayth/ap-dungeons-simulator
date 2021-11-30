@@ -4,7 +4,6 @@ import { StartTurnEvent } from "../engine/events/startTurn"
 import { Item } from "../engine/item"
 import { ItemKind } from "../engine/itemTypes"
 import { getRandomInt } from "../util/math"
-import cloneDeep from 'lodash/cloneDeep'
 import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { getRandomLivingActor } from "../util/actor"
@@ -19,8 +18,7 @@ export class BoostingBugle extends Item {
     }
 
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let newPartyStates = cloneDeep(parties)
-        let attacker = newPartyStates[event.turnActorPartyIndex][event.turnActorIndex]
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -30,16 +28,16 @@ export class BoostingBugle extends Item {
         }
 
         attacker.energy -= this.energyCost
-        newPartyStates[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
 
         ctx.logCombatMessage(`${attacker.name} plays an encouraging fanfare!`)
 
-        const possibleTargets = newPartyStates[event.turnActorPartyIndex]
+        const possibleTargets = parties[event.turnActorPartyIndex]
             .filter((actor, i) => !actor.isSummoned && !actor.dead && i != event.turnActorIndex)
 
         if (possibleTargets.length == 0) {
             return {
-                newPartyStates,
+                newPartyStates: parties,
                 newEvents: []
             }
         }
@@ -48,9 +46,9 @@ export class BoostingBugle extends Item {
 
         for (let i = 0; i < 2; i++) {
             const targetIndex = getRandomLivingActor(
-                newPartyStates, event.turnActorPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != event.turnActorIndex
+                parties, event.turnActorPartyIndex, (actor, i) => !actor.isSummoned && !actor.dead && i != event.turnActorIndex
             )
-            const target = newPartyStates[event.turnActorPartyIndex][targetIndex]
+            const target = parties[event.turnActorPartyIndex][targetIndex]
     
             const healingReceived = 2 * this.tier
             const attackReceived = 1 * this.tier
@@ -61,13 +59,13 @@ export class BoostingBugle extends Item {
             target.attackMin += attackReceived
             target.attackMax += attackReceived
 
-            newPartyStates[event.turnActorPartyIndex][targetIndex] = target
+            parties[event.turnActorPartyIndex][targetIndex] = target
 
             ctx.logCombatMessage(`${target.name} gains ${healingReceived} HP and ${attackReceived} attack.`)
         }
 
         return {
-            newPartyStates: newPartyStates,
+            newPartyStates: parties,
             newEvents: bugleEvents
         }
     }
