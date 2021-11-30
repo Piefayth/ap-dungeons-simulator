@@ -122,63 +122,89 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new MartyrArmor(7), new SurvivalKit(7), new Freezeman(7), new BoostingBugle(7)],
+    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(7), new BoostingBugle(8)],
     auras: [],
-    maxHP: 140,
-    curHP: 140,
+    maxHP: 150,
+    curHP: 150,
     energy: 0,
     speed: 13,
     attackMin: 3,
     attackMax: 12,
+    angel: false,
 }, {
     name: "zoop",
-    items: [new MartyrArmor(7), new SurvivalKit(7), new Freezeman(7), new BoostingBugle(7)],
+    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(8), new BoostingBugle(8)],
     auras: [],
-    maxHP: 145,
-    curHP: 145,
+    maxHP: 150,
+    curHP: 150,
     energy: 0,
     speed: 13,
     attackMin: 4,
     attackMax: 13,
-}]
-
-const testParty3: Actor[] = [{
-    name: "piefayth",
-    items: [new MartyrArmor(7), new SurvivalKit(7), new Freezeman(7), new BoostingBugle(7)],
+    angel: false,
+}/*, {
+    name: "rando",
+    items: [new MartyrArmor(6), new SurvivalKit(6), new MagicParasol(8), new BoostingBugle(6)],
     auras: [],
-    maxHP: 140,
-    curHP: 140,
-    energy: 0,
-    speed: 13,
-    attackMin: 3,
-    attackMax: 12,
-}, {
-    name: "saki",
-    items: [new ExplosionPowder(7), new Halberd(6), new SeekingMissiles(6), new WhirlwindAxe(5)],
-    auras: [],
-    maxHP: 115,
-    curHP: 115,
+    maxHP: 130,
+    curHP: 130,
     energy: 0,
     speed: 12,
     attackMin: 4,
     attackMax: 13,
-}, {
-    name: "p",
-    items: [new SurvivalKit(6), new MartyrArmor(6), new MagicParasol(6), new BoostingBugle(5)],
+}*/]
+
+const testParty3: Actor[] = [{
+    name: "piefayth",
+    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
     auras: [],
-    maxHP: 140,
-    curHP: 140,
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 13,
+    attackMin: 3,
+    attackMax: 12,
+    angel: false,
+}, {
+    name: "zoop",
+    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
     energy: 0,
     speed: 13,
     attackMin: 4,
     attackMax: 13,
+    angel: false,
+}, {
+    name: "rando 1",
+    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13,
+    angel: false,
+}, {
+    name: "rando 2",
+    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 13,
+    attackMin: 4,
+    attackMax: 13,
+    angel: false,
 }]
 
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty3
-    const selectedDungeon = dungeon6
+    const selectedDungeon = dungeon10
     const trials = 1000
-    const workers = 8
+    const workers = 6
     const workerOption = process.argv[2]
 
     if (workerOption) {
