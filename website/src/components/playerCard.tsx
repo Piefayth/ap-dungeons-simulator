@@ -36,7 +36,7 @@ const items = [
 const tiers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const prestige = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-const NamePicker = (namePickerProps: NamePickerProps) => 
+const NamePicker = React.memo((namePickerProps: NamePickerProps) => 
     <Row>
         <Col span={6}>
             Name
@@ -54,8 +54,9 @@ const NamePicker = (namePickerProps: NamePickerProps) =>
         </Col>
 
     </Row>
+)
 
-const PrestigePicker = (prestigePickerProps: PrestigePickerProps) => {
+const PrestigePicker = React.memo((prestigePickerProps: PrestigePickerProps) => {
     return (
         <Row>
         <Col span={19}>
@@ -84,9 +85,9 @@ const PrestigePicker = (prestigePickerProps: PrestigePickerProps) => {
         </Col>
         </Row>
     )
-}
+})
 
-function ItemPicker(itemPickerProps: ItemPickerProps) {
+const ItemPicker = React.memo((itemPickerProps: ItemPickerProps) => {
     const [itemKind, setItemKind] = useState(itemPickerProps.defaultItem ? itemPickerProps.defaultItem.kind : ItemKind.NONE)
     const [tier, setTier] = useState(itemPickerProps.defaultItem ? itemPickerProps.defaultItem.tier : 1)
 
@@ -139,7 +140,7 @@ function ItemPicker(itemPickerProps: ItemPickerProps) {
             </Col>
         </Row>
     )
-}
+})
 
 export function PlayerCard(playerCardProps: PlayerCardProps) {
     const actor = playerCardProps.actor

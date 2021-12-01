@@ -29,8 +29,8 @@ export const dungeon10: Dungeon = {
             curHP: 750,
             energy: 0,
             speed: 150,
-            attackMin: 0,
-            attackMax: 0
+            attackMin: 30,
+            attackMax: 50
         }]
     }, {
         enemies: [{
@@ -45,7 +45,7 @@ export const dungeon10: Dungeon = {
             attackMax: 30
         }, {
             name: "Big the Cat",
-            items: [new MagicParasol(9), new HealingPendant(3)],
+            items: [new MagicParasol(3), new HealingPendant(3)],
             auras: [],
             maxHP: 300,
             curHP: 300,
@@ -77,7 +77,7 @@ export const dungeon10: Dungeon = {
     }, {
         enemies: [{
             name: "Shadow The Hedgehog",
-            items: [new Thorns(9), new ExplosionPowder(9), new HealingPendant(9)],
+            items: [new Thorns(9), new ChallengerArrow(15), new HealingPendant(9)],
             auras: [],
             maxHP: 600,
             curHP: 600,

@@ -99,8 +99,8 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 }
 
 const testParty: Actor[] = [{
-    name: "degen 1",
-    items: [new BoostingBugle(8), new DrainingDagger(7), new MagicParasol(7), new MartyrArmor(7)],
+    name: "piefayth",
+    items: [new TrustySteed(8), new SurvivalKit(8), new RockCompanion(7), new ImpWhistle(8)],
     auras: [],
     maxHP: 145,
     curHP: 145,
@@ -108,16 +108,6 @@ const testParty: Actor[] = [{
     speed: 13,
     attackMin: 3,
     attackMax: 12
-}, {
-    name: "degen 2",
-    items: [new SurvivalKit(8), new ChallengerArrow(7), new MartyrArmor(7), new SeekingMissiles(6)],
-    auras: [],
-    maxHP: 145,
-    curHP: 145,
-    energy: 0,
-    speed: 13,
-    attackMin: 4,
-    attackMax: 13
 }]
 
 const testParty2: Actor[] = [{
@@ -133,7 +123,7 @@ const testParty2: Actor[] = [{
     angel: false,
 }, {
     name: "zoop",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(8), new BoostingBugle(8)],
+    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(8), new BoostingBugle(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -155,8 +145,8 @@ const testParty2: Actor[] = [{
 }*/]
 
 const testParty3: Actor[] = [{
-    name: "piefayth",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
+    name: "pie",
+    items: [new MartyrArmor(8), new SurvivalKit(8), new PoisonDagger(8), new ExplosionPowder(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -167,7 +157,7 @@ const testParty3: Actor[] = [{
     angel: false,
 }, {
     name: "zoop",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
+    items: [new MartyrArmor(9), new SurvivalKit(8), new MagicParasol(9), new ExplosionPowder(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -177,8 +167,8 @@ const testParty3: Actor[] = [{
     attackMax: 13,
     angel: false,
 }, {
-    name: "rando 1",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
+    name: "one",
+    items: [new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(9), new ExplosionPowder(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -188,8 +178,8 @@ const testParty3: Actor[] = [{
     attackMax: 13,
     angel: false,
 }, {
-    name: "rando 2",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new TrustySteed(8), new Avalanche(8)],
+    name: "two",
+    items: [new MartyrArmor(8), new SurvivalKit(8), new PoisonDagger(8), new ExplosionPowder(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -201,10 +191,10 @@ const testParty3: Actor[] = [{
 }]
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty2
-    const selectedDungeon = dungeon8
-    const trials = 1000
-    const workers = 6
+    const selectedParty = testParty3
+    const selectedDungeon = dungeon10
+    const trials = 10000
+    const workers = 3
     const workerOption = process.argv[2]
 
     if (workerOption) {
@@ -245,7 +235,7 @@ if (require.main === module && typeof window == "undefined") {
                 console.table(partyTable)
                 console.log(`Winrate: ${(aggregateResult.wins / aggregateResult.trials) * 100}%`)
             })
-            .catch(failed => console.log('failed???'))
+            .catch(failed => console.log(failed))
     } else {
         const simulator = new DungeonSimulator({
             displayCombatEvents: false,

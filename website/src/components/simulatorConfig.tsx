@@ -103,6 +103,26 @@ const defaultResult: SimulationResult = {
     party: []
 }
 
+const results = (resultData) => 
+    <div style={{width: 300, paddingBottom: 30, margin: '0 auto'}}>
+        Wins: {resultData.wins}
+        <br />
+        Losses: {resultData.trials - resultData.wins}
+        <br />
+        Winrate: {resultData.wins / resultData.trials}
+    </div>
+
+const addTeammateButton = (simData, setSimData) =>
+    <Form.Item>
+        <Button onClick={() => {
+            let newSimData = { ...simData }
+            newSimData.party = cloneDeep([...newSimData.party, demoParty[1] ])
+            setSimData(newSimData)
+        }}>
+            Add Teammate
+        </Button>
+    </Form.Item>
+
 export default function simulatorConfig(props: RouteComponentProps) {
     const oldState = props.location.state ? (props.location.state as any).party as Actor[] : undefined
     const navigate = useNavigate()
@@ -112,7 +132,6 @@ export default function simulatorConfig(props: RouteComponentProps) {
     const [resultData, setResultData] = useState(defaultResult)
 
     // TODO:
-    // Show winrates after simulate
     // Have button to show simulation combat log
 
     if (oldState) {
@@ -124,33 +143,14 @@ export default function simulatorConfig(props: RouteComponentProps) {
         setSimData(newSimData)
     }
 
-    const results = 
-        <div style={{width: 300, paddingBottom: 30, margin: '0 auto'}}>
-            Wins: {resultData.wins}
-            <br />
-            Losses: {resultData.trials - resultData.wins}
-            <br />
-            Winrate: {resultData.wins / resultData.trials}
-        </div>
-
-    const addTeammateButton =
-        <Form.Item>
-            <Button onClick={() => {
-                let newSimData = { ...simData }
-                newSimData.party = cloneDeep([...newSimData.party, demoParty[1] ])
-                setSimData(newSimData)
-            }}>
-                Add Teammate
-            </Button>
-        </Form.Item>
-
     return (
         <Form
             id="myform"
             name="basic"
             autoComplete="off"
        >
-            { results }
+            { results(resultData) }
+            
             <DungeonSelection 
                 defaultDungeon={8}
                 defaultTrials={1}
@@ -164,7 +164,7 @@ export default function simulatorConfig(props: RouteComponentProps) {
             
             <Row style={{ width:300, margin: '0 auto'}}>
                 <Col span={12}>
-                    { simData.party.length < 5 ? addTeammateButton : null }
+                    { simData.party.length < 5 ? addTeammateButton(simData, setSimData) : null }
                 </Col>
 
                 <Col span={7}>
