@@ -10,7 +10,7 @@ function workerSimulate(trials: number, party: Actor[], dungeon: Dungeon, parent
         displayCombatEvents: false,
         displayPartyStates: false,
         skipHistoryStorage: true,
-        pityScaling: (speed) => speed + 0
+        pityScaling: (speed) => speed + 1
     })
 
     const instantiatedParty = party.map(actor => {

@@ -176,10 +176,10 @@ export default function simulatorConfig(props: RouteComponentProps) {
                             const sanitizedSimData = sanitizeSimData(simData)
                             const result = runTrials(sanitizedSimData)
                             setResultData(result)
-                            /*
+                            
                             navigate('./simulator', {
                                 state: runTrials(sanitizedSimData)
-                            })*/
+                            })
                         }}>
                             Simulate
                         </Button>

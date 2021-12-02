@@ -43,15 +43,15 @@ export const dungeon9: Dungeon = {
             name: "Teemo",
             items: [new PoisonDagger(5)],
             auras: [],
-            maxHP: 100,
-            curHP: 100,
+            maxHP: 200,
+            curHP: 200,
             energy: 0,
-            speed: 20,
+            speed: 35,
             attackMin: 10,
             attackMax: 20
         }, {
             name: "Ezreal",
-            items: [new PoisonDagger(5)],
+            items: [],
             auras: [],
             maxHP: 100,
             curHP: 100,
@@ -88,7 +88,7 @@ export const dungeon9: Dungeon = {
             maxHP: 150,
             curHP: 150,
             energy: 0,
-            speed: 11,
+            speed: 15,
             attackMin: 10,
             attackMax: 20
         }, {

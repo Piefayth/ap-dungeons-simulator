@@ -146,7 +146,7 @@ const testParty2: Actor[] = [{
 
 const testParty3: Actor[] = [{
     name: "pie",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new PoisonDagger(8), new ExplosionPowder(9)],
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new BoostingBugle(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -157,38 +157,39 @@ const testParty3: Actor[] = [{
     angel: false,
 }, {
     name: "zoop",
-    items: [new MartyrArmor(9), new SurvivalKit(8), new MagicParasol(9), new ExplosionPowder(9)],
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
     speed: 13,
-    attackMin: 4,
-    attackMax: 13,
+    attackMin: 3,
+    attackMax: 12,
     angel: false,
 }, {
     name: "one",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new MagicParasol(9), new ExplosionPowder(9)],
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 13,
-    attackMin: 4,
-    attackMax: 13,
+    speed: 14,
+    attackMin: 3,
+    attackMax: 12,
     angel: false,
 }, {
     name: "two",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new PoisonDagger(8), new ExplosionPowder(9)],
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 13,
-    attackMin: 4,
-    attackMax: 13,
+    speed: 14,
+    attackMin: 3,
+    attackMax: 12,
     angel: false,
 }]
+
 
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty3
@@ -238,7 +239,7 @@ if (require.main === module && typeof window == "undefined") {
             .catch(failed => console.log(failed))
     } else {
         const simulator = new DungeonSimulator({
-            displayCombatEvents: false,
+            displayCombatEvents: true,
             displayPartyStates: false,
             pityScaling: (speed) => speed + 0
         })

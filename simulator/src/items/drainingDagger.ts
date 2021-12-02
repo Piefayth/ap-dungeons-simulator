@@ -29,10 +29,9 @@ export class DrainingDagger extends Item {
         let energyDrained = 1 * this.tier
         let roll = getRandomInt(0, 100)
         if (roll < chance) {
-            defender.energy = Math.max(0, defender.energy - 1)
+            defender.energy = Math.max(0, defender.energy - energyDrained)
             ctx.logCombatMessage(`Draining dagger saps ${defender.name}'s energy.`)
         }
-
 
         parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
         parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex] = defender

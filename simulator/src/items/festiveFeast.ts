@@ -30,12 +30,11 @@ export class FestiveFeast extends Item {
 
         let feastEvents: Event[] = []
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
+        const feastDamage = 3 * this.tier
 
-        ctx.logCombatMessage(`${attacker.name} conjures a feast and the team enjoys some food. The scraps get thrown at the enemies.`)  // TODO: Use the real combat text
+        ctx.logCombatMessage(`${attacker.name} conjures a feast and the team enjoys some food. The scraps get thrown at the enemies.`)
 
         parties = forAllLivingActors(parties, defenderPartyIndex, (actor, i) => {
-            const feastDamage = 3 * this.tier
-
             const damageDealtEvent = new DamageDealtEvent(feastDamage, defenderPartyIndex, i, event, event.turnActorIndex)
             feastEvents.push(damageDealtEvent)
 
@@ -45,8 +44,6 @@ export class FestiveFeast extends Item {
         })
 
         parties = forAllLivingActors(parties, event.turnActorPartyIndex, (actor, i) => {
-            const feastDamage = 3 * this.tier
-
             const healingReceivedEvent = new HealingReceivedEvent(feastDamage, event.turnActorPartyIndex, i, event)
             feastEvents.push(healingReceivedEvent)
 

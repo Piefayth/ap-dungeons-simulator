@@ -32,7 +32,7 @@ export class KnightsLance extends Item {
         let lanceEvents: Event[] = []
 
         const lanceDamageMin = 5 * this.tier
-        const lanceDamageMax = 10 * this.tier
+        const lanceDamageMax = 7 * this.tier
         let lanceDamage = getRandomInt(lanceDamageMin, lanceDamageMax + 1)
         const lanceTarget = getRandomLivingActor(parties, defenderPartyIndex)
 

@@ -46,7 +46,7 @@ export class EnergeticAlly extends Item {
         let allyEvents: Event[] = []
         const allyHealingEvent = new HealingReceivedEvent(allyHealing, event.turnActorPartyIndex, allyTarget, event)
         allyEvents.push(allyHealingEvent)
-
+        
         attacker.energy -= this.energyCost
         parties[event.turnActorPartyIndex][allyTarget].energy += allyEnergy
         parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
