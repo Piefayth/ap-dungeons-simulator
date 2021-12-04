@@ -100,10 +100,10 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [new TrustySteed(8), new SurvivalKit(8), new RockCompanion(7), new ImpWhistle(8)],
+    items: [],
     auras: [],
-    maxHP: 145,
-    curHP: 145,
+    maxHP: 150,
+    curHP: 150,
     energy: 0,
     speed: 13,
     attackMin: 3,
@@ -151,21 +151,21 @@ const testParty3: Actor[] = [{
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 13,
+    speed: 14,
     attackMin: 3,
     attackMax: 12,
-    angel: false,
+    angel: true,
 }, {
     name: "zoop",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new EnergeticAlly(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 13,
+    speed: 14,
     attackMin: 3,
     attackMax: 12,
-    angel: false,
+    angel: true,
 }, {
     name: "one",
     items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
@@ -176,26 +176,15 @@ const testParty3: Actor[] = [{
     speed: 14,
     attackMin: 3,
     attackMax: 12,
-    angel: false,
-}, {
-    name: "two",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 14,
-    attackMin: 3,
-    attackMax: 12,
-    angel: false,
+    angel: true,
 }]
 
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty3
-    const selectedDungeon = dungeon10
-    const trials = 10000
-    const workers = 3
+    const selectedParty = testParty
+    const selectedDungeon = dungeon2
+    const trials = 1000
+    const workers = 4
     const workerOption = process.argv[2]
 
     if (workerOption) {
@@ -224,10 +213,10 @@ if (require.main === module && typeof window == "undefined") {
                 const partyTable = selectedParty.map(actor => {
                     return {
                         name: actor.name,
-                        item1: `${actor.items[0].kind} ${actor.items[0].tier}`,
-                        item2: `${actor.items[1].kind} ${actor.items[1].tier}`,
-                        item3: `${actor.items[2].kind} ${actor.items[2].tier}`,
-                        item4: `${actor.items[3].kind} ${actor.items[3].tier}`,
+                        item1: actor.items[0] ? `${actor.items[0].kind} ${actor.items[0].tier}` : 'NONE',
+                        item2: actor.items[1] ? `${actor.items[1].kind} ${actor.items[1].tier}` : 'NONE',
+                        item3: actor.items[2] ? `${actor.items[2].kind} ${actor.items[2].tier}` : 'NONE',
+                        item4: actor.items[3] ? `${actor.items[3].kind} ${actor.items[3].tier}` : 'NONE',
                         angel: actor.angel ? 'Y' : 'N'
                     }
                 })

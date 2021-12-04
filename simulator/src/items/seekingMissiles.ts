@@ -17,6 +17,10 @@ export class SeekingMissiles extends Item {
         super(kind, name, tier, energyCost)
     }
 
+    // needs a "handle before turn" that applies the intial seeking missiles aura
+    // then target finalized finds the existing aura and sets the stacks
+    // seeking missiles also needs to pick its target at this time, and we can pass that down in the aura someway
+
     handleBeforeAttackerTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
         let lowestHP = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex].curHP
         let newTargetIndex = triggeredBy.defenderIndex
@@ -27,6 +31,10 @@ export class SeekingMissiles extends Item {
                 newTargetIndex = i
             }
         }
+
+        // this function is responsible for reassigning the basic attack target
+        // and printing the message
+        // death checking should happen right before this
 
         ctx.logCombatMessage(`${
             parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name

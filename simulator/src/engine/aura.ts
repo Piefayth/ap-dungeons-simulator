@@ -13,3 +13,9 @@ export type Aura = {
     kind: AuraKind,
     stacks: number
 }
+
+interface SeekingMissilesAura extends Aura {
+    damage: number,
+    targetPartyIndex: number,
+    targetIndex: number
+}

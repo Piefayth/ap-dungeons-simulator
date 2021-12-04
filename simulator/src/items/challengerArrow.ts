@@ -31,6 +31,9 @@ export class ChallengerArrow extends Item {
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         const arrowDamage = 10 * this.tier
         const arrowAttack = 1 * this.tier
+
+        // need to check if seeking missiles aura is applied
+        // if it is, take the seeking missiles target
         const arrowTarget = getRandomLivingActor(parties, defenderPartyIndex)
 
         let arrowEvents: Event[] = []
