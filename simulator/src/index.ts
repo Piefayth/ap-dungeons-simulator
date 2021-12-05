@@ -128,21 +128,21 @@ const testParty2: Actor[] = [{
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 13,
+    speed: 14,
     attackMin: 4,
     attackMax: 13,
     angel: false,
-}/*, {
+}, {
     name: "rando",
     items: [new MartyrArmor(6), new SurvivalKit(6), new MagicParasol(8), new BoostingBugle(6)],
     auras: [],
     maxHP: 130,
     curHP: 130,
     energy: 0,
-    speed: 12,
+    speed: 14,
     attackMin: 4,
     attackMax: 13,
-}*/]
+}]
 
 const testParty3: Actor[] = [{
     name: "pie",
@@ -154,7 +154,7 @@ const testParty3: Actor[] = [{
     speed: 14,
     attackMin: 3,
     attackMax: 12,
-    angel: true,
+    angel: false,
 }, {
     name: "zoop",
     items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new EnergeticAlly(9)],
@@ -165,7 +165,7 @@ const testParty3: Actor[] = [{
     speed: 14,
     attackMin: 3,
     attackMax: 12,
-    angel: true,
+    angel: false,
 }, {
     name: "one",
     items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
@@ -176,14 +176,25 @@ const testParty3: Actor[] = [{
     speed: 14,
     attackMin: 3,
     attackMax: 12,
-    angel: true,
+    angel: false,
+}, {
+    name: "two",
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new BoostingBugle(9)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 14,
+    attackMin: 3,
+    attackMax: 12,
+    angel: false,
 }]
 
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty
-    const selectedDungeon = dungeon2
-    const trials = 1000
+    const selectedParty = testParty3
+    const selectedDungeon = dungeon10
+    const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
 

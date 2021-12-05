@@ -44,7 +44,7 @@ export class FestiveFeast extends Item {
         })
 
         parties = forAllLivingActors(parties, event.turnActorPartyIndex, (actor, i) => {
-            const healingReceivedEvent = new HealingReceivedEvent(feastDamage, event.turnActorPartyIndex, i, event)
+            const healingReceivedEvent = new HealingReceivedEvent(feastDamage, event.turnActorPartyIndex, i)
             feastEvents.push(healingReceivedEvent)
 
             ctx.logCombatMessage(`${parties[event.turnActorPartyIndex][i].name} heals for ${feastDamage} HP.`)

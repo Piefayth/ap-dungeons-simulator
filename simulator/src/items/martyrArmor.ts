@@ -48,7 +48,7 @@ export class MartyrArmor extends Item {
         const healingReceived = 2 * this.tier
         const energyReceived = 1 * this.tier
 
-        const armorHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.targetPartyIndex, targetIndex, triggeredBy)
+        const armorHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.targetPartyIndex, targetIndex)
         newEvents.push(armorHealingEvent)
         target.energy += energyReceived
 

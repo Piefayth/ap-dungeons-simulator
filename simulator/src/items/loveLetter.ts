@@ -39,7 +39,7 @@ export class LoveLetter extends Item {
         const healingReceived = 2 * this.tier
         const energyReceived = 1 * this.tier
         
-        const letterHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.attackerPartyIndex, targetIndex, triggeredBy)
+        const letterHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.attackerPartyIndex, targetIndex)
         newEvents.push(letterHealingEvent)
         target.energy += energyReceived
 

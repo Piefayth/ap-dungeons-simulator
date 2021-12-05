@@ -31,13 +31,16 @@ export class EnergeticAlly extends Item {
         const allyHealing = 5 * this.tier
         const allyEnergy = 20
         
-        let allyTarget = -1
-        let lowestHP = Infinity
+        let allyTarget = event.turnActorIndex
+        let lowestHP = parties[event.turnActorPartyIndex][event.turnActorIndex].curHP
 
         for (let i = 0; i < parties[event.turnActorPartyIndex].length; i++) {
+            if (parties[event.turnActorPartyIndex][i].isSummoned) continue
+
             if (
                 parties[event.turnActorPartyIndex][i].curHP > 0 && 
-                parties[event.turnActorPartyIndex][i].curHP < lowestHP
+                parties[event.turnActorPartyIndex][i].curHP < lowestHP &&
+                parties[event.turnActorPartyIndex][i].curHP < parties[event.turnActorPartyIndex][i].maxHP
             ) {
                 lowestHP = parties[event.turnActorPartyIndex][i].curHP
                 allyTarget = i
@@ -45,13 +48,14 @@ export class EnergeticAlly extends Item {
         }
 
         let allyEvents: Event[] = []
-        const allyHealingEvent = new HealingReceivedEvent(allyHealing, event.turnActorPartyIndex, allyTarget, event)
+
+        const allyHealingEvent = new HealingReceivedEvent(allyHealing, event.turnActorPartyIndex, allyTarget)
         allyEvents.push(allyHealingEvent)
 
         attacker.energy -= this.energyCost
         parties[event.turnActorPartyIndex][allyTarget].energy += allyEnergy
         parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
-
+        
         ctx.logCombatMessage(`${attacker.name}'s cat blinds ${
             parties[event.turnActorPartyIndex][allyTarget].name
         } with an invigorating ray. ${

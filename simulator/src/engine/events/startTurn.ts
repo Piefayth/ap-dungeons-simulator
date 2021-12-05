@@ -3,6 +3,7 @@ import { Event, EventKind, ProcessedEventResult } from "../events"
 import { SelectTargetEvent } from "./selectTarget"
 import { StartTurnItemEvent } from "./startTurnItem"
 import { DungeonContext } from "../../simulator"
+import { CheckDeathsEvent } from "./checkDeaths"
 
 class StartTurnEvent extends Event {
     turnActorPartyIndex: number
@@ -15,8 +16,10 @@ class StartTurnEvent extends Event {
     }
 
     processStartTurn(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
-        let selectTargetEvent = new SelectTargetEvent(this.turnActorPartyIndex, this.turnActorIndex)
-        let startTurnEvents: Event[] = [selectTargetEvent]
+        const selectTargetEvent = new SelectTargetEvent(this.turnActorPartyIndex, this.turnActorIndex)
+        const checkDeathsEvent = new CheckDeathsEvent()
+
+        let startTurnEvents: Event[] = [selectTargetEvent, checkDeathsEvent]
 
         for (let k = 0; k < parties[this.turnActorPartyIndex][this.turnActorIndex].items.length; k++) {
             let item = parties[this.turnActorPartyIndex][this.turnActorIndex].items[k]

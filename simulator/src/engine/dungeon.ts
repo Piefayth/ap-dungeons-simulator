@@ -22,6 +22,7 @@ import { DamageTakenEvent } from './events/damageTaken'
 import { DungeonContext } from '../simulator'
 import { KnightsLance } from '../items'
 import { BeforeTurnEvent } from './events/beforeTurn'
+import { checkDeaths, CheckDeathsEvent } from './events/checkDeaths'
 
 type Floor = {
     enemies: Actor[]
@@ -154,6 +155,12 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
                 events = events.concat(startTurnItemResult.newEvents)
                 parties = startTurnItemResult.newPartyStates
                 break
+            case EventKind.CHECK_DEATHS:
+                const checkDeathsEvent = event as CheckDeathsEvent
+                const checkDeathsResult = checkDeathsEvent.processCheckDeaths(ctx, parties)
+                events = events.concat(checkDeathsResult.newEvents)
+                parties = checkDeathsResult.newPartyStates
+                break
             case EventKind.SELECT_TARGET:
                 const selectTargetEvent = event as SelectTargetEvent
                 const selectTargetResult = selectTargetEvent.processSelectTarget(ctx, parties)
@@ -218,27 +225,9 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
                 break
         }
 
-        parties = parties.map((party, partyIndex) => 
-            party
-                .map((actor, actorIndex) => {
-                if (actor && actor.curHP <= 0 && !actor.dead) {
-                    if (actor.angel) {
-                        actor.angel = false
-                        actor.curHP = Math.floor(actor.maxHP * 0.33)
-                        ctx.logCombatMessage(`${actor.name} was ressurected!`)
-                        return actor
-                    }
-                    
-                    ctx.logCombatMessage(`${actor.name} has fallen!`)
-                    // TODO: move these changes to the actor died event
-                    actor.speed = 0             
-                    actor.pitySpeed = 0       
-                    actor.dead = true
-                    events = events.concat(new ActorDiedEvent(actor, event as DamageTakenEvent))
-                }
-                return actor
-            })
-        )
+        const checkDeathsResult = checkDeaths(ctx, parties)
+        parties = checkDeathsResult.newPartyStates
+        events = events.concat(checkDeathsResult.newEvents)
 
         if (whichPartyDied(parties) !== null) {
             break

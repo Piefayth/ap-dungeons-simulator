@@ -18,17 +18,16 @@ export class ChickenHealing extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageTakenEvent): ProcessedEventResult {
+    handleOnDeath(ctx: DungeonContext, parties: Actor[][], diedPartyIndex: number, diedIndex: number): ProcessedEventResult {
         ctx.logCombatMessage('The party drools at the sight of accidentally cooked Chumby Chicken.')
     
         const newEvents: Event[] = []
-        parties = forAllLivingActors(parties, triggeredBy.targetPartyIndex, (actor, i) => {
+        parties = forAllLivingActors(parties, diedPartyIndex, (actor, i) => {
             const healingReceived = 2 * this.tier
             const chickenHealingEvent = new HealingReceivedEvent(
                 healingReceived,
-                triggeredBy.targetPartyIndex,
-                i,
-                triggeredBy
+                diedPartyIndex,
+                i
             )
 
             newEvents.push(chickenHealingEvent)

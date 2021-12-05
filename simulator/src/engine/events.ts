@@ -16,7 +16,8 @@ enum EventKind {
     HEALING_RECEIVED = 'Healing Received',
     SUMMON_ACTOR = 'Summon Actor',
     ACTOR_DIED = 'Actor Died',
-    END_TURN = 'End Turn'
+    END_TURN = 'End Turn',
+    CHECK_DEATHS = 'Check Deaths'
 }
 
 abstract class Event {

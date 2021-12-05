@@ -6,7 +6,7 @@ export function getRandomLivingActor(parties: Actor[][], partyIndex: number, ign
 
     const livingMembers = party
         .filter(ignoreCondition)
-        .filter(actor => actor.curHP > 0)
+        .filter(actor => !actor.dead)
 
     if (livingMembers.length === 0) {
         return -1
@@ -19,7 +19,7 @@ export function getRandomLivingActor(parties: Actor[][], partyIndex: number, ign
 export function forAllLivingActors(parties: Actor[][], partyIndex: number, action: (Actor, number) => Actor): Actor[][] {
     for (let i = 0; i < parties[partyIndex].length; i++) {
         let actor = parties[partyIndex][i]
-        if (actor.curHP <= 0) continue
+        if (actor.dead) continue
 
         parties[partyIndex][i] = action(actor, i)
     }
@@ -28,14 +28,14 @@ export function forAllLivingActors(parties: Actor[][], partyIndex: number, actio
 }
 
 export function numLivingPartyMembers(parties: Actor[][], partyIndex: number) {
-    return parties[partyIndex].filter(actor => actor.curHP > 0).length
+    return parties[partyIndex].filter(actor => !actor.dead).length
 }
 
 // Debt: This could have better time complexity
 export function getSummonedActorName(parties: Actor[][], partyIndex: number, summonBaseName) {
     const party = parties[partyIndex]
     const matchingSummonsInParty = party
-        .filter(actor => actor.curHP > 0 && actor.name.includes(summonBaseName))
+        .filter(actor => !actor.dead && actor.name.includes(summonBaseName))
 
     if (matchingSummonsInParty.length === 0) {
         return summonBaseName

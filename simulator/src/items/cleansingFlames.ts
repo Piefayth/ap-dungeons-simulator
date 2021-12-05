@@ -26,7 +26,7 @@ export class CleansingFlames extends Item {
             ctx.logCombatMessage(`${attacker.name} douses their party in cleansing flames.`)
             parties = forAllLivingActors(parties, triggeredBy.attackerPartyIndex, (actor, i) => {
                 const healingReceived = 1 * this.tier
-                const flamesHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.attackerPartyIndex, i, triggeredBy)
+                const flamesHealingEvent = new HealingReceivedEvent(healingReceived, triggeredBy.attackerPartyIndex, i)
                 newEvents.push(flamesHealingEvent)
                 ctx.logCombatMessage(`${actor.name} gains ${healingReceived} HP.`)
                 return actor

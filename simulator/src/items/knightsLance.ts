@@ -45,7 +45,7 @@ export class KnightsLance extends Item {
             ctx.logCombatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg.`)
         } else {
             const damageDealtEvent = new DamageDealtEvent(lanceDamage, defenderPartyIndex, lanceTarget, event, event.turnActorIndex)
-            const healingReceivedEvent = new HealingReceivedEvent(lanceDamage, event.turnActorPartyIndex, event.turnActorIndex, event, )
+            const healingReceivedEvent = new HealingReceivedEvent(lanceDamage, event.turnActorPartyIndex, event.turnActorIndex)
             lanceEvents.push(damageDealtEvent)
             lanceEvents.push(healingReceivedEvent)
             ctx.logCombatMessage(`${attacker.name} pierces ${defender.name} with a knight's lance. ${defender.name} takes ${lanceDamage} dmg. When did ${attacker.name} become a knight? Who knows, but ${attacker.name} heals ${lanceDamage} hp.` )

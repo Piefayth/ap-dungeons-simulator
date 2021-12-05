@@ -26,7 +26,7 @@ abstract class _Item {
     abstract handleOnBeforeTurn(ctx: DungeonContext, parties: Actor[][], event: BeforeTurnEvent): ProcessedEventResult
     abstract handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult
     abstract handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult
-    abstract handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult
+    abstract handleOnDeath(ctx: DungeonContext, parties: Actor[][], diedPartyIndex: number, diedIndex: number): ProcessedEventResult
     abstract handleNewFloor(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number, floor: number): ProcessedEventResult
     abstract handleBeforeAttackerTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent
     abstract handleBeforeDefenderTargetFinalized(ctx: DungeonContext, parties: Actor[][], itemHolderIndex: number, triggeredBy: SelectTargetEvent): SelectTargetEvent
@@ -87,7 +87,7 @@ export class Item extends _Item {
         }
     }
 
-    handleOnDeath(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult {
+    handleOnDeath(ctx: DungeonContext, parties: Actor[][], diedPartyIndex: number, diedIndex: number): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []

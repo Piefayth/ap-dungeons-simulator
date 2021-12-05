@@ -26,7 +26,7 @@ export class HealingPendant extends Item {
         let roll = getRandomInt(0, 2)
         if (roll > 0) {
             const healingReceived = 5 * this.tier
-            const pendantHealingEvent = new HealingReceivedEvent(healingReceived, event.turnActorPartyIndex, event.turnActorIndex, event)
+            const pendantHealingEvent = new HealingReceivedEvent(healingReceived, event.turnActorPartyIndex, event.turnActorIndex)
             newEvents.push(pendantHealingEvent)
             ctx.logCombatMessage(`The magic of ${attacker.name}'s healing pendant revitalizes them. ${attacker.name} restores ${healingReceived} HP.`)
         }

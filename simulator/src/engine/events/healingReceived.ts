@@ -7,7 +7,7 @@ class HealingReceivedEvent extends Event {
     targetPartyIndex: number
     targetIndex: number
 
-    constructor(healingReceived: number, targetPartyIndex: number, targetIndex: number, triggeredBy: Event) {
+    constructor(healingReceived: number, targetPartyIndex: number, targetIndex: number) {
         super(EventKind.HEALING_RECEIVED)
         this.healingReceived = healingReceived
         this.targetPartyIndex = targetPartyIndex

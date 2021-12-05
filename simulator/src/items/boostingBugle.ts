@@ -53,7 +53,7 @@ export class BoostingBugle extends Item {
             const healingReceived = 2 * this.tier
             const attackReceived = 1 * this.tier
 
-            const bugleHealingEvent = new HealingReceivedEvent(healingReceived, event.turnActorPartyIndex, targetIndex, event)
+            const bugleHealingEvent = new HealingReceivedEvent(healingReceived, event.turnActorPartyIndex, targetIndex)
             bugleEvents.push(bugleHealingEvent)
 
             target.attackMin += attackReceived
