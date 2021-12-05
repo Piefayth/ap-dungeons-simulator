@@ -29,8 +29,8 @@ export const dungeon2: Dungeon = {
             curHP: 35,
             energy: 0,
             speed: 12,
-            attackMin: 0,
-            attackMax: 0
+            attackMin: 6,
+            attackMax: 8
         }, {
             name: "Boar",
             items: [],

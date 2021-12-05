@@ -119,6 +119,26 @@ const testParty: Actor[] = [{
     speed: 15,
     attackMin: 4,
     attackMax: 13
+}, {
+    name: "zoneoop",
+    items: [],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "two",
+    items: [],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
 }]
 
 const testParty2: Actor[] = [{
@@ -204,7 +224,7 @@ const testParty3: Actor[] = [{
 
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty
-    const selectedDungeon = dungeon1
+    const selectedDungeon = dungeon2
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
