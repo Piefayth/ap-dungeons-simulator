@@ -1,4 +1,5 @@
 import { Settings } from 'http2'
+import { dungeon1 } from './dungeons/dungeon1'
 import { dungeon10 } from './dungeons/dungeon10'
 import { dungeon2 } from './dungeons/dungeon2'
 import { dungeon3 } from './dungeons/dungeon3'
@@ -105,9 +106,19 @@ const testParty: Actor[] = [{
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 13,
-    attackMin: 3,
-    attackMax: 12
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "zoop",
+    items: [],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
 }]
 
 const testParty2: Actor[] = [{
@@ -192,8 +203,8 @@ const testParty3: Actor[] = [{
 
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty3
-    const selectedDungeon = dungeon10
+    const selectedParty = testParty
+    const selectedDungeon = dungeon1
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]

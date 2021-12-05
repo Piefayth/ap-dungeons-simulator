@@ -37,7 +37,10 @@ type DungeonResult = {
 }
 
 function copyParty(party: Actor[]) {
-    return party.map(actor => ({ ...actor }))
+    return party.map(actor => ({ 
+        ...actor,
+        auras: []
+    }))
 }
 
 function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): DungeonResult {
