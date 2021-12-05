@@ -256,7 +256,7 @@ function applyPitySpeed(ctx: DungeonContext, parties: Actor[][], turnResult: Det
                 if (actor.pitySpeed === undefined) {
                     actor.pitySpeed = 0
                 }
-                actor.pitySpeed = actor.pitySpeed === undefined ? ctx.settings.pityScaling(actor.pitySpeed) : ctx.settings.pityScaling(0)
+                actor.pitySpeed = actor.pitySpeed === undefined ? ctx.settings.pityScaling(actor.speed, actor.pitySpeed) : ctx.settings.pityScaling(actor.speed, 0)
             }
 
             return actor

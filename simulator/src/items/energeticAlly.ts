@@ -16,7 +16,7 @@ export class EnergeticAlly extends Item {
         let energyCost = 50
         super(kind, name, tier, energyCost)
     }
-    // this does not activate in the same phase as other energy items
+    // TODO: this does not activate in the same phase as other energy items
     // activates with the healing items
     handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
         let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]

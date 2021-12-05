@@ -179,7 +179,7 @@ const testParty3: Actor[] = [{
     angel: false,
 }, {
     name: "two",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new BoostingBugle(9)],
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -241,7 +241,7 @@ if (require.main === module && typeof window == "undefined") {
         const simulator = new DungeonSimulator({
             displayCombatEvents: true,
             displayPartyStates: false,
-            pityScaling: (speed) => speed + 0
+            pityScaling: (speed, pitySpeed) => pitySpeed + 0
         })
         simulator.simulate(trials, selectedParty, selectedDungeon)
     }

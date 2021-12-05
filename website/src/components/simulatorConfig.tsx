@@ -78,7 +78,7 @@ function runTrials(options: SimulatorInputData): SimulationResult {
     const simulator = new DungeonSimulator({
         displayCombatEvents: false,
         displayPartyStates: false,
-        pityScaling: speed => speed + 1
+        pityScaling: (speed, pitySpeed) => pitySpeed + 1
     })
 
     const dungeonMap = {
