@@ -1,4 +1,3 @@
-import { cloneDeep } from "lodash"
 import { Actor } from "./engine/actor"
 import { Dungeon, startDungeon } from "./engine/dungeon"
 import { Settings } from "./settings"
@@ -43,7 +42,7 @@ export class DungeonContext {
 
     logPartyStates(parties: Actor[][]) {
         if (!this.settings.skipHistoryStorage) {
-            this.simulationResult.results[this.currentTrial].turnPartyStates[this.currentTurn] = cloneDeep(parties)
+            this.simulationResult.results[this.currentTrial].turnPartyStates[this.currentTurn] = parties.map(party => party.map(actor => ({ ...actor })))
         }
     }
 

@@ -1,4 +1,3 @@
-import cloneDeep from 'lodash/cloneDeep'
 import { getRandomInt } from '../util/math'
 import { Actor } from './actor'
 import { 
@@ -37,8 +36,12 @@ type DungeonResult = {
     won: boolean,
 }
 
+function copyParty(party: Actor[]) {
+    return party.map(actor => ({ ...actor }))
+}
+
 function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): DungeonResult {
-    let parties = cloneDeep([party, []])    // clones in this function stay
+    let parties = [copyParty(party), []]
     
     // TODO: Move dungeon start and floor start to events
     // Without this, can't use summon actor event for pet summons
@@ -54,7 +57,7 @@ function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): Du
 
     for (let f = 0; f < dungeon.floors.length; f++) {
         ctx.logCombatMessage(`Starting floor ${f}`)
-        parties[1] = cloneDeep(dungeon.floors[f].enemies)
+        parties[1] = copyParty(dungeon.floors[f].enemies)
         
         // handle new floor actions for items
         for (let i = 0; i < parties.length; i++) {
