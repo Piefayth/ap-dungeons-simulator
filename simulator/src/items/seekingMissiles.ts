@@ -1,6 +1,7 @@
 import { Actor } from "../engine/actor"
-import { AuraKind } from "../engine/aura"
+import { AuraKind, SeekingMissilesAura } from "../engine/aura"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/events"
+import { BeforeTurnEvent } from "../engine/events/beforeTurn"
 import { DamageDealtEvent } from "../engine/events/damageDealt"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 import { TargetFinalizedEvent } from "../engine/events/targetFinalized"
@@ -17,31 +18,65 @@ export class SeekingMissiles extends Item {
         super(kind, name, tier, energyCost)
     }
 
-    // needs a "handle before turn" that applies the intial seeking missiles aura
-    // then target finalized finds the existing aura and sets the stacks
-    // seeking missiles also needs to pick its target at this time, and we can pass that down in the aura someway
+    handleOnBeforeTurn(ctx: DungeonContext, parties: Actor[][], event: BeforeTurnEvent): ProcessedEventResult {
+        let beforeTurnEvents = []
+        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
+        let defenderPartyIndex = event.turnActorPartyIndex === 1 ? 0 : 1
+
+        let firstLivingMember = parties[defenderPartyIndex].find(actor => !actor.dead)
+        let targetIndex = parties[defenderPartyIndex].indexOf(firstLivingMember)
+        let lowestHP = firstLivingMember.curHP
+
+        for (let i = 0; i < parties[defenderPartyIndex].length; i++) {
+            if (!parties[defenderPartyIndex][i].dead && parties[defenderPartyIndex][i].curHP < lowestHP) {
+                lowestHP = parties[defenderPartyIndex][i].curHP
+                targetIndex = i
+            }
+        }
+
+        attacker.auras = attacker.auras.filter(aura => aura.kind !== AuraKind.SEEKING_MISSILES)
+
+        attacker.auras.push({
+            kind: AuraKind.SEEKING_MISSILES,
+            stacks: 0,
+            damage: 0,
+            targetPartyIndex: defenderPartyIndex,
+            targetIndex
+        } as SeekingMissilesAura)
+
+        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+
+        return {
+            newPartyStates: parties,
+            newEvents: beforeTurnEvents
+        }
+    }
 
     handleBeforeAttackerTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: SelectTargetEvent): SelectTargetEvent {
-        let lowestHP = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex].curHP
-        let newTargetIndex = triggeredBy.defenderIndex
+        let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let seeking = attacker.auras.find(aura => aura.kind === AuraKind.SEEKING_MISSILES) as SeekingMissilesAura
+
+        let firstLivingMember = parties[triggeredBy.defenderPartyIndex].find(actor => !actor.dead)
+        let newTargetIndex = parties[triggeredBy.defenderPartyIndex].indexOf(firstLivingMember)
+        let lowestHP = firstLivingMember.curHP
 
         for (let i = 0; i < parties[triggeredBy.defenderPartyIndex].length; i++) {
-            if (parties[triggeredBy.defenderPartyIndex][i].curHP > 0 && parties[triggeredBy.defenderPartyIndex][i].curHP < lowestHP) {
+            if (!parties[triggeredBy.defenderPartyIndex][i].dead && parties[triggeredBy.defenderPartyIndex][i].curHP < lowestHP) {
                 lowestHP = parties[triggeredBy.defenderPartyIndex][i].curHP
                 newTargetIndex = i
             }
         }
 
-        // this function is responsible for reassigning the basic attack target
-        // and printing the message
-        // death checking should happen right before this
+        seeking.targetIndex = newTargetIndex
+        attacker.auras[attacker.auras.indexOf(seeking)] = seeking
+        parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
 
         ctx.logCombatMessage(`${
             parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex].name
         } follows their seeking missiles and hunts down ${
             parties[triggeredBy.defenderPartyIndex][newTargetIndex].name
         }.`)
-
+        
         return new SelectTargetEvent(
             triggeredBy.attackerPartyIndex,
             triggeredBy.attackerIndex,
@@ -51,6 +86,7 @@ export class SeekingMissiles extends Item {
 
     handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
         let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
+        let seeking = attacker.auras.find(aura => aura.kind === AuraKind.SEEKING_MISSILES) as SeekingMissilesAura
         let defender = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
 
         // Seeking missiles actually does 0.5 damage per tier per 10% hp missing
@@ -61,14 +97,12 @@ export class SeekingMissiles extends Item {
         let missilesMultiplier = Math.floor(hpPercentageMissing / 10)
         let missileDamage = Math.floor(0.5 * this.tier * missilesMultiplier)
 
-        attacker.auras.push({
-            kind: AuraKind.SEEKING_MISSILES,
-            stacks: missileDamage
-        })
+        seeking.damage = missileDamage
+        attacker.auras[attacker.auras.indexOf(seeking)] = seeking
 
         parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex] = attacker
 
-        ctx.logCombatMessage(`Seeking Missiles deal an extra ${missileDamage} damage.`)
+        ctx.logCombatMessage(`Seeking Missiles deal an extra ${seeking.damage} damage.`)
 
         return {
             newPartyStates: parties,

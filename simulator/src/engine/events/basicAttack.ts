@@ -1,6 +1,6 @@
 import { getRandomInt } from "../../util/math";
 import { Actor } from "../actor";
-import { AuraKind } from "../aura";
+import { AuraKind, SeekingMissilesAura } from "../aura";
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events";
 import { TargetFinalizedEvent } from "./targetFinalized";
 import { DamageDealtEvent } from "./damageDealt";
@@ -43,9 +43,9 @@ class BasicAttackEvent extends CombatEvent {
 
         // TODO: Refactor this behavior into the item
         if (attacker.auras.some(it => it.kind === AuraKind.SEEKING_MISSILES)) {
-            totalDamage += attacker.auras.find(it => it.kind === AuraKind.SEEKING_MISSILES).stacks
+            const seeking = attacker.auras.find(it => it.kind === AuraKind.SEEKING_MISSILES) as SeekingMissilesAura
+            totalDamage += seeking.damage
 
-            attacker.auras = attacker.auras.filter(aura => aura.kind !== AuraKind.SEEKING_MISSILES)
             parties[this.attackerPartyIndex][this.attackerIndex] = attacker
         }
 

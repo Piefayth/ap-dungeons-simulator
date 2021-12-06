@@ -5,6 +5,8 @@ import { BasicAttackEvent } from "./basicAttack"
 import { EndTurnEvent } from "./endTurn"
 import { DungeonContext } from "../../simulator"
 import { ActorDiedEvent } from "./actorDied"
+import { whichPartyDied } from "../dungeon"
+import { CancelTurnEvent } from "./cancelTurn"
 
 class CheckDeathsEvent extends Event {
     constructor() {
@@ -29,11 +31,20 @@ function checkDeaths(ctx: DungeonContext, parties: Actor[][]): ProcessedEventRes
                     return actor
                 }
                 
+                actor.speed = 0             
+                actor.pitySpeed = 0       
+                actor.dead = true
+
                 ctx.logCombatMessage(`${actor.name} has fallen!`)
                 events.push(new ActorDiedEvent(actor, partyIndex, actorIndex))
             }
         return actor
     }))
+
+    let deadParty = whichPartyDied(parties)
+    if (deadParty !== null) {
+        events.push(new CancelTurnEvent())
+    }
 
     return {
         newPartyStates: parties,

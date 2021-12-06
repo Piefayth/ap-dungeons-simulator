@@ -16,10 +16,9 @@ export class EnergeticAlly extends Item {
         let energyCost = 50
         super(kind, name, tier, energyCost)
     }
-    // TODO: this does not activate in the same phase as other energy items
-    // activates with the healing items
-    handleOnTurnStart(ctx: DungeonContext, parties: Actor[][], event: StartTurnEvent): ProcessedEventResult {
-        let attacker = parties[event.turnActorPartyIndex][event.turnActorIndex]
+
+    handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], event: CombatEvent): ProcessedEventResult {
+        let attacker = parties[event.attackerPartyIndex][event.attackerIndex]
 
         if (attacker.energy < this.energyCost) {
             return {
@@ -27,39 +26,39 @@ export class EnergeticAlly extends Item {
                 newEvents: []
             }
         }
-
+        
         const allyHealing = 5 * this.tier
         const allyEnergy = 20
         
-        let allyTarget = event.turnActorIndex
-        let lowestHP = parties[event.turnActorPartyIndex][event.turnActorIndex].curHP
+        let allyTarget = event.attackerIndex
+        let lowestHP = attacker.curHP
 
-        for (let i = 0; i < parties[event.turnActorPartyIndex].length; i++) {
-            if (parties[event.turnActorPartyIndex][i].isSummoned) continue
+        for (let i = 0; i < parties[event.attackerPartyIndex].length; i++) {
+            if (parties[event.attackerPartyIndex][i].isSummoned) continue
 
             if (
-                parties[event.turnActorPartyIndex][i].curHP > 0 && 
-                parties[event.turnActorPartyIndex][i].curHP < lowestHP &&
-                parties[event.turnActorPartyIndex][i].curHP < parties[event.turnActorPartyIndex][i].maxHP
+                parties[event.attackerPartyIndex][i].curHP > 0 && 
+                parties[event.attackerPartyIndex][i].curHP < lowestHP &&
+                parties[event.attackerPartyIndex][i].curHP < parties[event.attackerPartyIndex][i].maxHP
             ) {
-                lowestHP = parties[event.turnActorPartyIndex][i].curHP
+                lowestHP = parties[event.attackerPartyIndex][i].curHP
                 allyTarget = i
             }
         }
 
         let allyEvents: Event[] = []
 
-        const allyHealingEvent = new HealingReceivedEvent(allyHealing, event.turnActorPartyIndex, allyTarget)
+        const allyHealingEvent = new HealingReceivedEvent(allyHealing, event.attackerPartyIndex, allyTarget)
         allyEvents.push(allyHealingEvent)
 
         attacker.energy -= this.energyCost
-        parties[event.turnActorPartyIndex][allyTarget].energy += allyEnergy
-        parties[event.turnActorPartyIndex][event.turnActorIndex] = attacker
+        parties[event.attackerPartyIndex][allyTarget].energy += allyEnergy
+        parties[event.attackerPartyIndex][event.attackerIndex] = attacker
         
         ctx.logCombatMessage(`${attacker.name}'s cat blinds ${
-            parties[event.turnActorPartyIndex][allyTarget].name
+            parties[event.attackerPartyIndex][allyTarget].name
         } with an invigorating ray. ${
-            parties[event.turnActorPartyIndex][allyTarget].name
+            parties[event.attackerPartyIndex][allyTarget].name
         } recovers ${allyHealing} hp and gains ${allyEnergy} energy.`)
 
         return {

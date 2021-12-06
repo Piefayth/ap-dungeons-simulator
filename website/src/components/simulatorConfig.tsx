@@ -18,35 +18,45 @@ import cloneDeep from 'lodash/cloneDeep'
 import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 
 const demoParty: Actor[] = [{
-    name: "zoop",
-    items: [new Items.KnightsLance(8), new Items.MartyrArmor(8), new Items.SurvivalKit(8), new Items.MagicParasol(8)],
-    auras: [],
-    maxHP: 100,
-    curHP: 100,
-    energy: 0,
-    speed: 10,
-    attackMin: 1,
-    attackMax: 10
-}, {
     name: "piefayth",
-    items: [new Items.LoveLetter(8), new Items.Freezeman(8), new Items.Thorns(8), new Items.EnergeticAlly(8)],
+    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
     auras: [],
-    maxHP: 100,
-    curHP: 100,
+    maxHP: 150,
+    curHP: 150,
     energy: 0,
-    speed: 10,
-    attackMin: 1,
-    attackMax: 10
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
 }, {
-    name: "piefayth's cats",
-    items: [new Items.Machete(8), new Items.Freezeman(8), new Items.Thorns(8), new Items.Avalanche(8)],
+    name: "zoop",
+    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
     auras: [],
-    maxHP: 100,
-    curHP: 100,
+    maxHP: 150,
+    curHP: 150,
     energy: 0,
-    speed: 10,
-    attackMin: 1,
-    attackMax: 10
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "one",
+    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "two",
+    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
 }]
 
 type SimulatorInputData = {

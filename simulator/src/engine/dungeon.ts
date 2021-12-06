@@ -123,7 +123,7 @@ function prepareTurn(parties: Actor[][]): Actor[][] {
     )
 }
 
-function whichPartyDied(parties: Actor[][]): number | null {
+export function whichPartyDied(parties: Actor[][]): number | null {
     for (let i = 0; i < parties.length; i++) {
         let partyRemainingHP = parties[i]
             .reduce((acc, cur) => cur ? acc + Math.max(0, cur.curHP) : acc, 0)
@@ -230,15 +230,11 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
             default:
                 break
         }
-
-        const checkDeathsResult = checkDeaths(ctx, parties)
-        parties = checkDeathsResult.newPartyStates
-        events = events.concat(checkDeathsResult.newEvents)
-
-        if (whichPartyDied(parties) !== null) {
-            break
-        }
     }
+
+    const checkDeathsResult = checkDeaths(ctx, parties)
+    parties = checkDeathsResult.newPartyStates
+    events = events.concat(checkDeathsResult.newEvents)
 
     return parties
 }

@@ -9,6 +9,7 @@ import { HealingReceivedEvent } from "../engine/events/healingReceived"
 
 import { getRandomLivingActor } from "../util/actor"
 import { DungeonContext } from "../simulator"
+import { AuraKind, SeekingMissilesAura } from "../engine/aura"
 
 export class ChallengerArrow extends Item {
     constructor(tier: number) {
@@ -28,13 +29,13 @@ export class ChallengerArrow extends Item {
             }
         }
 
+        let seeking = attacker.auras.find(aura => aura.kind === AuraKind.SEEKING_MISSILES) as SeekingMissilesAura
+
         const defenderPartyIndex = event.turnActorPartyIndex === 0 ? 1 : 0
         const arrowDamage = 10 * this.tier
         const arrowAttack = 2 * this.tier
 
-        // need to check if seeking missiles aura is applied
-        // if it is, take the seeking missiles target
-        const arrowTarget = getRandomLivingActor(parties, defenderPartyIndex)
+        const arrowTarget = seeking ? seeking.targetIndex : getRandomLivingActor(parties, defenderPartyIndex)
 
         let arrowEvents: Event[] = []
         const damageDealtEvent = new DamageDealtEvent(arrowDamage, defenderPartyIndex, arrowTarget, event, event.turnActorIndex)

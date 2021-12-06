@@ -101,7 +101,7 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [],
+    items: [new ChallengerArrow(2), new SeekingMissiles(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -111,7 +111,7 @@ const testParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [],
+    items: [new ChallengerArrow(2), new SeekingMissiles(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -120,8 +120,8 @@ const testParty: Actor[] = [{
     attackMin: 4,
     attackMax: 13
 }, {
-    name: "zoneoop",
-    items: [],
+    name: "one",
+    items: [new ChallengerArrow(2), new SeekingMissiles(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -131,7 +131,7 @@ const testParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "two",
-    items: [],
+    items: [new ChallengerArrow(2), new SeekingMissiles(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -188,7 +188,7 @@ const testParty3: Actor[] = [{
     angel: false,
 }, {
     name: "zoop",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new EnergeticAlly(9)],
+    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -223,8 +223,8 @@ const testParty3: Actor[] = [{
 
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty
-    const selectedDungeon = dungeon2
+    const selectedParty = testParty3
+    const selectedDungeon = dungeon10
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
