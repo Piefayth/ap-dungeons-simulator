@@ -14,7 +14,7 @@ export class ExplosionPowder extends Item {
     constructor(tier: number) {
         let kind = ItemKind.EXPLOSION_POWDER
         let name = ItemKind[ItemKind.EXPLOSION_POWDER]
-        let energyCost = 60
+        let energyCost = 55
         super(kind, name, tier, energyCost)
     }
 

@@ -21,8 +21,8 @@ export class BFCannon extends Item {
 
         owner.attackMin += 6 + (6 * this.tier)
         owner.attackMax += 6 + (6 * this.tier)
-        owner.curHP += 10 * this.tier
-        owner.maxHP += 10 * this.tier
+        owner.curHP += 7 * this.tier
+        owner.maxHP += 7 * this.tier
 
         parties[ownerPartyIndex][ownerIndex] = owner
 

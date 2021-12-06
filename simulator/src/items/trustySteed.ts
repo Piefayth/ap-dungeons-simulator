@@ -30,7 +30,7 @@ export class TrustySteed extends Item {
             auras: [],
             maxHP: 10 * this.tier,
             curHP: 10 * this.tier,
-            energy: 55,
+            energy: 40,
             speed: 20,
             attackMin: 0,
             attackMax: 0,

@@ -23,7 +23,7 @@ export class ChickenHealing extends Item {
     
         const newEvents: Event[] = []
         parties = forAllLivingActors(parties, diedPartyIndex, (actor, i) => {
-            const healingReceived = 2 * this.tier
+            const healingReceived = 3 * this.tier
             const chickenHealingEvent = new HealingReceivedEvent(
                 healingReceived,
                 diedPartyIndex,

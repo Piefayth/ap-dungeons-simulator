@@ -13,7 +13,7 @@ export class Avalanche extends Item {
     constructor(tier: number) {
         let kind = ItemKind.AVALANCHE
         let name = ItemKind[ItemKind.AVALANCHE]
-        let energyCost = 40
+        let energyCost = 35
         super(kind, name, tier, energyCost)
     }
 

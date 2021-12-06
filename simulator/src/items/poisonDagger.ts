@@ -16,6 +16,20 @@ export class PoisonDagger extends Item {
         super(kind, name, tier, energyCost)
     }
 
+    handleOnDungeonStart(ctx: DungeonContext, parties: Actor[][], ownerPartyIndex: number, ownerIndex: number): ProcessedEventResult {
+        let owner = parties[ownerPartyIndex][ownerIndex]
+
+        owner.curHP += 3 * this.tier
+        owner.maxHP += 3 * this.tier
+
+        parties[ownerPartyIndex][ownerIndex] = owner
+
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
     handleOnTargetFinalized(ctx: DungeonContext, parties: Actor[][], triggeredBy: TargetFinalizedEvent): ProcessedEventResult {
         let attacker = parties[triggeredBy.attackerPartyIndex][triggeredBy.attackerIndex]
         let defender = parties[triggeredBy.defenderPartyIndex][triggeredBy.defenderIndex]
