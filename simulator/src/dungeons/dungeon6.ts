@@ -1,5 +1,5 @@
 import { Dungeon } from "../engine/dungeon";
-import { BigClub, ChallengerArrow, CleansingFlames, DrainingDagger, FireSword, HealingPendant, ImpWhistle, KnightsLance, LoveLetter, MartyrArmor, PoisonDagger, WhirlwindAxe } from "../items";
+import { BigClub, ChallengerArrow, CleansingFlames, DrainingDagger, FireSword, HealingPendant, ImpWhistle, KnightsLance, LoveLetter, MartyrArmor, PoisonDagger, SurvivalKit, WhirlwindAxe } from "../items";
 import { Avalanche } from "../items/avalanche";
 import { BoostingBugle } from "../items/boostingBugle";
 import { ExplosionPowder } from "../items/explosionPowder";
@@ -45,10 +45,10 @@ export const dungeon6: Dungeon = {
     }, {
         enemies: [{
             name: "Fat Gum",
-            items: [new MartyrArmor(3)],
+            items: [new MartyrArmor(3), new SurvivalKit(3)],
             auras: [],
-            maxHP: 300,
-            curHP: 300,
+            maxHP: 240,
+            curHP: 240,
             energy: 0,
             speed: 6,
             attackMin: 50,
