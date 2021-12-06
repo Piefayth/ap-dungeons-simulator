@@ -19,7 +19,7 @@ import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 
 const demoParty: Actor[] = [{
     name: "piefayth",
-    items: [new Items.ChumbyChicken(6), new Items.ChallengerArrow(6), new Items.TrustySteed(6), new Items.PetImp(6)],
+    items: [new Items.HealingPendant(1), new Items.PetImp(1)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -29,12 +29,42 @@ const demoParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new Items.ChumbyChicken(6), new Items.ChallengerArrow(6), new Items.TrustySteed(6), new Items.PetImp(6)],
+    items: [new Items.MagicParasol(1)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
     speed: 15,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "tobu",
+    items: [new Items.EnergeticAlly(1), new Items.ChumbyChicken(1)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 14,
+    attackMin: 5,
+    attackMax: 14
+}, {
+    name: "mdao",
+    items: [new Items.Avalanche(1)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 14,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "mdao2",
+    items: [new Items.Avalanche(1)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 14,
     attackMin: 4,
     attackMax: 13
 }]

@@ -33,17 +33,22 @@ export class WhirlwindAxe extends Item {
             }
         }
 
-        ctx.logCombatMessage(`${attacker.name} swings their whirlwind axe wildly.`)
-        parties = forAllLivingActors(parties, triggeredBy.defenderPartyIndex, (actor, i) => {
-            if (i === triggeredBy.defenderIndex) return actor
+        const chance = 11 * this.tier
+        const roll = getRandomInt(0, 100)
 
-            const axeDamage = damageDealt
-            const damageDealtEvent = new DamageDealtEvent(axeDamage, triggeredBy.defenderPartyIndex, i, triggeredBy, triggeredBy.attackerIndex)
-            axeEvents.push(damageDealtEvent)
+        if (roll < chance) {
+            ctx.logCombatMessage(`${attacker.name} swings their whirlwind axe wildly.`)
+            parties = forAllLivingActors(parties, triggeredBy.defenderPartyIndex, (actor, i) => {
+                if (i === triggeredBy.defenderIndex) return actor
 
-            ctx.logCombatMessage(`${parties[triggeredBy.defenderPartyIndex][i].name} is hit, taking ${axeDamage} damage`)
-            return actor
-        })
+                const axeDamage = damageDealt
+                const damageDealtEvent = new DamageDealtEvent(axeDamage, triggeredBy.defenderPartyIndex, i, triggeredBy, triggeredBy.attackerIndex)
+                axeEvents.push(damageDealtEvent)
+
+                ctx.logCombatMessage(`${parties[triggeredBy.defenderPartyIndex][i].name} is hit, taking ${axeDamage} damage`)
+                return actor
+            })
+        }
 
         return {
             newPartyStates: parties,

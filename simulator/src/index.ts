@@ -101,7 +101,7 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [new ChumbyChicken(7), new Avalanche(7), new TrustySteed(7), new PetImp(7)],
+    items: [new TrustySteed(7), new ChumbyChicken(7), new Avalanche(7), new PetImp(7)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -111,7 +111,7 @@ const testParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new ChumbyChicken(7), new Avalanche(7), new TrustySteed(7), new PetImp(7)],
+    items: [new TrustySteed(7), new Avalanche(7), new ChumbyChicken(7), new PetImp(7)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -123,36 +123,54 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(8), new BoostingBugle(8)],
+    items: [new HealingPendant(1), new PetImp(1)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 13,
-    attackMin: 3,
-    attackMax: 12,
-    angel: false,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
 }, {
     name: "zoop",
-    items: [new MartyrArmor(8), new SurvivalKit(8), new Freezeman(8), new BoostingBugle(9)],
+    items: [new MagicParasol(1)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
+}, {
+    name: "tobu",
+    items: [new EnergeticAlly(1), new ChumbyChicken(1)],
+    auras: [],
+    maxHP: 150,
+    curHP: 150,
+    energy: 0,
+    speed: 14,
+    attackMin: 5,
+    attackMax: 14
+}, {
+    name: "mdao",
+    items: [new Avalanche(1)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
     speed: 14,
     attackMin: 4,
-    attackMax: 13,
-    angel: false,
+    attackMax: 13
 }, {
-    name: "rando",
-    items: [new MartyrArmor(6), new SurvivalKit(6), new MagicParasol(8), new BoostingBugle(6)],
+    name: "mdao2",
+    items: [new Avalanche(1)],
     auras: [],
-    maxHP: 130,
-    curHP: 130,
+    maxHP: 150,
+    curHP: 150,
     energy: 0,
     speed: 14,
     attackMin: 4,
-    attackMax: 13,
+    attackMax: 13
 }]
 
 const testParty3: Actor[] = [{
@@ -203,8 +221,8 @@ const testParty3: Actor[] = [{
 
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty
-    const selectedDungeon = dungeon6
+    const selectedParty = testParty2
+    const selectedDungeon = dungeon4
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
