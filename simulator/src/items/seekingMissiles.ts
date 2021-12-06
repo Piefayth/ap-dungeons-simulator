@@ -118,7 +118,7 @@ export class SeekingMissiles extends Item {
         const target = parties[triggeredBy.diedActorPartyIndex][triggeredBy.diedActorIndex]
         const attacker = parties[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
 
-        const healingReceived = 1 * this.tier
+        const healingReceived = 6 * this.tier
         const healingReceivedEvent = new HealingReceivedEvent(healingReceived, triggeredBy.turnActorPartyIndex, triggeredBy.turnActorIndex)
         onKillEvents.push(healingReceivedEvent)
 

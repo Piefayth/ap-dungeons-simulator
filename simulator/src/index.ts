@@ -4,6 +4,7 @@ import { dungeon10 } from './dungeons/dungeon10'
 import { dungeon2 } from './dungeons/dungeon2'
 import { dungeon3 } from './dungeons/dungeon3'
 import { dungeon4 } from './dungeons/dungeon4'
+import { dungeon5 } from './dungeons/dungeon5'
 import { dungeon6 } from './dungeons/dungeon6'
 import { dungeon7 } from './dungeons/dungeon7'
 import { dungeon8 } from './dungeons/dungeon8'
@@ -123,7 +124,7 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new HealingPendant(1), new PetImp(1)],
+    items: [new HealingPendant(1), new PetImp(1), new ChumbyChicken(1), new ExplosionPowder(1)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -133,7 +134,7 @@ const testParty2: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new MagicParasol(1)],
+    items: [new MagicParasol(1), new ChallengerArrow(2), new SeekingMissiles(3), new BFCannon(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -143,7 +144,7 @@ const testParty2: Actor[] = [{
     attackMax: 13
 }, {
     name: "tobu",
-    items: [new EnergeticAlly(1), new ChumbyChicken(1)],
+    items: [new EnergeticAlly(1), new ChumbyChicken(1), new BigClub(1)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -162,7 +163,7 @@ const testParty2: Actor[] = [{
     attackMin: 4,
     attackMax: 13
 }, {
-    name: "mdao2",
+    name: "altaradf",
     items: [new Avalanche(1)],
     auras: [],
     maxHP: 150,
@@ -222,7 +223,7 @@ const testParty3: Actor[] = [{
 
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty2
-    const selectedDungeon = dungeon4
+    const selectedDungeon = dungeon5
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
