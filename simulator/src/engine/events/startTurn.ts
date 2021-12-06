@@ -17,7 +17,7 @@ class StartTurnEvent extends Event {
 
     processStartTurn(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
         const selectTargetEvent = new SelectTargetEvent(this.turnActorPartyIndex, this.turnActorIndex)
-        const checkDeathsEvent = new CheckDeathsEvent()
+        const checkDeathsEvent = new CheckDeathsEvent(this.turnActorPartyIndex, this.turnActorIndex)
 
         let startTurnEvents: Event[] = [selectTargetEvent, checkDeathsEvent]
 

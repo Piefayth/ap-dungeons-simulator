@@ -100,8 +100,7 @@ function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
     const turnActorSelection = determineTurn(parties[0], parties[1])
     let newPartyState = applyPitySpeed(ctx, parties, turnActorSelection)
     newPartyState = prepareTurn(newPartyState)
-    const beforeTurnEvent = new BeforeTurnEvent(turnActorSelection.partyID, turnActorSelection.partyIndex)
-    newPartyState = processTurnEvents(ctx, newPartyState, [beforeTurnEvent])
+    newPartyState = processTurnEvents(ctx, newPartyState, turnActorSelection.partyID, turnActorSelection.partyIndex)
 
     let deadParty = whichPartyDied(parties)
     if (deadParty !== null) {
@@ -136,11 +135,11 @@ export function whichPartyDied(parties: Actor[][]): number | null {
     return null
 }
 
-function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Event[]): Actor[][] {
-    // TODO: start this function with a list of all events that should happen per turn
-    // It's hard to follow right now with events being responsible for adding other turn-standard events
-    
-    events.unshift(new CheckDeathsEvent())
+function processTurnEvents(ctx: DungeonContext, parties: Actor[][], partyID: number, partyIndex: number): Actor[][] {
+    let events: Event[] = [
+        new CheckDeathsEvent(partyID, partyIndex), 
+        new BeforeTurnEvent(partyID, partyIndex)
+    ]
 
     while (events.length != 0) {
         const event = events.pop()

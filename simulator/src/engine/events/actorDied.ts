@@ -4,31 +4,39 @@ import { DamageTakenEvent } from "./damageTaken"
 import { DungeonContext } from "../../simulator"
 
 class ActorDiedEvent extends Event {
-    actorIndex: number
-    actorPartyIndex: number
+    diedActorIndex: number
+    diedActorPartyIndex: number
+    turnActorPartyIndex: number
+    turnActorIndex: number
     triggeredBy: DamageTakenEvent
 
-    constructor(actor: Actor, actorPartyIndex: number, actorIndex: number) {
+    constructor(actor: Actor, diedActorPartyIndex: number, diedActorIndex: number, turnActorPartyIndex: number, turnActorIndex: number) {
         super(EventKind.ACTOR_DIED)
-        this.actorPartyIndex = actorPartyIndex
-        this.actorIndex = actorIndex
+        this.diedActorPartyIndex = diedActorPartyIndex
+        this.diedActorIndex = diedActorIndex
+        this.turnActorPartyIndex = turnActorPartyIndex
+        this.turnActorIndex = turnActorIndex
     }
 
     processActorDied(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {
         let actorDiedEvents: Event[] = []
-        let actor = partyStates[this.actorPartyIndex][this.actorIndex]
+        let diedActor = partyStates[this.diedActorPartyIndex][this.diedActorIndex]
 
-        actor.speed = 0             
-        actor.pitySpeed = 0       
-        actor.dead = true
+        diedActor.speed = 0             
+        diedActor.pitySpeed = 0       
+        diedActor.dead = true
 
-        for (let i = 0; i < actor.items.length; i++) {
-            let result = actor.items[i].handleOnDeath(ctx, partyStates, this.actorPartyIndex, this.actorIndex)
+        // need to call handleOnDeath for the item owner's items
+        // but also need to call handleOnKill for the ATTACKER's items
+        // but that means we need to know whose turn it was when someone died
+
+        for (let i = 0; i < diedActor.items.length; i++) {
+            let result = diedActor.items[i].handleOnDeath(ctx, partyStates, this.diedActorPartyIndex, this.diedActorIndex)
             partyStates = result.newPartyStates
             actorDiedEvents = actorDiedEvents.concat(result.newEvents)
         }
 
-        partyStates[this.actorPartyIndex][this.actorIndex] = actor
+        partyStates[this.diedActorPartyIndex][this.diedActorIndex] = diedActor
 
         return {
             newPartyStates: partyStates,

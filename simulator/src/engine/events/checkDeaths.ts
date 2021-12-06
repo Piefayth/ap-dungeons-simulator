@@ -9,16 +9,21 @@ import { whichPartyDied } from "../dungeon"
 import { CancelTurnEvent } from "./cancelTurn"
 
 class CheckDeathsEvent extends Event {
-    constructor() {
+    turnActorPartyIndex: number
+    turnActorIndex: number
+
+    constructor(turnActorPartyIndex: number, turnActorIndex: number) {
         super(EventKind.CHECK_DEATHS)
+        this.turnActorPartyIndex = turnActorPartyIndex
+        this.turnActorIndex = turnActorIndex
     }
 
     processCheckDeaths(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
-        return checkDeaths(ctx, parties)
+        return checkDeaths(ctx, parties, this.turnActorPartyIndex, this.turnActorIndex)
     }
 }
 
-function checkDeaths(ctx: DungeonContext, parties: Actor[][]): ProcessedEventResult {
+function checkDeaths(ctx: DungeonContext, parties: Actor[][], turnActorPartyIndex: number, turnActorIndex: number): ProcessedEventResult {
     let events = []
 
     parties = parties.map((party, partyIndex) => party
@@ -36,7 +41,7 @@ function checkDeaths(ctx: DungeonContext, parties: Actor[][]): ProcessedEventRes
                 actor.dead = true
 
                 ctx.logCombatMessage(`${actor.name} has fallen!`)
-                events.push(new ActorDiedEvent(actor, partyIndex, actorIndex))
+                events.push(new ActorDiedEvent(actor, partyIndex, actorIndex, turnActorPartyIndex, turnActorIndex))
             }
         return actor
     }))

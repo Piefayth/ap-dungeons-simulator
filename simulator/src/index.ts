@@ -101,7 +101,7 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [new ChumbyChicken(2), new ChallengerArrow(2), new SeekingMissiles(2)],
+    items: [new ChumbyChicken(7), new ChallengerArrow(7), new TrustySteed(7), new RockCompanion(7)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -111,27 +111,7 @@ const testParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new ChumbyChicken(2), new ChallengerArrow(2), new SeekingMissiles(2)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 15,
-    attackMin: 4,
-    attackMax: 13
-}, {
-    name: "one",
-    items: [new ChumbyChicken(2), new ChallengerArrow(2), new SeekingMissiles(2)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 15,
-    attackMin: 4,
-    attackMax: 13
-}, {
-    name: "two",
-    items: [new ChumbyChicken(2), new ChallengerArrow(2), new SeekingMissiles(2)],
+    items: [new ChumbyChicken(7), new ChallengerArrow(7), new TrustySteed(7), new RockCompanion(7)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -224,8 +204,8 @@ const testParty3: Actor[] = [{
 
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty
-    const selectedDungeon = dungeon4
-    const trials = 100
+    const selectedDungeon = dungeon6
+    const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
 
