@@ -137,6 +137,11 @@ export function whichPartyDied(parties: Actor[][]): number | null {
 }
 
 function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Event[]): Actor[][] {
+    // TODO: start this function with a list of all events that should happen per turn
+    // It's hard to follow right now with events being responsible for adding other turn-standard events
+    
+    events.unshift(new CheckDeathsEvent())
+
     while (events.length != 0) {
         const event = events.pop()
         switch (event.kind) {
@@ -231,10 +236,6 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], events: Even
                 break
         }
     }
-
-    const checkDeathsResult = checkDeaths(ctx, parties)
-    parties = checkDeathsResult.newPartyStates
-    events = events.concat(checkDeathsResult.newEvents)
 
     return parties
 }

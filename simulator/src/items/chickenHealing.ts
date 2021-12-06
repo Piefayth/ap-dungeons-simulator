@@ -38,7 +38,7 @@ export class ChickenHealing extends Item {
 
         return {
             newPartyStates: parties,
-            newEvents: []
+            newEvents: newEvents
         }
     }
 }
