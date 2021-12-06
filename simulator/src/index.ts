@@ -124,7 +124,7 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new HealingPendant(1), new PetImp(1), new ChumbyChicken(1), new ExplosionPowder(1)],
+    items: [new HealingPendant(1), new LoveLetter(1), new ChumbyChicken(2), new ChallengerArrow(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -134,42 +134,12 @@ const testParty2: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new MagicParasol(1), new ChallengerArrow(2), new SeekingMissiles(3), new BFCannon(2)],
+    items: [new PetImp(1), new ChallengerArrow(2), new SeekingMissiles(3), new BFCannon(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
     speed: 15,
-    attackMin: 4,
-    attackMax: 13
-}, {
-    name: "tobu",
-    items: [new EnergeticAlly(1), new ChumbyChicken(1), new BigClub(1)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 14,
-    attackMin: 5,
-    attackMax: 14
-}, {
-    name: "mdao",
-    items: [new Avalanche(1)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 14,
-    attackMin: 4,
-    attackMax: 13
-}, {
-    name: "altaradf",
-    items: [new Avalanche(1)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 14,
     attackMin: 4,
     attackMax: 13
 }]
@@ -223,7 +193,7 @@ const testParty3: Actor[] = [{
 
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty2
-    const selectedDungeon = dungeon5
+    const selectedDungeon = dungeon2
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
