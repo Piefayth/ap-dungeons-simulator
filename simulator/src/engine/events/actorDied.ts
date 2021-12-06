@@ -2,6 +2,7 @@ import { Actor } from "../actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../events"
 import { DamageTakenEvent } from "./damageTaken"
 import { DungeonContext } from "../../simulator"
+import { CancelTurnEvent } from "./cancelTurn"
 
 class ActorDiedEvent extends Event {
     diedActorIndex: number
@@ -21,14 +22,12 @@ class ActorDiedEvent extends Event {
     processActorDied(ctx: DungeonContext, partyStates: Actor[][]): ProcessedEventResult {
         let actorDiedEvents: Event[] = []
         let diedActor = partyStates[this.diedActorPartyIndex][this.diedActorIndex]
+        let turnActor = partyStates[this.turnActorPartyIndex][this.turnActorIndex]
 
         diedActor.speed = 0             
         diedActor.pitySpeed = 0       
         diedActor.dead = true
-
-        // need to call handleOnDeath for the item owner's items
-        // but also need to call handleOnKill for the ATTACKER's items
-        // but that means we need to know whose turn it was when someone died
+        partyStates[this.diedActorPartyIndex][this.diedActorIndex] = diedActor
 
         for (let i = 0; i < diedActor.items.length; i++) {
             let result = diedActor.items[i].handleOnDeath(ctx, partyStates, this.diedActorPartyIndex, this.diedActorIndex)
@@ -36,7 +35,21 @@ class ActorDiedEvent extends Event {
             actorDiedEvents = actorDiedEvents.concat(result.newEvents)
         }
 
-        partyStates[this.diedActorPartyIndex][this.diedActorIndex] = diedActor
+        // if you die on your own turn (e.g. rough skin), cancel the rest of your turn after processing on death effects
+        if (turnActor.dead) {
+            actorDiedEvents.unshift(new CancelTurnEvent())
+
+            return {
+                newPartyStates: partyStates,
+                newEvents: actorDiedEvents
+            }
+        }
+
+        for (let i = 0; i < turnActor.items.length; i++) {
+            let result = turnActor.items[i].handleOnKill(ctx, partyStates, this)
+            partyStates = result.newPartyStates
+            actorDiedEvents = actorDiedEvents.concat(result.newEvents)
+        }
 
         return {
             newPartyStates: partyStates,

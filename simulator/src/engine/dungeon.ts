@@ -99,7 +99,7 @@ function startDungeon(ctx: DungeonContext, dungeon: Dungeon, party: Actor[]): Du
 function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
     const turnActorSelection = determineTurn(parties[0], parties[1])
     let newPartyState = applyPitySpeed(ctx, parties, turnActorSelection)
-    newPartyState = prepareTurn(newPartyState)
+    newPartyState = prepareTurn(newPartyState)  // this could both be an event AND handle the pity speed
     newPartyState = processTurnEvents(ctx, newPartyState, turnActorSelection.partyID, turnActorSelection.partyIndex)
 
     let deadParty = whichPartyDied(parties)
@@ -116,6 +116,8 @@ function simulateFloor(ctx: DungeonContext, parties: Actor[][]): Actor[][] {
 function prepareTurn(parties: Actor[][]): Actor[][] {
     return parties.map(party => 
         party.map(actor => {
+            if (actor.dead) return actor
+
             actor.energy += 2
             return actor
         })
@@ -136,8 +138,7 @@ export function whichPartyDied(parties: Actor[][]): number | null {
 }
 
 function processTurnEvents(ctx: DungeonContext, parties: Actor[][], partyID: number, partyIndex: number): Actor[][] {
-    let events: Event[] = [
-        new CheckDeathsEvent(partyID, partyIndex), 
+    let events: Event[] = [ 
         new BeforeTurnEvent(partyID, partyIndex)
     ]
 
@@ -229,6 +230,7 @@ function processTurnEvents(ctx: DungeonContext, parties: Actor[][], partyID: num
                 const endTurnEvent = event as EndTurnEvent
                 const endTurnResult = endTurnEvent.processEndTurn(ctx, parties)
                 events = events.concat(endTurnResult.newEvents)
+                events.unshift(new CheckDeathsEvent(partyID, partyIndex))
                 parties = endTurnResult.newPartyStates
                 break
             default:

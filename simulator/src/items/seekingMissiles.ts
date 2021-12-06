@@ -1,8 +1,10 @@
 import { Actor } from "../engine/actor"
 import { AuraKind, SeekingMissilesAura } from "../engine/aura"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "../engine/events"
+import { ActorDiedEvent } from "../engine/events/actorDied"
 import { BeforeTurnEvent } from "../engine/events/beforeTurn"
 import { DamageDealtEvent } from "../engine/events/damageDealt"
+import { HealingReceivedEvent } from "../engine/events/healingReceived"
 import { SelectTargetEvent } from "../engine/events/selectTarget"
 import { TargetFinalizedEvent } from "../engine/events/targetFinalized"
 import { Item } from "../engine/item"
@@ -107,6 +109,24 @@ export class SeekingMissiles extends Item {
         return {
             newPartyStates: parties,
             newEvents: []
+        }
+    }
+
+    handleOnKill(ctx: DungeonContext, parties: Actor[][], triggeredBy: ActorDiedEvent): ProcessedEventResult {
+        let onKillEvents = []
+
+        const target = parties[triggeredBy.diedActorPartyIndex][triggeredBy.diedActorIndex]
+        const attacker = parties[triggeredBy.turnActorPartyIndex][triggeredBy.turnActorIndex]
+
+        const healingReceived = 1 * this.tier
+        const healingReceivedEvent = new HealingReceivedEvent(healingReceived, triggeredBy.turnActorPartyIndex, triggeredBy.turnActorIndex)
+        onKillEvents.push(healingReceivedEvent)
+
+        ctx.logCombatMessage(`Seeking Missiles cook ${target.name} into a delicious meal! ${attacker.name} heals for ${healingReceived} HP.`)
+
+        return {
+            newPartyStates: parties,
+            newEvents: onKillEvents
         }
     }
 }

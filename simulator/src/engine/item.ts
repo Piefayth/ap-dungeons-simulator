@@ -2,6 +2,7 @@ import { DungeonContext } from "../simulator"
 import { getRandomInt } from "../util/math"
 import { Actor } from "./actor"
 import { CombatEvent, Event, EventKind, ProcessedEventResult } from "./events"
+import { ActorDiedEvent } from "./events/actorDied"
 import { BasicAttackEvent } from "./events/basicAttack"
 import { BeforeTurnEvent } from "./events/beforeTurn"
 import { DamageDealtEvent } from "./events/damageDealt"
@@ -34,6 +35,7 @@ abstract class _Item {
     abstract handleOnBasicAttack(ctx: DungeonContext, parties: Actor[][], damageDealt: number, triggeredBy: BasicAttackEvent): ProcessedEventResult
     abstract handleOnAfterAttack(ctx: DungeonContext, parties: Actor[][], triggeredBy: Event): ProcessedEventResult
     abstract handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult
+    abstract handleOnKill(ctx: DungeonContext, parties: Actor[][], triggeredBy: ActorDiedEvent): ProcessedEventResult
 }
 
 export class Item extends _Item {
@@ -52,6 +54,13 @@ export class Item extends _Item {
     }
 
     handleOnDamageDealt(ctx: DungeonContext, parties: Actor[][], triggeredBy: DamageDealtEvent): ProcessedEventResult {
+        return {
+            newPartyStates: parties,
+            newEvents: []
+        }
+    }
+
+    handleOnKill(ctx: DungeonContext, parties: Actor[][], triggeredBy: ActorDiedEvent): ProcessedEventResult {
         return {
             newPartyStates: parties,
             newEvents: []

@@ -19,7 +19,7 @@ import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 
 const demoParty: Actor[] = [{
     name: "piefayth",
-    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
+    items: [new Items.ChumbyChicken(6), new Items.ChallengerArrow(6), new Items.TrustySteed(6), new Items.PetImp(6)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -29,27 +29,7 @@ const demoParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 15,
-    attackMin: 4,
-    attackMax: 13
-}, {
-    name: "one",
-    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 15,
-    attackMin: 4,
-    attackMax: 13
-}, {
-    name: "two",
-    items: [new Items.ChallengerArrow(2), new Items.SeekingMissiles(2)],
+    items: [new Items.ChumbyChicken(6), new Items.ChallengerArrow(6), new Items.TrustySteed(6), new Items.PetImp(6)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -88,7 +68,7 @@ function runTrials(options: SimulatorInputData): SimulationResult {
     const simulator = new DungeonSimulator({
         displayCombatEvents: false,
         displayPartyStates: false,
-        pityScaling: (speed, pitySpeed) => pitySpeed + 1
+        pityScaling: (speed, pitySpeed) => pitySpeed + 0
     })
 
     const dungeonMap = {

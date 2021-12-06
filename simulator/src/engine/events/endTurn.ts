@@ -5,6 +5,7 @@ import { BasicAttackEvent } from "./basicAttack"
 import { AuraKind } from "../aura"
 import { DungeonContext } from "../../simulator"
 import { DamageTakenEvent } from "./damageTaken"
+import { CheckDeathsEvent } from "./checkDeaths"
 
 class EndTurnEvent extends Event {
     turnActorPartyIndex: number

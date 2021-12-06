@@ -25,7 +25,7 @@ class CheckDeathsEvent extends Event {
 
 function checkDeaths(ctx: DungeonContext, parties: Actor[][], turnActorPartyIndex: number, turnActorIndex: number): ProcessedEventResult {
     let events = []
-
+    
     parties = parties.map((party, partyIndex) => party
         .map((actor, actorIndex) => {
             if (actor && actor.curHP <= 0 && !actor.dead) {
@@ -41,9 +41,16 @@ function checkDeaths(ctx: DungeonContext, parties: Actor[][], turnActorPartyInde
                 actor.dead = true
 
                 ctx.logCombatMessage(`${actor.name} has fallen!`)
-                events.push(new ActorDiedEvent(actor, partyIndex, actorIndex, turnActorPartyIndex, turnActorIndex))
+
+                // if you die on your own turn, process it last, because it will 
+                // cancel the remainder of the turn, despite other deaths possibly occuring
+                if (turnActorPartyIndex == actorIndex) {
+                    events.unshift(new ActorDiedEvent(actor, partyIndex, actorIndex, turnActorPartyIndex, turnActorIndex))
+                } else {
+                    events.push(new ActorDiedEvent(actor, partyIndex, actorIndex, turnActorPartyIndex, turnActorIndex))
+                }
             }
-        return actor
+            return actor
     }))
 
     let deadParty = whichPartyDied(parties)

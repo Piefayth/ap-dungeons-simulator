@@ -101,7 +101,7 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [new ChumbyChicken(7), new ChallengerArrow(7), new TrustySteed(7), new RockCompanion(7)],
+    items: [new ChumbyChicken(6), new ChallengerArrow(6), new TrustySteed(6), new PetImp(6)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -111,7 +111,7 @@ const testParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new ChumbyChicken(7), new ChallengerArrow(7), new TrustySteed(7), new RockCompanion(7)],
+    items: [new ChumbyChicken(6), new ChallengerArrow(6), new TrustySteed(6), new PetImp(6)],
     auras: [],
     maxHP: 150,
     curHP: 150,
