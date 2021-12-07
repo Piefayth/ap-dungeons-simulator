@@ -9,6 +9,7 @@ export enum ItemKind {
     CHALLENGER_ARROW = 'Challenger Arrow',
     CHICKEN_HEALING = 'Dummy Chicken Healing',
     CHUMBY_CHICKEN = 'Chumby Chicken',
+    CLEANSED_TOME = 'Cleansed Tome',
     CLEANSING_FLAMES = 'Cleansing Flames',
     DRAINING_DAGGER = 'Draining Dagger',
     ENERGETIC_ALLY = 'Energetic Ally',

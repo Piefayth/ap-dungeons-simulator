@@ -19,6 +19,7 @@ import { BigClub } from './items/bigClub'
 import { BoostingBugle } from './items/boostingBugle'
 import { ChallengerArrow } from './items/challengerArrow'
 import { ChumbyChicken } from './items/chicken'
+import { CleansedTome } from './items/cleansedTome'
 import { CleansingFlames } from './items/cleansingFlames'
 import { DrainingDagger } from './items/drainingDagger'
 import { EnergeticAlly } from './items/energeticAlly'
@@ -90,6 +91,7 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
     
             worker.on('error', (error) => {
                 console.log(`worker ${i} errored a run`)
+                console.log(error)
                 rej(error)
             })
         })
@@ -102,7 +104,7 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [new TrustySteed(7), new ChumbyChicken(7), new Avalanche(7), new PetImp(7)],
+    items: [new TrustySteed(7), new RockCompanion(7), new FestiveFeast(7), new PetImp(7)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -112,7 +114,7 @@ const testParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new TrustySteed(7), new Avalanche(7), new ChumbyChicken(7), new PetImp(7)],
+    items: [new TrustySteed(7), new ChallengerArrow(7), new RockCompanion(7), new PetImp(7)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -124,7 +126,7 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new HealingPendant(1), new LoveLetter(1), new ChumbyChicken(2), new ChallengerArrow(2)],
+    items: [new CleansedTome(2), new TrustySteed(2), new ChumbyChicken(3), new BoostingBugle(2)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -134,7 +136,7 @@ const testParty2: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new PetImp(1), new ChallengerArrow(2), new SeekingMissiles(3), new BFCannon(2)],
+    items: [new CleansedTome(2), new ChallengerArrow(3), new SeekingMissiles(3), new LoveLetter(3)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -193,7 +195,7 @@ const testParty3: Actor[] = [{
 
 if (require.main === module && typeof window == "undefined") {
     const selectedParty = testParty2
-    const selectedDungeon = dungeon2
+    const selectedDungeon = dungeon3
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]

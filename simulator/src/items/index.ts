@@ -5,6 +5,7 @@ import { BigClub } from "./bigClub"
 import { BoostingBugle } from "./boostingBugle"
 import { ChallengerArrow } from "./challengerArrow"
 import { ChumbyChicken } from "./chicken"
+import { CleansedTome } from "./cleansedTome"
 import { CleansingFlames } from "./cleansingFlames"
 import { DrainingDagger } from "./drainingDagger"
 import { EnergeticAlly } from "./energeticAlly"
@@ -37,6 +38,7 @@ const itemKindMap = {
     [ItemKind.BOOSTING_BUGLE]: BoostingBugle,
     [ItemKind.CHALLENGER_ARROW]: ChallengerArrow,
     [ItemKind.CHUMBY_CHICKEN]: ChumbyChicken,
+    [ItemKind.CLEANSED_TOME]: CleansedTome,
     [ItemKind.CLEANSING_FLAMES]: CleansingFlames,
     [ItemKind.DRAINING_DAGGER]: DrainingDagger,
     [ItemKind.ENERGETIC_ALLY]: EnergeticAlly,
@@ -72,6 +74,7 @@ export {
     ChallengerArrow,
     ChumbyChicken,
     CleansingFlames,
+    CleansedTome,
     DrainingDagger,
     EnergeticAlly,
     ExplosionPowder,
