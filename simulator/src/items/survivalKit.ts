@@ -35,7 +35,7 @@ export class SurvivalKit extends Item {
             return null
         }
 
-        let chance = 10 + this.tier * 3
+        let chance = 7 + this.tier * 3
         let roll = getRandomInt(0, 100)
         if (roll < chance) {
             let attacker = parties[event.attackerPartyIndex][event.attackerIndex]

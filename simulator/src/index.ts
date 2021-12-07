@@ -104,7 +104,7 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [new TrustySteed(7), new RockCompanion(7), new FestiveFeast(7), new PetImp(7)],
+    items: [new LoveLetter(8), new CleansedTome(8), new BoostingBugle(8), new Freezeman(8)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -114,7 +114,7 @@ const testParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new TrustySteed(7), new ChallengerArrow(7), new RockCompanion(7), new PetImp(7)],
+    items: [new CleansedTome(8), new Freezeman(8), new ChallengerArrow(8), new SeekingMissiles(8)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -126,7 +126,7 @@ const testParty: Actor[] = [{
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new CleansedTome(2), new TrustySteed(2), new ChumbyChicken(3), new BoostingBugle(2)],
+    items: [new PetImp(6), new TrustySteed(6), new RockCompanion(6), new FestiveFeast(6)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -136,7 +136,7 @@ const testParty2: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new CleansedTome(2), new ChallengerArrow(3), new SeekingMissiles(3), new LoveLetter(3)],
+    items: [new PetImp(6), new TrustySteed(6), new RockCompanion(6), new ChallengerArrow(6)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -147,55 +147,31 @@ const testParty2: Actor[] = [{
 }]
 
 const testParty3: Actor[] = [{
-    name: "pie",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new BoostingBugle(9)],
+    name: "piefayth",
+    items: [new PetImp(4), new TrustySteed(4), new RockCompanion(4), new FestiveFeast(4)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 14,
-    attackMin: 3,
-    attackMax: 12,
-    angel: false,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
 }, {
     name: "zoop",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
+    items: [new SeekingMissiles(3), new ChumbyChicken(4), new RockCompanion(4), new ChallengerArrow(3)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 14,
-    attackMin: 3,
-    attackMax: 12,
-    angel: false,
-}, {
-    name: "one",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 14,
-    attackMin: 3,
-    attackMax: 12,
-    angel: false,
-}, {
-    name: "two",
-    items: [new DrainingDagger(9), new MartyrArmor(9), new SurvivalKit(9), new FestiveFeast(9)],
-    auras: [],
-    maxHP: 150,
-    curHP: 150,
-    energy: 0,
-    speed: 14,
-    attackMin: 3,
-    attackMax: 12,
-    angel: false,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13
 }]
 
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty2
-    const selectedDungeon = dungeon3
+    const selectedParty = testParty3
+    const selectedDungeon = dungeon4
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]
