@@ -19,7 +19,7 @@ import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 
 const demoParty: Actor[] = [{
     name: "piefayth",
-    items: [new Items.BFCannon(2), new Items.TrustySteed(1), new Items.ChumbyChicken(2), new Items.BoostingBugle(2)],
+    items: [new Items.PetImp(4), new Items.TrustySteed(4), new Items.RockCompanion(5), new Items.FestiveFeast(5)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -29,7 +29,7 @@ const demoParty: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new Items.WhirlwindAxe(2), new Items.ChallengerArrow(3), new Items.SeekingMissiles(3), new Items.BFCannon(3)],
+    items: [new Items.SeekingMissiles(3), new Items.RockCompanion(4), new Items.ChumbyChicken(4), new Items.ChallengerArrow(3)],
     auras: [],
     maxHP: 150,
     curHP: 150,

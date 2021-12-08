@@ -148,7 +148,7 @@ const testParty2: Actor[] = [{
 
 const testParty3: Actor[] = [{
     name: "piefayth",
-    items: [new PetImp(4), new TrustySteed(4), new RockCompanion(4), new FestiveFeast(4)],
+    items: [new PetImp(4), new TrustySteed(4), new RockCompanion(5), new FestiveFeast(5)],
     auras: [],
     maxHP: 150,
     curHP: 150,
@@ -158,7 +158,7 @@ const testParty3: Actor[] = [{
     attackMax: 13
 }, {
     name: "zoop",
-    items: [new SeekingMissiles(3), new ChumbyChicken(4), new RockCompanion(4), new ChallengerArrow(3)],
+    items: [new SeekingMissiles(3), new RockCompanion(4), new ChumbyChicken(4), new ChallengerArrow(3)],
     auras: [],
     maxHP: 150,
     curHP: 150,
