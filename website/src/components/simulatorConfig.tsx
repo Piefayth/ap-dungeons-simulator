@@ -11,6 +11,7 @@ import { dungeon2 } from '../../../simulator/src/dungeons/dungeon2'
 import { dungeon3 } from '../../../simulator/src/dungeons/dungeon3'
 import { dungeon4 } from '../../../simulator/src/dungeons/dungeon4'
 import { dungeon6 } from '../../../simulator/src/dungeons/dungeon6'
+import { dungeon7 } from '../../../simulator/src/dungeons/dungeon7'
 import { dungeon8 } from '../../../simulator/src/dungeons/dungeon8'
 import { dungeon9 } from '../../../simulator/src/dungeons/dungeon9'
 import { dungeon10 } from '../../../simulator/src/dungeons/dungeon10'
@@ -19,24 +20,34 @@ import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 
 const demoParty: Actor[] = [{
     name: "piefayth",
-    items: [new Items.PetImp(4), new Items.TrustySteed(4), new Items.RockCompanion(5), new Items.FestiveFeast(5)],
+    items: [new Items.LoveLetter(6), new Items.TrustySteed(6), new Items.MagicParasol(6), new Items.BoostingBugle(5)],
     auras: [],
-    maxHP: 150,
-    curHP: 150,
+    maxHP: 155,
+    curHP: 155,
     energy: 0,
     speed: 15,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
 }, {
     name: "zoop",
-    items: [new Items.SeekingMissiles(3), new Items.RockCompanion(4), new Items.ChumbyChicken(4), new Items.ChallengerArrow(3)],
+    items: [new Items.SeekingMissiles(4), new Items.CleansedTome(5), new Items.Freezeman(5), new Items.ChallengerArrow(5)],
     auras: [],
-    maxHP: 150,
-    curHP: 150,
+    maxHP: 155,
+    curHP: 155,
     energy: 0,
     speed: 15,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
+}, {
+    name: "tymp",
+    items: [new Items.MagicParasol(6), new Items.DrainingDagger(6), new Items.SurvivalKit(6), new Items.EnergeticAlly(6)],
+    auras: [],
+    maxHP: 140,
+    curHP: 140,
+    energy: 0,
+    speed: 13,
+    attackMin: 2,
+    attackMax: 11,
 }]
 
 type SimulatorInputData = {
@@ -76,6 +87,7 @@ function runTrials(options: SimulatorInputData): SimulationResult {
         3: dungeon3,
         4: dungeon4,
         6: dungeon6,
+        7: dungeon7,
         8: dungeon8,
         9: dungeon9,
         10: dungeon10

@@ -22,7 +22,7 @@ export class MagicParasol extends Item {
         let defender = parties[triggeredBy.targetPartyIndex][triggeredBy.targetIndex]
         const newEvents: Event[] = []
 
-        const chance = 17 + (3 * this.tier) // TODO: VERIFY PARASOL SCALING IS CORRECT
+        const chance = 17 + (3 * this.tier)
         const damageReduction = 2 + (3 * this.tier)
         const roll = getRandomInt(0, 100)
         if (roll < chance) {

@@ -1,4 +1,3 @@
-import { Settings } from 'http2'
 import { dungeon1 } from './dungeons/dungeon1'
 import { dungeon10 } from './dungeons/dungeon10'
 import { dungeon2 } from './dungeons/dungeon2'
@@ -104,74 +103,104 @@ async function worker(numTrials: number, numWorkers: number, party: Actor[], dun
 
 const testParty: Actor[] = [{
     name: "piefayth",
-    items: [new LoveLetter(8), new CleansedTome(8), new BoostingBugle(8), new Freezeman(8)],
+    items: [new LoveLetter(7), new CleansedTome(5), new MagicParasol(7), new BoostingBugle(7)],
     auras: [],
-    maxHP: 150,
-    curHP: 150,
+    maxHP: 155,
+    curHP: 155,
     energy: 0,
     speed: 15,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
 }, {
     name: "zoop",
-    items: [new CleansedTome(8), new Freezeman(8), new ChallengerArrow(8), new SeekingMissiles(8)],
+    items: [new SeekingMissiles(6), new CleansedTome(6), new Freezeman(6), new ChallengerArrow(6)],
     auras: [],
-    maxHP: 150,
-    curHP: 150,
+    maxHP: 155,
+    curHP: 155,
     energy: 0,
     speed: 15,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
 }]
 
 const testParty2: Actor[] = [{
     name: "piefayth",
-    items: [new PetImp(6), new TrustySteed(6), new RockCompanion(6), new FestiveFeast(6)],
+    items: [new LoveLetter(7), new DrainingDagger(6), new MagicParasol(7), new BoostingBugle(7)],
     auras: [],
-    maxHP: 150,
-    curHP: 150,
+    maxHP: 155,
+    curHP: 155,
     energy: 0,
     speed: 15,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
 }, {
     name: "zoop",
-    items: [new PetImp(6), new TrustySteed(6), new RockCompanion(6), new ChallengerArrow(6)],
+    items: [new SeekingMissiles(6), new CleansedTome(6), new Freezeman(6), new ChallengerArrow(6)],
+    auras: [],
+    maxHP: 155,
+    curHP: 155,
+    energy: 0,
+    speed: 15,
+    attackMin: 4,
+    attackMax: 13,
+}, {
+    name: "tymp",
+    items: [new TrustySteed(5), new RockCompanion(6), new PetImp(6), new FestiveFeast(6)],
     auras: [],
     maxHP: 150,
     curHP: 150,
     energy: 0,
-    speed: 15,
-    attackMin: 4,
-    attackMax: 13
+    speed: 14,
+    attackMin: 2,
+    attackMax: 11,
 }]
 
 const testParty3: Actor[] = [{
     name: "piefayth",
-    items: [new PetImp(4), new TrustySteed(4), new RockCompanion(5), new FestiveFeast(5)],
+    items: [new SurvivalKit(9), new DrainingDagger(9), new MagicParasol(9), new BoostingBugle(9)],
     auras: [],
-    maxHP: 150,
-    curHP: 150,
+    maxHP: 155,
+    curHP: 155,
     energy: 0,
     speed: 15,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
 }, {
     name: "zoop",
-    items: [new SeekingMissiles(3), new RockCompanion(4), new ChumbyChicken(4), new ChallengerArrow(3)],
+    items: [new MagicParasol(9), new CleansedTome(9), new SurvivalKit(9), new ChallengerArrow(9)],
     auras: [],
-    maxHP: 150,
-    curHP: 150,
+    maxHP: 155,
+    curHP: 155,
     energy: 0,
     speed: 15,
     attackMin: 4,
-    attackMax: 13
+    attackMax: 13,
+}, {
+    name: "tymp",
+    items: [new MagicParasol(9), new DrainingDagger(9), new SurvivalKit(9), new EnergeticAlly(9)],
+    auras: [],
+    maxHP: 140,
+    curHP: 140,
+    energy: 0,
+    speed: 13,
+    attackMin: 2,
+    attackMax: 11,
+}, {
+    name: "tymp 2",
+    items: [new MagicParasol(9), new SurvivalKit(9), new DrainingDagger(9), new ChallengerArrow(9)],
+    auras: [],
+    maxHP: 140,
+    curHP: 140,
+    energy: 0,
+    speed: 13,
+    attackMin: 2,
+    attackMax: 11,
 }]
 
 
 if (require.main === module && typeof window == "undefined") {
-    const selectedParty = testParty3
-    const selectedDungeon = dungeon4
+    const selectedParty = testParty
+    const selectedDungeon = dungeon6
     const trials = 10000
     const workers = 4
     const workerOption = process.argv[2]

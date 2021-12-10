@@ -31,8 +31,7 @@ export class CleansedTome extends Item {
 
             if (
                 parties[event.turnActorPartyIndex][i].curHP > 0 && 
-                parties[event.turnActorPartyIndex][i].curHP < lowestHP &&
-                parties[event.turnActorPartyIndex][i].curHP < parties[event.turnActorPartyIndex][i].maxHP
+                parties[event.turnActorPartyIndex][i].curHP < lowestHP 
             ) {
                 lowestHP = parties[event.turnActorPartyIndex][i].curHP
                 tomeTarget = i
