@@ -20,7 +20,7 @@ import { ItemKind } from '../../../simulator/src/engine/itemTypes'
 
 const demoParty: Actor[] = [{
     name: "piefayth",
-    items: [new Items.LoveLetter(6), new Items.TrustySteed(6), new Items.MagicParasol(6), new Items.BoostingBugle(5)],
+    items: [new Items.BigClub(9), new Items.DrainingDagger(9), new Items.Freezeman(9), new Items.ChallengerArrow(9)],
     auras: [],
     maxHP: 155,
     curHP: 155,
@@ -30,7 +30,7 @@ const demoParty: Actor[] = [{
     attackMax: 13,
 }, {
     name: "zoop",
-    items: [new Items.SeekingMissiles(4), new Items.CleansedTome(5), new Items.Freezeman(5), new Items.ChallengerArrow(5)],
+    items: [new Items.SurvivalKit(9), new Items.DrainingDagger(9), new Items.TrustySteed(9), new Items.BoostingBugle(9)],
     auras: [],
     maxHP: 155,
     curHP: 155,
@@ -40,7 +40,17 @@ const demoParty: Actor[] = [{
     attackMax: 13,
 }, {
     name: "tymp",
-    items: [new Items.MagicParasol(6), new Items.DrainingDagger(6), new Items.SurvivalKit(6), new Items.EnergeticAlly(6)],
+    items: [new Items.SurvivalKit(9), new Items.DrainingDagger(9), new Items.TrustySteed(9), new Items.BoostingBugle(9)],
+    auras: [],
+    maxHP: 140,
+    curHP: 140,
+    energy: 0,
+    speed: 13,
+    attackMin: 2,
+    attackMax: 11,
+}, {
+    name: "tymp 2",
+    items: [new Items.SurvivalKit(9), new Items.DrainingDagger(9), new Items.TrustySteed(9), new Items.EnergeticAlly(9)],
     auras: [],
     maxHP: 140,
     curHP: 140,
