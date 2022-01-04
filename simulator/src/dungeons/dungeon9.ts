@@ -1,138 +1,108 @@
 import { Dungeon } from "../engine/dungeon";
 import { Avalanche } from "../items/avalanche";
-import { BigClub } from "../items/bigClub";
 import { BoostingBugle } from "../items/boostingBugle";
-import { ChallengerArrow } from "../items/challengerArrow";
-import { EnergeticAlly } from "../items/energeticAlly";
 import { ExplosionPowder } from "../items/explosionPowder";
-import { HealingPendant } from "../items/healingPendant";
-import { ImpWhistle } from "../items/impWhistle";
-import { LoveLetter } from "../items/loveLetter";
 import { Machete } from "../items/machete";
-import { MagicParasol } from "../items/magicParasol";
-import { PoisonDagger } from "../items/poisonDagger";
-import { RoughSkin } from "../items/roughSkin";
 import { SeekingMissiles } from "../items/seekingMissiles";
-import { SurvivalKit } from "../items/survivalKit";
 import { Thorns } from "../items/thorns";
 
 export const dungeon9: Dungeon = {
     tier: 9,
     floors: [{
         enemies: [{
-            name: "Trundle",
-            items: [new ChallengerArrow(2)],
+            name: "Boomerang Monkey",
+            items: [new Machete(8)],
+            auras: [],
+            maxHP: 225,
+            curHP: 225,
+            energy: 0,
+            speed: 17,
+            attackMin: 24,
+            attackMax: 32
+        }, {
+            name: "Wizard Monkey",
+            items: [new ExplosionPowder(2)],
             auras: [],
             maxHP: 250,
             curHP: 250,
             energy: 999,
-            speed: 17,
-            attackMin: 20,
-            attackMax: 75
+            speed: 10,
+            attackMin: 0,
+            attackMax: 0
         }, {
-            name: "Sejuani",
-            items: [new Avalanche(4)],
+            name: "Ice Monkey",
+            items: [new Avalanche(1)],
             auras: [],
-            maxHP: 250,
-            curHP: 250,
-            energy: 0,
-            speed: 13,
-            attackMin: 50,
-            attackMax: 100
-        }, {
-            name: "Teemo",
-            items: [new PoisonDagger(5)],
-            auras: [],
-            maxHP: 185,
-            curHP: 185,
-            energy: 0,
-            speed: 35,
-            attackMin: 10,
-            attackMax: 20
-        }, {
-            name: "Ezreal",
-            items: [],
-            auras: [],
-            maxHP: 100,
-            curHP: 100,
-            energy: 0,
+            maxHP: 200,
+            curHP: 200,
+            energy: 999,
             speed: 20,
             attackMin: 10,
-            attackMax: 20
+            attackMax: 25
         }]
     }, {
         enemies: [{
-            name: "Tahm Kench",
-            items: [new HealingPendant(5), new MagicParasol(6), new RoughSkin(5)],
+            name: "Dart Monkey 1",
+            items: [],
+            auras: [],
+            maxHP: 150,
+            curHP: 150,
+            energy: 0,
+            speed: 18,
+            attackMin: 10,
+            attackMax: 40
+        }, {
+            name: "Dart Monkey 2",
+            items: [],
+            auras: [],
+            maxHP: 150,
+            curHP: 150,
+            energy: 0,
+            speed: 18,
+            attackMin: 10,
+            attackMax: 40
+        }, {
+            name: "Tack Shooter 1",
+            items: [new Thorns(7)],
             auras: [],
             maxHP: 200,
             curHP: 200,
             energy: 0,
-            speed: 6,
-            attackMin: 50,
-            attackMax: 150
+            speed: 18,
+            attackMin: 0,
+            attackMax: 0
         }, {
-            name: "Braum",
-            items: [new MagicParasol(4), new SurvivalKit(7), new RoughSkin(5)],
+            name: "Tack Shooter 2",
+            items: [new Thorns(7)],
             auras: [],
-            maxHP: 160,
-            curHP: 160,
+            maxHP: 200,
+            curHP: 200,
             energy: 0,
-            speed: 7,
-            attackMin: 50,
-            attackMax: 100
-        }, {
-            name: "Brand",
-            items: [new Thorns(7), new ExplosionPowder(5), new Machete(4)],
-            auras: [],
-            maxHP: 150,
-            curHP: 150,
-            energy: 0,
-            speed: 15,
-            attackMin: 10,
-            attackMax: 20
-        }, {
-            name: "Zyra",
-            items: [new Thorns(7), new ImpWhistle(8), new Machete(4)],
-            auras: [],
-            maxHP: 150,
-            curHP: 150,
-            energy: 0,
-            speed: 15,
-            attackMin: 5,
-            attackMax: 25
-        }, {
-            name: "Sona",
-            items: [new EnergeticAlly(7), new LoveLetter(7)],
-            auras: [],
-            maxHP: 150,
-            curHP: 150,
-            energy: 0,
-            speed: 12,
-            attackMin: 20,
-            attackMax: 30
+            speed: 18,
+            attackMin: 0,
+            attackMax: 0
         }]
     }, {
         enemies: [{
-            name: "Riven",
-            items: [new Machete(9), new BigClub(9)],
+            name: "Super Monkey",
+            items: [new SeekingMissiles(5)],
             auras: [],
-            maxHP: 500,
-            curHP: 500,
+            maxHP: 375,
+            curHP: 375,
             energy: 0,
-            speed: 20,
-            attackMin: 40,
-            attackMax: 90
+            speed: 55,
+            attackMin: 20,
+            attackMax: 35
         }, {
-            name: "Yasuo",
-            items: [],
+            name: "Monkey Village",
+            items: [new BoostingBugle(3)],
             auras: [],
-            maxHP: 250,
-            curHP: 250,
-            energy: 0,
+            maxHP: 200,
+            curHP: 200,
+            energy: 1001,
             speed: 20,
-            attackMin: 1,
-            attackMax: 150
+            attackMin: 0,
+            attackMax: 0
         }]
     }]
 }

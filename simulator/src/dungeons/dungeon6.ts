@@ -67,7 +67,7 @@ export const dungeon6: Dungeon = {
     }, {
         enemies: [{
             name: "All-Might",
-            items: [],
+            items: [new BigClub(5)],
             auras: [],
             maxHP: 200,
             curHP: 200,
@@ -77,7 +77,7 @@ export const dungeon6: Dungeon = {
             attackMax: 60
         }, {
             name: "Izuku Midoriya",
-            items: [],
+            items: [new FireSword(5)],
             auras: [],
             maxHP: 200,
             curHP: 200,

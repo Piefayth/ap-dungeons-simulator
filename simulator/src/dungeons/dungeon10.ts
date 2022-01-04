@@ -3,88 +3,136 @@ import { Avalanche } from "../items/avalanche";
 import { BigClub } from "../items/bigClub";
 import { BoostingBugle } from "../items/boostingBugle";
 import { ChallengerArrow } from "../items/challengerArrow";
-import { CleansingFlames } from "../items/cleansingFlames";
 import { EnergeticAlly } from "../items/energeticAlly";
 import { ExplosionPowder } from "../items/explosionPowder";
-import { FireSword } from "../items/fireSword";
 import { HealingPendant } from "../items/healingPendant";
 import { ImpWhistle } from "../items/impWhistle";
 import { LoveLetter } from "../items/loveLetter";
 import { Machete } from "../items/machete";
 import { MagicParasol } from "../items/magicParasol";
 import { PoisonDagger } from "../items/poisonDagger";
+import { RoughSkin } from "../items/roughSkin";
 import { SeekingMissiles } from "../items/seekingMissiles";
 import { SurvivalKit } from "../items/survivalKit";
 import { Thorns } from "../items/thorns";
-import { WhirlwindAxe } from "../items/whirlwindAxe";
 
 export const dungeon10: Dungeon = {
     tier: 10,
     floors: [{
         enemies: [{
-            name: "Sonic the Hedgehog",
-            items: [new FireSword(7)],
+            name: "Trundle",
+            items: [new ChallengerArrow(2)],
             auras: [],
-            maxHP: 750,
-            curHP: 750,
-            energy: 0,
-            speed: 150,
-            attackMin: 30,
-            attackMax: 50
-        }]
-    }, {
-        enemies: [{
-            name: "Amy Rose",
-            items: [new WhirlwindAxe(9)],
+            maxHP: 250,
+            curHP: 250,
+            energy: 999,
+            speed: 17,
+            attackMin: 20,
+            attackMax: 75
+        }, {
+            name: "Sejuani",
+            items: [new Avalanche(4)],
             auras: [],
             maxHP: 250,
             curHP: 250,
             energy: 0,
-            speed: 22,
-            attackMin: 20,
-            attackMax: 30
+            speed: 13,
+            attackMin: 50,
+            attackMax: 100
         }, {
-            name: "Big the Cat",
-            items: [new MagicParasol(3), new HealingPendant(3)],
+            name: "Teemo",
+            items: [new PoisonDagger(5)],
             auras: [],
-            maxHP: 300,
-            curHP: 300,
+            maxHP: 185,
+            curHP: 185,
             energy: 0,
-            speed: 12,
-            attackMin: 40,
-            attackMax: 80
+            speed: 35,
+            attackMin: 10,
+            attackMax: 20
         }, {
-            name: "Knuckles the Echidna",
-            items: [new SeekingMissiles(5), new BigClub(6)],
+            name: "Ezreal",
+            items: [],
+            auras: [],
+            maxHP: 100,
+            curHP: 100,
+            energy: 0,
+            speed: 20,
+            attackMin: 10,
+            attackMax: 20
+        }]
+    }, {
+        enemies: [{
+            name: "Tahm Kench",
+            items: [new HealingPendant(5), new MagicParasol(6), new RoughSkin(5)],
             auras: [],
             maxHP: 200,
             curHP: 200,
             energy: 0,
-            speed: 25,
-            attackMin: 10,
-            attackMax: 60
+            speed: 6,
+            attackMin: 50,
+            attackMax: 150
         }, {
-            name: "Miles Tails Prowler",
-            items: [new BoostingBugle(5), new Thorns(5), new CleansingFlames(7)],
+            name: "Braum",
+            items: [new MagicParasol(4), new SurvivalKit(7), new RoughSkin(5)],
             auras: [],
-            maxHP: 250,
-            curHP: 250,
-            energy: 90,
-            speed: 30,
+            maxHP: 160,
+            curHP: 160,
+            energy: 0,
+            speed: 7,
+            attackMin: 50,
+            attackMax: 100
+        }, {
+            name: "Brand",
+            items: [new Thorns(7), new ExplosionPowder(5), new Machete(4)],
+            auras: [],
+            maxHP: 150,
+            curHP: 150,
+            energy: 0,
+            speed: 15,
             attackMin: 10,
+            attackMax: 20
+        }, {
+            name: "Zyra",
+            items: [new Thorns(7), new ImpWhistle(8), new Machete(4)],
+            auras: [],
+            maxHP: 150,
+            curHP: 150,
+            energy: 0,
+            speed: 15,
+            attackMin: 5,
+            attackMax: 25
+        }, {
+            name: "Sona",
+            items: [new EnergeticAlly(7), new LoveLetter(7)],
+            auras: [],
+            maxHP: 150,
+            curHP: 150,
+            energy: 0,
+            speed: 12,
+            attackMin: 20,
             attackMax: 30
         }]
     }, {
         enemies: [{
-            name: "Shadow The Hedgehog",
-            items: [new Thorns(9), new ChallengerArrow(15), new HealingPendant(9)],
+            name: "Riven",
+            items: [new Machete(9), new BigClub(9)],
             auras: [],
-            maxHP: 600,
-            curHP: 600,
+            maxHP: 500,
+            curHP: 500,
             energy: 0,
-            speed: 80,
-            attackMin: 5,
-            attackMax: 20
+            speed: 20,
+            attackMin: 40,
+            attackMax: 90
+        }, {
+            name: "Yasuo",
+            items: [],
+            auras: [],
+            maxHP: 250,
+            curHP: 250,
+            energy: 0,
+            speed: 20,
+            attackMin: 1,
+            attackMax: 150
         }]
     }]
 }
